@@ -56,7 +56,7 @@ function Predict({ data }) {
         <div>
           <h1>Kestirimci Bakım</h1>
           <div className="lede">Model bir duruşu <b>önceden işaretler</b> · RCA <b>nedenini</b> bulur ·
-            What-If <b>OEE & € kazanımını</b> ölçer.</div>
+            What-If <b>OEE kazanımını</b> ölçer.</div>
         </div>
         <Tag kind="green">ALTIN + PLATİN</Tag>
       </header>
@@ -66,8 +66,8 @@ function Predict({ data }) {
         <Panel cls="d2"><Stat label="Lift" value={`${meta.lift}×`} /></Panel>
         <Panel cls="d3"><Stat label="Recall" value={fmtPct(dep.recall)} plain
           sub={`${dep.caught_stops}/${dep.significant_stops} önemli duruş`} /></Panel>
-        <Panel cls="d4"><Stat label="ΔOEE (kestirimci)"
-          value={`+${(dep.oee.delta.dOEE * 100).toFixed(1)} puan`} /></Panel>
+        <Panel cls="d4"><Stat label="Yakalanan duruş süresi"
+          value={`${Math.round(dep.caught_downtime_h)} sa`} plain /></Panel>
       </div>
 
       <div className="ctl mt">
@@ -153,10 +153,9 @@ function RcaPanel({ data, machine }) {
 function WhatIf({ machine }) {
   const [pct, setPct] = useState(50)
   const r = useMemo(() => whatIfW1(machine.components, pct / 100), [machine, pct])
-  const fin = useMemo(() => financials(r.recoveredH, r.extraPieces, ASSUM, 'downtime_cost'), [r])
   const dOEE = (r.after.OEE - r.before.OEE) * 100
   return (
-    <Panel title="3 · What-If — düzeltmenin OEE & finansal etkisi" icon="◇" cls="d4">
+    <Panel title="3 · What-If — düzeltmenin OEE etkisi" icon="◇" cls="d4">
       <div className="ctl">
         <span className="ctl-lbl">{machine.name} plansız duruşunu azalt</span>
         <input type="range" min="0" max="100" value={pct} onChange={(e) => setPct(+e.target.value)} />
@@ -167,8 +166,8 @@ function WhatIf({ machine }) {
         <div className="wi-stats">
           <Stat label="ΔOEE" value={`+${dOEE.toFixed(1)} puan`} />
           <Stat label="Geri kazanılan" value={fmtH(r.recoveredH)} plain />
-          <Stat label="Net fayda / 30g" value={fmtEur(fin.net)} plain />
-          <div className="cap n">Varsayım: €80/saat duruş, €300 müdahale · veride maliyet yok.</div>
+          <Stat label="Ek üretim" value={`${fmtInt(r.extraPieces)} parça`} plain />
+          <div className="cap n">Aynı OEE motoruyla yeniden hesaplanır. Etki Kullanılabilirlik üzerinden gelir.</div>
         </div>
       </div>
     </Panel>
@@ -237,7 +236,7 @@ function Overview({ data }) {
         <div>
           <h1>Filo & OEE</h1>
           <div className="lede">Telemetrisi olan ve duruşu kaydedilen makineler, OEE'ye göre sıralı.
-            Renk = rejim: yeşil Fanuc (tahmin edilebilir) · kehribar Mitsubishi.</div>
+            Renk = rejim: yeşil Fanuc (tahmin edilebilir) · turuncu Mitsubishi.</div>
         </div>
         <Tag kind="green">{fmtPct(plantOEE)} ort. OEE</Tag>
       </header>
@@ -264,14 +263,14 @@ function Overview({ data }) {
           cap="<b>Kırmızı</b> = makine arızası · <b>gri</b> = bağlantı kesintisi (IT, OEE'yi geri kazandırmaz).">
           <ParetoChart rows={data.pareto.slice(0, 10)} />
         </Panel>
-        <Panel title="What-If senaryoları — ΔOEE & net €" icon="◇" cls="d3"
-          cap="Her senaryo aynı OEE motoruyla yeniden hesaplanır (ΔA/ΔP/ΔOEE). Varsayımlar etiketli.">
+        <Panel title="What-If senaryoları — ΔOEE & kazanılan süre" icon="◇" cls="d3"
+          cap="Her senaryo aynı OEE motoruyla yeniden hesaplanır (ΔA/ΔP/ΔOEE). Değerler fiziksel kazanımdır.">
           <div className="rows">
             {sc.map((s) => (
               <div className="row sc" key={s.id}>
                 <span>{s.id} · {s.machine !== 'PLANT' ? s.machine.replace('Makine ', 'M') + ' · ' : ''}{s.scenario}</span>
                 <span className="num"><b className={s.delta_OEE_pp > 0 ? 'green' : 'dim'}>+{s.delta_OEE_pp} pp</b>
-                  <i className={s.net_eur >= 0 ? 'green' : 'red'}>{fmtEur(s.net_eur)}</i></span>
+                  <i className="tie">{s.recovered_runtime_h > 0 ? `${Math.round(s.recovered_runtime_h)} sa` : (s.recovered_schedule_h > 0 ? `${Math.round(s.recovered_schedule_h)} sa bağlantı` : '—')}</i></span>
               </div>
             ))}
           </div>

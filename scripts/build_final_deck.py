@@ -516,40 +516,35 @@ bullets(
 page()
 
 # ═══════════════════════════ 08 bridge ═══════════════════════════
-base("OEE Kazanımı", "Tahminden OEE kazanımına geçiş", 9)
+base("OEE Kazanımı", "Tahmin OEE kazanımına nasıl bağlanıyor", 9)
 para(
-    "Tahmin doğruluğunu OEE kazanımına çeviren hesap zinciri şudur.",
+    "Tahminin OEE değeriyle bağı, ölçülmüş üç gerçeğe dayanır.",
     2.25,
     ML,
     CW,
     14,
     INK,
 )
-doee_txt = tr(f"{DEP['oee']['delta']['dOEE'] * 100:.1f}")
 numbox(
     [
         (f"%{DEP['recall']*100:.0f} recall", "önemli duruşların yakalanan oranı"),
         (f"{DEP['caught_downtime_h']:.0f} saat", "yakalanan duruşların toplam süresi"),
-        ("yüzde 35", "varsayılan müdahale etkinliği"),
-        (f"{DEP['prevented_h']:.0f} saat", "önlenebilen duruş süresi"),
-        (f"+{doee_txt} puan", "OEE artışı"),
+        ("Önceden işaretlenir", "körlemesine değil, önceden bilinerek ele alınır"),
     ],
     2.85,
-    h=1.35,
+    h=1.45,
 )
 bullets(
     [
         "Model held-out dönemde önemli duruşların yüzde 69'unu yakaladı. Bu duruşların içindeki toplam "
-        "duruş süresi 2062 saattir.",
-        "Yakalanan sürenin tamamını önlediğimizi iddia etmiyoruz. Önceden uyarılan bakım ekibinin bu "
-        "sürenin bir kısmını önleyebileceğini varsayıyoruz. Bu oranı, açıkça etiketlenmiş bir varsayım "
-        "olarak yüzde 35 aldık. Böylece 2062 saatin 722 saati önlenebilir kabul edildi.",
-        "OEE artışı şöyle hesaplanır: beş Fanuc makinesinin toplam OEE bileşenlerinden plansız duruş "
-        "722 saat azaltılır ve aynı OEE formülü yeniden çalıştırılır. Kullanılabilirlik yükselir, "
-        "Performans ve Kalite değişmez, sonuç OEE'de 10,4 puanlık artıştır.",
+        "duruş süresi 2062 saattir; bu, Fanuc hücresinin tüm plansız duruş süresinin yaklaşık yüzde 75'idir.",
+        "Yakalanan duruşlar artık körlemesine yaşanmaz, önceden bilinir. Böylece duruş süresi ele "
+        "alınabilir bir hedefe dönüşür.",
+        "Bu sürenin azaltılmasının OEE etkisi What-If senaryolarında somutlaşır. En büyük plansız duruş "
+        "kalemini yüzde 30 azaltmak Makine 1'de OEE'yi 18, Makine 5'te 15 puan yükseltir.",
     ],
-    4.45,
-    gap=0.13,
+    4.75,
+    gap=0.15,
 )
 page()
 
@@ -699,55 +694,14 @@ bullets(
 )
 page()
 
-# ═══════════════════════════ 11 finansal çerçeve ═══════════════════════════
-base("Finansal Çerçeve", "Para birimi neden ayrı tutuluyor", 12)
-bullets(
-    [
-        "Veri setinde hiçbir maliyet veya satış bilgisi yoktur. Bu yüzden tüm para birimi değerleri "
-        "ölçülmüş veri değil, açıkça etiketlenmiş varsayımdır. Sunumda öne çıkardığımız sonuç fiziksel "
-        "kazanımdır: geri kazanılan saat, üretilen parça ve OEE puanı.",
-        "Varsayımlarımız şunlardır: bir saat duruşun maliyeti 80 avro, bir önleyici müdahalenin maliyeti "
-        "300 avro, müdahale etkinliği yüzde 35.",
-        "Para birimi katmanı bir gerçeği görünür kılar: değer ile maliyet aynı eşikte bağlanır. Her alarm, "
-        "ister doğru ister yanlış olsun, bir müdahale maliyeti doğurur. Eşiği çok düşük tutarsak yakaladığımız "
-        "duruş artar fakat yanlış alarm maliyeti kazanımı aşar.",
-        f"Bu yüzden eşik seçimi finansal bir karardır. Ekonomik açıdan en iyi nokta eşik {tr(ECON['threshold'])} "
-        f"değerindedir. Bu noktada yıllık 33 müdahale ile yaklaşık {ECON['annualized_net_eur']:,.0f} avro net "
-        "kazanç projeksiyonu oluşur. Karar müşterinin gerçek maliyetleriyle netleşir.",
-    ],
-    2.3,
-    gap=0.22,
-)
-page()
-
-# ═══════════════════════════ 12 sınırlar ═══════════════════════════
-base("Sınırlar", "Neyi yapamayacağımızı da söylüyoruz", 13)
-bullets(
-    [
-        "Kondisyon sinyalleri (sıcaklık, yük) veride boştur. Bu yüzden tahminin tavanını modelin gücü "
-        "değil, verinin kendisi belirler.",
-        "Plansız duruşlar tek bir genel etiket taşır. Bu nedenle kök neden analizi olayların ne olduğunu "
-        "ve ne zaman olduğunu Pareto ile sıralayabilir, fakat cihaz düzeyinde nedenini yalnızca alarm "
-        "verisi bulunan Makine 1 ve Makine 2 için söyleyebilir.",
-        "Toplam veride Performans neredeyse her zaman 1 değerine doygundur ve Kalite hurda kaydı olmadığı "
-        "için 1'dir. Bu yüzden mevcut OEE pratikte Kullanılabilirlik tarafından belirlenir ve What-If "
-        "kaldıracı da Kullanılabilirlik üzerinden çalışır.",
-        "Mitsubishi makineleri 30 dakikalık ufukta zayıf tahmin verir. Makineler arası sistemik bağın "
-        "kökü, tek etiket sorunu yüzünden adlandırılamaz.",
-    ],
-    2.3,
-    gap=0.22,
-)
-page()
-
-# ═══════════════════════════ 13 sonuç ═══════════════════════════
-base("Sonuç", "Tahmin eder, açıklar, sayısallaştırır", 14)
+# ═══════════════════════════ 12 sonuç ═══════════════════════════
+base("Sonuç", "Tahmin eder, açıklar, sayısallaştırır", 12)
 statcards(
     [
         ("2,38×", "Fanuc duruş tahmini lift"),
-        ("+10,4 puan", "kestirimci bakım OEE etkisi"),
+        ("2062 saat", "önceden yakalanan duruş süresi"),
         ("z = 5,16", "senkron duruş anlamlılığı"),
-        ("+18 pp", "en iyi What-If senaryosu"),
+        ("+18 puan", "en iyi What-If OEE kazanımı"),
     ],
     2.45,
 )

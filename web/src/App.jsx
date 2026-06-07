@@ -269,7 +269,7 @@ function Overview({ data }) {
           <div className="rows">
             {sc.map((s) => (
               <div className="row sc" key={s.id}>
-                <span>{s.scenario}</span>
+                <span>{s.id} · {s.machine !== 'PLANT' ? s.machine.replace('Makine ', 'M') + ' · ' : ''}{s.scenario}</span>
                 <span className="num"><b className={s.delta_OEE_pp > 0 ? 'green' : 'dim'}>+{s.delta_OEE_pp} pp</b>
                   <i className={s.net_eur >= 0 ? 'green' : 'red'}>{fmtEur(s.net_eur)}</i></span>
               </div>

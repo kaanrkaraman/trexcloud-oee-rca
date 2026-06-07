@@ -66,7 +66,7 @@ def connectivity_row():
         offline["duration_milliseconds"], errors="coerce").fillna(0).sum() / 3.6e6)
     return {
         "id": "S4",
-        "scenario": "Tesis genelinde bağlantı düzeltildi",
+        "scenario": "Tesis genelinde bağlantı kesintisi giderilir",
         "machine": "PLANT",
         "scope": f"{len(offline)} tekilleştirilmiş collector offline penceresi",
         "owner": "IT / ağ",
@@ -135,24 +135,27 @@ def main():
         f"{m1_top['reason']} / tüm OEE baseline dönemi", "Bakım", r1, f1, days1,
         note=f"{m1_top['reason']} süresi %30 azaltılır; etki A ve OEE üzerinden hesaplanır."))
 
-    m2, days2 = aggregate_machine(base, "Makine 2")
+    m5, days5 = aggregate_machine(base, "Makine 5")
+    m5_top = pareto[(pareto["machine"] == "Makine 5") &
+                    ~pareto["reason"].str.contains("Offline|Connect", case=False, na=False)] \
+        .sort_values("hours", ascending=False).iloc[0]
     r2 = whatif.run_scenario(
-        m2, whatif.ScenarioSpec("W2", category="Duruş", abs_ms=8 * 3.6e6),
-        category_ms=8 * 3.6e6)
-    f2 = whatif.compute_financials(r2, assumptions, period_days=days2)
+        m5, whatif.ScenarioSpec("W1", 0.30, str(m5_top["reason"])),
+        category_ms=float(m5_top["hours"]) * 3.6e6)
+    f2 = whatif.compute_financials(r2, assumptions, period_days=days5)
     rows.append(scenario_row(
-        "S2", "8 saat plansız -> planlı bakım", "Makine 2",
-        "Tüm OEE baseline dönemi; sınıflandırma/program değişikliği", "Bakım planlama",
-        r2, f2, days2,
-        note="8 saat plansız duruş planlı bakıma taşınır; A yükselir fakat runtime kazanılmaz."))
+        "S2", "En büyük plansız duruş kalemi -%30", "Makine 5",
+        f"{m5_top['reason']} / tüm OEE baseline dönemi", "Bakım", r2, f2, days5,
+        note=f"{m5_top['reason']} süresi %30 azaltılır; ikinci bir makinede de etki A ve OEE üzerinden gelir."))
 
-    m4, days4 = aggregate_machine(base, "Makine 4")
-    r3 = whatif.run_scenario(m4, whatif.ScenarioSpec("W4", 0.10))
-    f3 = whatif.compute_financials(r3, assumptions, period_days=days4)
+    m3, days3 = aggregate_machine(base, "Makine 3")
+    r3 = whatif.run_scenario(m3, whatif.ScenarioSpec("W4", 0.10))
+    f3 = whatif.compute_financials(r3, assumptions, period_days=days3)
     rows.append(scenario_row(
-        "S3", "Performans/çevrim +%10", "Makine 4",
-        "Tüm OEE baseline dönemi; ProductSum=0", "Proses mühendisliği", r3, f3, days4,
-        note="ProductSum=0 olduğu için P kolu inerttir; OEE veya finansal fayda üretmez."))
+        "S3", "Çevrim süresi +%10", "Makine 3",
+        "Tüm OEE baseline dönemi; Performans kaldıracı", "Proses mühendisliği", r3, f3, days3,
+        note=("Üretim yapılan 777 makine gününün 605'inde P tam 1, 172'sinde 0 ve arada hiçbir gün "
+              "yoktur. P bu veride dejeneredir, bu yüzden çevrim iyileştirmesi OEE'yi oynatmaz.")))
 
     rows.append(connectivity_row())
     payload = {

@@ -1,553 +1,280 @@
-import React, { useEffect, useMemo, useState } from 'react'
-import { Panel, Stat, Tag, RiskChart, ParetoChart, OeeBars, TelemetrySpark, SyncBars, DeviationBars } from './components.jsx'
-import {
-  recompute, whatIfW1, financials, pmFinancials,
-  fmtPct, fmtInt, fmtH, fmtEur, oeeColor,
-} from './lib.js'
+import React, { useMemo, useState, useEffect } from 'react'
+import { Panel, Stat, Tag, RiskChart, ParetoChart, OeeBars, SyncBars, DeviationBars } from './components.jsx'
+import { whatIfW1, financials, fmtPct, fmtInt, fmtH, fmtEur, oeeColor } from './lib.js'
 
 const FANUC = ['Makine 1', 'Makine 2', 'Makine 3', 'Makine 5', 'Makine 9']
 const NAV = [
-  { id: 'overview', label: 'Genel Bakış', icon: '◳' },
-  { id: 'predict', label: 'Tahmin → Aksiyon', icon: '◈' },
-  { id: 'cross', label: 'Çapraz Makine', icon: '⊞' },
+  { id: 'predict', label: 'Kestirimci Bakım', icon: '◈' },
+  { id: 'cross', label: 'Senkron Duruşlar', icon: '⊞' },
+  { id: 'overview', label: 'Filo & OEE', icon: '▦' },
 ]
+const ASSUM = { margin_per_piece: 12, downtime_cost_per_hour: 80, intervention_cost: 300, horizon_days: 30, currency: 'EUR' }
 
 export default function App() {
   const [data, setData] = useState(null)
-  const requestedView = new URLSearchParams(window.location.search).get('view')
-  const [view, setView] = useState(
-    NAV.some((item) => item.id === requestedView) ? requestedView : 'predict',
-  )
+  const q = new URLSearchParams(window.location.search).get('view')
+  const [view, setView] = useState(NAV.some((n) => n.id === q) ? q : 'predict')
   useEffect(() => { fetch('data/bundle.json').then((r) => r.json()).then(setData) }, [])
-  if (!data) return <Boot />
+  if (!data) return <div className="boot"><div className="stat"><div className="v">…</div><div className="l">yükleniyor</div></div></div>
 
   return (
     <div className="shell">
       <aside className="rail">
         <div className="brand">
           <div className="dot" />
-          <div>
-            <div className="name">trexCloud</div>
-            <div className="sub">predictive oee · rca</div>
-          </div>
+          <div><div className="name">trexCloud</div><div className="sub">predictive oee · rca</div></div>
         </div>
-        <div className="navlabel">Panolar</div>
         {NAV.map((n) => (
-          <div key={n.id} className={`navitem ${view === n.id ? 'active' : ''}`}
-            onClick={() => setView(n.id)}>
+          <div key={n.id} className={`navitem ${view === n.id ? 'active' : ''}`} onClick={() => setView(n.id)}>
             <span className="k">{n.icon}</span>{n.label}
           </div>
         ))}
-        <div className="foot">
-          12 makine · {fmtInt(7.4e6)} telemetri satırı<br />
-          model: HistGBDT · ROC {data.fanuc.meta.ROC_AUC}<br />
-          Ağu 2025 – May 2026
-        </div>
+        <div className="foot">12 makine · 7,4M telemetri<br />HistGBDT · ROC {data.fanuc.meta.ROC_AUC}</div>
       </aside>
       <main className="main">
-        {view === 'overview' && <Overview data={data} go={setView} />}
         {view === 'predict' && <Predict data={data} />}
         {view === 'cross' && <Cross data={data} />}
+        {view === 'overview' && <Overview data={data} />}
       </main>
     </div>
   )
 }
 
-const Boot = () => (
-  <div style={{ display: 'grid', placeItems: 'center', height: '100vh' }}>
-    <div className="stat"><div className="v">…</div><div className="l">veri yükleniyor</div></div>
-  </div>
-)
-
-/* ───────────────────────── OVERVIEW ───────────────────────── */
-function Overview({ data, go }) {
-  const [sel, setSel] = useState('Makine 1')
-  const tel = data.machines.filter((m) => m.has_telemetry)
-  const plantOEE = tel.reduce((s, m) => s + m.oee, 0) / tel.length
-  const totalDown = data.machines.reduce((s, m) => s + m.down_h, 0)
-  const m = data.machines.find((x) => x.name === sel)
-  return (
-    <>
-      <header className="head">
-        <div>
-          <h1>Genel Bakış</h1>
-          <div className="lede">12 makinelik CNC + lazer tesisi. Renkler <b>rejimi</b> gösterir:
-            yeşil = Fanuc üretim hücresi (tahmin edilebilir), kehribar = Mitsubishi (yalnız RCA/OEE),
-            gri = telemetrisiz. Bir makineye tıklayıp bileşenlerini görün.</div>
-        </div>
-        <div className="badge">PLATIN HEDEFİ · çapraz-makine + ΔOEE + finansal</div>
-      </header>
-
-      <div className="grid g3" style={{ marginBottom: 14 }}>
-        <Panel cls="d1"><Stat label="Tesis ort. OEE (telemetrili)" value={fmtPct(plantOEE)} /></Panel>
-        <Panel cls="d2"><Stat label="Toplam plansız duruş" value={fmtH(totalDown)} plain /></Panel>
-        <Panel cls="d3"><Stat label="Fanuc tahmin modeli · kazanç" value={`${data.fanuc.meta.lift}×`} /></Panel>
-      </div>
-
-      <div className="grid g-2-1">
-        <Panel title="Makine Filosu — rejime göre" icon="▦" cls="d2"
-          cap="OEE = Kullanılabilirlik × Performans × Kalite. <b>P</b> üretim sayımı olmayan günlerde 0; <b>Q</b> hurda kaydı olmadığından 1.">
-          <div className="mgrid">
-            {data.machines.map((mc) => {
-              const c = mc.regime.startsWith('Fanuc') ? 'green' : mc.regime.startsWith('Mits') ? 'amber' : 'dim'
-              return (
-                <div key={mc.name} className={`mcard ${sel === mc.name ? 'sel' : ''}`}
-                  onClick={() => setSel(mc.name)}>
-                  <div className="mn">{mc.name}<Tag kind={c}>{mc.vendor}</Tag></div>
-                  <div className="oee" style={{ color: oeeColor(mc.oee) }}>{fmtPct(mc.oee)}</div>
-                  <div className="bar"><i style={{ width: `${mc.oee * 100}%` }} /></div>
-                  <div className="meta">{mc.has_telemetry ? `duruş ${mc.down_h} sa` : 'telemetri YOK'}</div>
-                </div>
-              )
-            })}
-          </div>
-        </Panel>
-
-        <Panel title={`${sel} — KPI ayrışımı`} icon="◷" cls="d3"
-          cap="Bu makinenin tüm dönem bileşenlerinden yeniden hesaplanan OEE.">
-          <div className="grid" style={{ gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-            <Stat label="OEE" value={fmtPct(m.oee)} />
-            <Stat label="Kullanılabilirlik" value={fmtPct(m.A)} plain />
-            <Stat label="Performans" value={fmtPct(m.P)} plain />
-            <Stat label="Kalite" value={fmtPct(m.Q)} plain />
-          </div>
-          <div className="scope" style={{ marginTop: 14 }}>
-            Rejim: <b>{m.regime}</b>
-          </div>
-        </Panel>
-      </div>
-
-      <div style={{ height: 14 }} />
-      <Panel title="Duruş Pareto — arıza vs bağlantı" icon="▬" cls="d4"
-        cap="<b>Kırmızı</b> = makine arızası (giderilebilir). <b>Gri</b> = System Offline / bağlantı kesintisi — bir IT/ağ sorunudur, makine OEE'sini geri kazandırmaz. TurboCut en büyük duruş kaynağı ama telemetrisi yok.">
-        <ParetoChart rows={data.pareto} />
-      </Panel>
-    </>
-  )
-}
-
-/* ───────────────────────── PREDICT → ACTION ───────────────────────── */
+/* ── 1. PREDICT → ROOT CAUSE → WHAT-IF (the whole story, one screen) ── */
 function Predict({ data }) {
   const [machine, setMachine] = useState('Makine 1')
   const meta = data.fanuc.meta
+  const dep = data.pm_value.deployed
   const eps = data.fanuc.episodes[machine] || []
-  const [epIdx, setEpIdx] = useState(0)
-  const ep = eps[epIdx]
+  const [ei, setEi] = useState(0)
+  const ep = eps[ei]
   const mc = data.machines.find((x) => x.name === machine)
 
   return (
     <>
       <header className="head">
         <div>
-          <h1>Tahmin → Kök-Neden → What-If</h1>
-          <div className="lede">Altın + Platin senaryosu tek ekranda: model bir <b>yüksek-risk dönemi</b> işaretler →
-            RCA <b>nedeni</b> açıklar → What-If <b>OEE / € geri kazanımını</b> ölçer.</div>
+          <h1>Kestirimci Bakım</h1>
+          <div className="lede">Model bir duruşu <b>önceden işaretler</b> · RCA <b>nedenini</b> bulur ·
+            What-If <b>OEE & € kazanımını</b> ölçer.</div>
         </div>
-        <div className="badge">tutulmamış gelecek üzerinde · ROC {meta.ROC_AUC}</div>
+        <Tag kind="green">ALTIN + PLATİN</Tag>
       </header>
 
-      <div className="scope" style={{ marginBottom: 14 }}>
-        <b>Kapsam (tasarım gereği):</b> tahmin katmanı <b>Fanuc üretim hücresi {`{1,2,3,5,9}`}</b> içindir —
-        duruş öncesi sinyali taşıyan cycle-time / run-state sinyalleri yalnız burada akıyor. Mitsubishi {`{7,8}`}
-        bu sinyallerden yoksun (tahmin ≈ rastlantı) → RCA/OEE'de kapsanıyor, atılmıyor. {`{4,6,10,TurboCut,ARES}`} telemetrisiz.
+      <div className="grid g4 kpis">
+        <Panel cls="d1"><Stat label="ROC-AUC" value={meta.ROC_AUC} /></Panel>
+        <Panel cls="d2"><Stat label="Lift" value={`${meta.lift}×`} /></Panel>
+        <Panel cls="d3"><Stat label="Recall" value={fmtPct(dep.recall)} plain
+          sub={`${dep.caught_stops}/${dep.significant_stops} önemli duruş`} /></Panel>
+        <Panel cls="d4"><Stat label="ΔOEE (kestirimci)"
+          value={`+${(dep.oee.delta.dOEE * 100).toFixed(1)} puan`} /></Panel>
       </div>
 
-      <div className="grid g3" style={{ marginBottom: 14 }}>
-        <Panel cls="d1"><Stat label="ROC-AUC (Fanuc)" value={meta.ROC_AUC} /></Panel>
-        <Panel cls="d2"><Stat label="Taban-üstü kazanç" value={`${meta.lift}×`} /></Panel>
-        <Panel cls="d3"><Stat label="Dönem isabeti"
-          value={`${Math.round(meta.episode_precision * 100)}%`} plain /></Panel>
+      <div className="ctl mt">
+        <span className="ctl-lbl">Makine</span>
+        {FANUC.map((m) => (
+          <button key={m} className={`pill ${m === machine ? 'on' : ''}`}
+            onClick={() => { setMachine(m); setEi(0) }}>{m.replace('Makine ', 'M')}</button>
+        ))}
       </div>
 
-      <div className="ctl" style={{ marginBottom: 12 }}>
-        <label className="fld">Fanuc makinesi
-          <select value={machine} onChange={(e) => { setMachine(e.target.value); setEpIdx(0) }}>
-            {FANUC.map((m) => <option key={m}>{m}</option>)}
-          </select>
-        </label>
-      </div>
-
-      {/* 1 — PREDICT */}
-      <Panel title="1 · Tahmin — duruş-risk zaman çizgisi" icon="◈" cls="d2"
-        cap={`Mavi çizgi = tahmin edilen risk. Kırmızı kesikli = alarm eşiği (${meta.threshold}). Kırmızı ×'ler = gerçekleşen ≥15 dk plansız duruşlar. Sarı çizgi = seçili dönem. Modelin bu pencereyi <b>hiç görmediğini</b> unutmayın.`}>
+      {/* PREDICT */}
+      <Panel title="1 · Tahmin — duruş riski (tutulmamış gelecek)" icon="◈" cls="d2"
+        cap={`Yeşil çizgi = risk · kırmızı kesikli = alarm eşiği · kırmızı × = gerçek duruş · sarı = seçili dönem.`}>
         <RiskChart points={data.fanuc.risk[machine] || []} threshold={meta.threshold}
           stops={data.fanuc.stops[machine] || []} episode={ep} />
         {eps.length > 0 && (
-          <>
-            <div className="cap" style={{ marginBottom: 8 }}>Yüksek-risk dönemleri (riske göre sıralı) — birini seçin:</div>
-            <div className="btnrow">
-              {eps.map((e, i) => (
-                <div key={i} className={`chip ${i === epIdx ? 'on' : ''}`} onClick={() => setEpIdx(i)}>
-                  {e.start.slice(5)} · pik {(e.peak * 100).toFixed(0)}% ·{' '}
-                  {e.hit ? <span className="hit">gerçek duruş ⚠</span> : <span className="nohit">duruş yok</span>}
-                </div>
-              ))}
-            </div>
-          </>
+          <div className="btnrow mt-s">
+            {eps.slice(0, 6).map((e, i) => (
+              <button key={i} className={`pill ${i === ei ? 'on' : ''}`} onClick={() => setEi(i)}>
+                {e.start.slice(5, 10)} · {(e.peak * 100).toFixed(0)}%{e.hit ? ' ⚠' : ''}
+              </button>
+            ))}
+          </div>
         )}
       </Panel>
 
-      <div style={{ height: 14 }} />
+      {/* RCA */}
+      <RcaPanel data={data} machine={machine} />
 
-      {/* 2 — RCA */}
-      <RcaPanel data={data} machine={machine} ep={ep} />
+      {/* WHAT-IF */}
+      <WhatIf machine={mc} />
 
-      <div style={{ height: 14 }} />
-
-      {/* 3 — PREDICTIVE-MAINTENANCE VALUE */}
-      <PmValue pm={data.pm_value} />
-
-      <div style={{ height: 14 }} />
-
-      {/* 4 — WHAT-IF */}
-      <WhatIf machine={mc} assumptions={data.whatif_assumptions} />
-
-      <div style={{ height: 14 }} />
-
-      <ScenarioCatalog catalog={data.scenarios} />
+      <div className="foot-note">Tahmin kapsamı: <b>Fanuc hücresi {`{1,2,3,5,9}`}</b> — duruş öncesi sinyali
+        yalnız burada akıyor. Mitsubishi {`{7,8}`} RCA/OEE'de kapsanır; {`{4,6,10,TurboCut,ARES}`} telemetrisiz.</div>
     </>
   )
 }
 
-function RcaPanel({ data, machine, ep }) {
-  const isFlagship = machine === 'Makine 1' && data.rca_demo?.card
-  if (isFlagship) {
-    const d = data.rca_demo, card = d.card
-    const cas = card.cascade
+function RcaPanel({ data, machine }) {
+  if (machine === 'Makine 1' && data.rca_demo?.card) {
+    const d = data.rca_demo, card = d.card, cas = card.cascade
     return (
-      <Panel title="2 · Kök-Neden — baseline sapma + çok-sinyal → nedensellik" icon="◎" cls="d3"
-        cap="Altın kriteri: birden çok sinyalin baseline'dan sapması (robust-z) saptanır ve alarm kaskadı nedensel önceliğe göre sıralanarak kök nedene inilir.">
-        <div className="grid g-2-1">
+      <Panel title="2 · Kök-Neden — baseline sapma → nedensellik zinciri" icon="◎" cls="d3"
+        cap="Altın: çok-sinyal baseline sapması (robust-z) + alarmların nedensel önceliğe göre sıralanması.">
+        <div className="rca">
           <div>
-            <div style={{ marginBottom: 6 }}><Tag kind="red">{card.pattern}</Tag>
-              <span style={{ marginLeft: 8, color: 'var(--text-2)', fontSize: 13 }}>
-                tetik: {card.trigger}</span></div>
-            {cas && (
-              <>
-                <div className="cap" style={{ border: 0, padding: 0, margin: '10px 0 4px' }}>
-                  Alarm kaskadı (nedensel önceliğe göre sıralı, indekse göre değil):</div>
-                <div className="cascade">
-                  {cas.alarms.map((a, i) => (
-                    <React.Fragment key={i}>
-                      <span className={`casc-node ${a === cas.root_alarm ? 'root' : ''}`}>{a}</span>
-                      {i < cas.alarms.length - 1 && <span className="casc-arrow">→</span>}
-                    </React.Fragment>
-                  ))}
-                </div>
-                <div className="cap" style={{ marginTop: 8 }}>Kök neden:
-                  <b style={{ color: 'var(--red)' }}> {cas.root_alarm}</b> ({cas.root_category})</div>
-              </>
-            )}
-            {d.deviation?.length > 0 && (
-              <>
-                <div className="ptitle" style={{ fontSize: 11, marginTop: 14 }}>
-                  Baseline sapma imzası (robust-z, olay penceresi)</div>
-                <DeviationBars dev={d.deviation} />
-                <div className="cap">Olay anında baseline'dan en çok sapan sinyaller. <b>run_state ▼7.7σ</b> =
-                  makine duruyor; cycle_time de sapıyor. Bu çok-sinyal sapması alarm kaskadını
-                  <b> doğruluyor</b> — sapma burada eşzamanlı kanıttır, öngörücü değil (dürüst not).</div>
-              </>
-            )}
-            <ul className="evid">{card.evidence.map((e, i) => <li key={i}>{e}</li>)}</ul>
-            <div className="note" style={{ color: 'var(--green-bright)', borderColor: 'var(--line-2)', background: 'var(--green-dim)' }}>
-              Önerilen aksiyon: {card.recommended_action}</div>
+            {cas && <>
+              <div className="cascade">
+                {cas.alarms.map((a, i) => (
+                  <React.Fragment key={i}>
+                    <span className={`casc-node ${a === cas.root_alarm ? 'root' : ''}`}>{a}</span>
+                    {i < cas.alarms.length - 1 && <span className="casc-arrow">→</span>}
+                  </React.Fragment>
+                ))}
+              </div>
+              <div className="kv">Kök neden: <b className="red">{cas.root_alarm}</b></div>
+            </>}
+            <div className="kv ok">Aksiyon: {card.recommended_action}</div>
           </div>
           <div>
-            <div className="ptitle" style={{ fontSize: 11 }}>Telemetri (alarm penceresi)</div>
-            {d.telemetry.map((t) => <TelemetrySpark key={t.role} role={t.role} points={t.points} />)}
-            <div className="ptitle" style={{ fontSize: 11, marginTop: 14 }}>Sıralı hipotezler</div>
-            {card.hypotheses.slice(0, 3).map((h, i) => (
-              <div className="hyp" key={i}>
-                <div className="c">{h.cause}</div><div className="lk">{(h.likelihood * 100).toFixed(0)}%</div>
-                <div className="a">{h.recommended_action}</div>
-              </div>
-            ))}
+            <div className="mini-h">Baseline sapma imzası</div>
+            <DeviationBars dev={d.deviation} />
+            <div className="cap n">Olay anında baseline'dan sapan sinyaller — alarm kaskadını doğrular.</div>
           </div>
         </div>
       </Panel>
     )
   }
-  // non-alarm Fanuc machines — honest Pareto-based RCA
-  const par = data.pareto.filter((p) => p.machine === machine)
+  const par = data.pareto.filter((p) => p.machine === machine).slice(0, 4)
   return (
-    <Panel title="2 · Kök-Neden — neden duruyor" icon="◎" cls="d3">
-      <div className="note">ℹ️ Bu makinenin plansız duruşları tek bir genel etiket taşıyor (<b>Duruş</b>) —
-        alarm ayrıntısı yok. Bu yüzden RCA <b>ne / ne zaman</b> sıralar (Pareto + tekrar), cihaz düzeyinde
-        <b> neden</b> diyemez. Alarm düzeyinde kök-neden yalnız Makine 1 &amp; 2'de mevcut.</div>
-      <div className="cap" style={{ marginTop: 12 }}>{machine} için en büyük plansız duruş kalemleri:</div>
-      <table className="dt" style={{ marginTop: 8 }}>
-        <thead><tr><th>Neden</th><th>Olay</th><th>Saat</th></tr></thead>
-        <tbody>{par.length ? par.map((p, i) => (
-          <tr key={i}><td>{p.reason}</td><td className="num">{fmtInt(p.events)}</td>
-            <td className="num">{p.hours}</td></tr>
-        )) : <tr><td colSpan="3" className="cap">Bu makine için Pareto kalemi yok.</td></tr>}</tbody>
-      </table>
+    <Panel title="2 · Kök-Neden" icon="◎" cls="d3">
+      <div className="note">Bu makinenin plansız duruşları tek genel etiket taşır (<b>Duruş</b>) → RCA
+        <b> ne/ne zaman</b> sıralar (Pareto), cihaz düzeyinde <b>neden</b> diyemez (alarm yalnız M1 & M2).</div>
+      <div className="rows mt-s">
+        {par.length ? par.map((p, i) => (
+          <div className="row" key={i}><span>{p.reason}</span><b>{p.hours} sa</b></div>
+        )) : <div className="cap">Pareto kalemi yok.</div>}
+      </div>
     </Panel>
   )
 }
 
-function WhatIf({ machine, assumptions }) {
+function WhatIf({ machine }) {
   const [pct, setPct] = useState(50)
-  const [a, setA] = useState(assumptions)
-  const [valueAs, setValueAs] = useState('margin')
   const r = useMemo(() => whatIfW1(machine.components, pct / 100), [machine, pct])
-  const fin = useMemo(() => financials(r.recoveredH, r.extraPieces, a, valueAs), [r, a, valueAs])
-  const set = (k) => (e) => setA({ ...a, [k]: parseFloat(e.target.value) || 0 })
-
+  const fin = useMemo(() => financials(r.recoveredH, r.extraPieces, ASSUM, 'downtime_cost'), [r])
+  const dOEE = (r.after.OEE - r.before.OEE) * 100
   return (
-    <Panel title="4 · What-If — düzeltmenin OEE / € etkisi" icon="◇" cls="d4">
-      <div className="ctl" style={{ marginBottom: 12 }}>
-        <label className="fld" style={{ flex: 1, minWidth: 240 }}>
-          {machine.name} plansız duruşunu %{pct} azalt
-          <input type="range" min="0" max="100" value={pct} onChange={(e) => setPct(+e.target.value)} />
-        </label>
+    <Panel title="3 · What-If — düzeltmenin OEE & finansal etkisi" icon="◇" cls="d4">
+      <div className="ctl">
+        <span className="ctl-lbl">{machine.name} plansız duruşunu azalt</span>
+        <input type="range" min="0" max="100" value={pct} onChange={(e) => setPct(+e.target.value)} />
+        <b className="pct">%{pct}</b>
       </div>
-      <div className="grid g2">
-        <div>
-          <OeeBars before={r.before} after={r.after} />
-          <div className="cap">Geri kazanılan çalışma süresi: <b>{r.recoveredH.toFixed(0)} saat</b> ·
-            ek parça: <b>{fmtInt(r.extraPieces)}</b>. ΔOEE = <b style={{ color: 'var(--green)' }}>
-              +{((r.after.OEE - r.before.OEE) * 100).toFixed(1)} puan</b>.</div>
-        </div>
-        <div>
-          <div className="ptitle" style={{ fontSize: 11 }}>Finansal etki <span className="tag amber" style={{ marginLeft: 6 }}>VARSAYIM</span></div>
-          <div className="cap" style={{ marginBottom: 10 }}>Veri setinde maliyet/fiyat yok — tüm € değerleri
-            kullanıcı varsayımıdır, gerçek değil.</div>
-          <div className="grid" style={{ gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-            <label className="fld">Marj / parça
-              <input type="number" value={a.margin_per_piece} onChange={set('margin_per_piece')} /></label>
-            <label className="fld">Duruş maliyeti / saat
-              <input type="number" value={a.downtime_cost_per_hour} onChange={set('downtime_cost_per_hour')} /></label>
-            <label className="fld">Müdahale maliyeti
-              <input type="number" value={a.intervention_cost} onChange={set('intervention_cost')} /></label>
-            <label className="fld">Süreyi değerle
-              <select value={valueAs} onChange={(e) => setValueAs(e.target.value)}>
-                <option value="margin">marj</option><option value="downtime_cost">duruş maliyeti</option>
-              </select></label>
-          </div>
-          <div className="grid" style={{ gridTemplateColumns: '1fr 1fr', gap: 12, marginTop: 14 }}>
-            <Stat label={`Net / ${a.horizon_days}g`} value={`${fmtInt(fin.net)} ${a.currency}`} />
-            <Stat label="Geri ödeme (gün)" value={fin.payback ? fin.payback.toFixed(1) : '—'} plain />
-          </div>
+      <div className="wi">
+        <OeeBars before={r.before} after={r.after} />
+        <div className="wi-stats">
+          <Stat label="ΔOEE" value={`+${dOEE.toFixed(1)} puan`} />
+          <Stat label="Geri kazanılan" value={fmtH(r.recoveredH)} plain />
+          <Stat label="Net fayda / 30g" value={fmtEur(fin.net)} plain />
+          <div className="cap n">Varsayım: €80/saat duruş, €300 müdahale · veride maliyet yok.</div>
         </div>
       </div>
     </Panel>
   )
 }
 
-function PmValue({ pm }) {
-  const defaults = pm.assumptions
-  const [effectiveness, setEffectiveness] = useState(
-    Math.round(defaults.pm.intervention_effectiveness * 100))
-  const [downtimeCost, setDowntimeCost] = useState(
-    defaults.financial.downtime_cost_per_hour)
-  const [interventionCost, setInterventionCost] = useState(
-    defaults.financial.intervention_cost)
-  const result = useMemo(() => pmFinancials(
-    pm, effectiveness / 100, downtimeCost, interventionCost,
-  ), [pm, effectiveness, downtimeCost, interventionCost])
-  const d = pm.deployed
-
-  return (
-    <Panel title="3 · Kestirimci Bakım Getirisi — ROC/lift → OEE/€" icon="◆" cls="d4"
-      cap={`Tutulmamış gelecekte <b>${d.caught_stops}/${d.significant_stops}</b> anlamlı duruş
-        yakalandı (recall <b>${(d.recall * 100).toFixed(1)}%</b>). Değer yalnız yakalanan
-        duruşların varsayılan etkililik payından gelir; kaçırılan duruşlara değer yazılmaz.
-        Eşik <b>${d.threshold}</b> olarak sabittir.`}>
-      <div className="scope" style={{ marginBottom: 14 }}>
-        <b>Fanuc {`{1,2,3,5,9}`} / denetimli tahmin:</b> {d.episodes} alarm dönemi ·
-        dönem isabeti {(d.episode_precision * 100).toFixed(1)}% ·
-        yanlış alarm {d.false_alarm_episodes}. Her alarm dönemi, gerçek veya yanlış,
-        bir kontrol maliyeti doğurur.
-      </div>
-      <div className="ctl" style={{ marginBottom: 14 }}>
-        <label className="fld" style={{ minWidth: 250 }}>
-          Müdahale etkililiği %{effectiveness}
-          <input type="range" min="0" max="100" value={effectiveness}
-            onChange={(e) => setEffectiveness(+e.target.value)} />
-        </label>
-        <label className="fld">Duruş maliyeti / saat (€)
-          <input type="number" value={downtimeCost}
-            onChange={(e) => setDowntimeCost(parseFloat(e.target.value) || 0)} /></label>
-        <label className="fld">Alarm başı kontrol maliyeti (€)
-          <input type="number" value={interventionCost}
-            onChange={(e) => setInterventionCost(parseFloat(e.target.value) || 0)} /></label>
-      </div>
-      <div className="grid g3">
-        <div>
-          <div className="ptitle" style={{ fontSize: 11 }}>Tutulmamış test dönemi</div>
-          <div className="grid" style={{ gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-            <Stat label="Geri kazanılan saat" value={fmtH(result.preventedH)} />
-            <Stat label="ΔOEE" value={`+${(result.deltaOEE * 100).toFixed(2)} puan`} />
-            <Stat label="Net değer" value={fmtEur(result.observed.net)}
-              plain={result.observed.net < 0} />
-            <Stat label="ROI" value={result.observed.roi == null
-              ? '—' : `${(result.observed.roi * 100).toFixed(0)}%`}
-              plain={result.observed.roi < 0} />
-          </div>
-        </div>
-        <div>
-          <div className="ptitle" style={{ fontSize: 11 }}>365 gün projeksiyonu</div>
-          <div className="grid" style={{ gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-            <Stat label="Geri kazanılan saat / yıl"
-              value={fmtH(result.annualized.preventedH)} />
-            <Stat label="Brüt değer / yıl" value={fmtEur(result.annualized.gross)} plain />
-            <Stat label="Kontrol maliyeti / yıl"
-              value={fmtEur(result.annualized.intervention)} plain />
-            <Stat label="Net / yıl" value={fmtEur(result.annualized.net)}
-              plain={result.annualized.net < 0} />
-          </div>
-        </div>
-        <div>
-          <div className="ptitle" style={{ fontSize: 11 }}>
-            Ekonomik duyarlılık <Tag kind="amber">RETROSPEKTİF</Tag></div>
-          <div className="cap" style={{ border: 0, padding: 0 }}>
-            Denetim penceresinde net €'yu en yüksek yapan eşik
-            <b> {pm.sensitivity.economic_optimum.threshold.toFixed(2)}</b>.
-            Bu seçim recall'ı %{(pm.sensitivity.economic_optimum.recall * 100).toFixed(1)}
-            seviyesine indirip alarm sayısını {pm.sensitivity.economic_optimum.episodes}'e
-            düşürüyor. Canlı model eşiğinin yerine geçmez.
-          </div>
-          <div className="note">
-            <Tag kind="amber">VARSAYIM</Tag> Veri setinde maliyet veya müdahale etkililiği yoktur.
-            € sonuçları hipotezdir; recall ve alarm isabeti gerçek held-out ölçümlerdir.
-          </div>
-        </div>
-      </div>
-    </Panel>
-  )
-}
-
-function ScenarioCatalog({ catalog }) {
-  const [sort, setSort] = useState({ key: 'delta_OEE_pp', dir: -1 })
-  const rows = useMemo(() => [...(catalog.rows || [])].sort((a, b) => {
-    const av = a[sort.key], bv = b[sort.key]
-    if (typeof av === 'number' && typeof bv === 'number') return (av - bv) * sort.dir
-    return String(av ?? '').localeCompare(String(bv ?? '')) * sort.dir
-  }), [catalog, sort])
-  const order = (key) => setSort((s) => ({
-    key, dir: s.key === key ? -s.dir : -1,
-  }))
-  const head = (label, key) => (
-    <th className="sortable" onClick={() => order(key)}>
-      {label}{sort.key === key ? (sort.dir > 0 ? ' ▲' : ' ▼') : ''}
-    </th>
-  )
-
-  return (
-    <Panel title="5 · Senaryo Kataloğu — incelenebilir A/P/Q/OEE/€" icon="▤" cls="d5">
-      <div className="tablewrap">
-        <table className="dt">
-          <thead><tr>
-            {head('Senaryo', 'id')}{head('Makine / sahip', 'machine')}
-            {head('ΔA pp', 'delta_A_pp')}{head('ΔP pp', 'delta_P_pp')}
-            {head('ΔQ pp', 'delta_Q_pp')}{head('ΔOEE pp', 'delta_OEE_pp')}
-            {head('Runtime h', 'recovered_runtime_h')}
-            {head('Schedule h', 'recovered_schedule_h')}
-            {head('Net €', 'net_eur')}{head('Geri ödeme', 'payback_days')}
-          </tr></thead>
-          <tbody>{rows.map((r) => (
-            <tr key={r.id}>
-              <td><b>{r.id}</b> · {r.scenario}<div className="cellnote">{r.note}</div></td>
-              <td>{r.machine}<div className="cellnote">{r.owner}</div></td>
-              <td className="num">{r.delta_A_pp.toFixed(2)}</td>
-              <td className="num">{r.delta_P_pp.toFixed(2)}</td>
-              <td className="num">{r.delta_Q_pp.toFixed(2)}</td>
-              <td className={`num ${r.delta_OEE_pp > 0 ? 'win' : ''}`}>
-                {r.delta_OEE_pp.toFixed(2)}</td>
-              <td className="num">{r.recovered_runtime_h.toFixed(1)}</td>
-              <td className="num">{r.recovered_schedule_h.toFixed(1)}</td>
-              <td className={`num ${r.net_eur > 0 ? 'win' : r.net_eur < 0 ? 'lose' : ''}`}>
-                {fmtEur(r.net_eur)}</td>
-              <td className="num">{r.payback_days == null ? '—' : `${r.payback_days.toFixed(1)} g`}</td>
-            </tr>
-          ))}</tbody>
-        </table>
-      </div>
-      <div className="note">
-        <Tag kind="amber">VARSAYIM</Tag> Finansal oranlar kullanıcı varsayımıdır.
-        S4, bağlantı/IT aksiyonudur: schedule görünürlüğünü geri getirir fakat makine OEE'sine yazılmaz.
-      </div>
-    </Panel>
-  )
-}
-
-/* ───────────────────────── CROSS-MACHINE ───────────────────────── */
+/* ── 2. CROSS-MACHINE (Platinum) ── */
 function Cross({ data }) {
   const cm = data.crossmachine
   const sync = cm.synchronization
-  const cluster = cm.coupling?.running?.clusters?.[0] || []
-  const regimeEntries = Object.entries(cm.regimes || {})
-  const rm = (data.regime_models || []).filter(
-    (r) => r.experiment === 'cross' && r.model === 'hist_gbdt')
-
+  const regimes = Object.entries(cm.regimes || {})
   return (
     <>
       <header className="head">
         <div>
-          <h1>Çapraz Makine & Rejimler</h1>
-          <div className="lede">Platin kriteri: çapraz-makine örüntüleri. Buradaki her iddia <b>boş-model
-            (null) testinden</b> geçti — şansa ya da ortak vardiyaya bağlı olanları dürüstçe ayırdık.</div>
+          <h1>Senkron Duruşlar</h1>
+          <div className="lede">Her iddia <b>null-model testinden</b> geçti — şansa ve ortak vardiyaya
+            bağlı olanları ayıkladık.</div>
         </div>
-        <div className="badge">dürüst · null-model destekli</div>
+        <Tag kind="green">PLATİN</Tag>
       </header>
 
-      <Panel title="Eski yöntemin tuzağı" icon="⚠" cls="d1"
-        cap="Eski 'recurrence' yöntemi CONNECTIVITY'yi 1 numaralı sistemik bulgu sayıyordu — ama bu, tek bir System Offline kaydının aynı instance_id'deki makinelere kopyalanmasıdır. Yani örüntü 'tespit' değil, kayıt tekrarıdır. Yeni yöntem bunu ayıkladı.">
-        <div className="ctl">
-          <Tag kind="red">eski: CONNECTIVITY sıra #{cm.old_connectivity_rank} = totoloji</Tag>
-          <Tag kind="green">yeni: null-model + rejim haritası + kümeleme</Tag>
-        </div>
+      <Panel title="Eşzamanlı duruşlar — şansın ötesinde mi?" icon="◫" cls="d1"
+        cap={`Saat-içi vardiya ritmini koruyan null bile aşılıyor → <b>z=${sync.daily?.z}, p<0.001</b>. Yani 'herkes vardiyada durdu' değil; gerçek senkronizasyon.`}>
+        <SyncBars sync={sync} />
       </Panel>
 
-      <div style={{ height: 14 }} />
-      <div className="grid g2">
-        <Panel title="Eşzamanlı duruşlar — şansın ötesinde mi?" icon="◫" cls="d2"
-          cap={`≥2 makinenin aynı saatte ≥15dk plansız duruşa başlaması: <b>${sync.observed_co_stop_hours} saat</b>. Saat-içi ritmi koruyan null beklentisinin (${Math.round(sync.daily?.exp)}) çok üstünde → <b>z=${sync.daily?.z}, p&lt;0.001</b>. Yani 'herkes vardiya değişiminde durdu' değil; gerçek bir senkronizasyon var.`}>
-          <SyncBars sync={sync} />
-        </Panel>
-
-        <Panel title="Veri rejimleri — hangi makineler birlikte modellenebilir" icon="⊞" cls="d3"
-          cap="Sinyal <b>kullanılabilirliğinden</b> türetildi, katalogdan değil. Vendor aileleri neredeyse hiç ortak sütun paylaşmıyor; cycle_time bile makineler arası 8× ölçek farkı taşıyor → makine-içi normalizasyon şart.">
-          {regimeEntries.map(([pat, ms], i) => (
-            <div key={i} style={{ marginBottom: 10 }}>
-              <div className="ctl" style={{ marginBottom: 4 }}>
+      <div className="grid g2 mt">
+        <Panel title="Veri rejimleri — birlikte modellenebilir mi?" icon="⊞" cls="d2"
+          cap="Sinyal kullanılabilirliğinden türetildi. Vendor aileleri ortak sütun paylaşmıyor → ancak rejim içinde, makine-içi normalizasyonla.">
+          {regimes.map(([pat, ms], i) => (
+            <div className="regime" key={i}>
+              <div className="ctl-tags">
                 {ms.map((m) => <Tag key={m} kind={FANUC.includes(m) ? 'green' : pat === '(blind)' ? 'dim' : 'amber'}>{m.replace('Makine', 'M')}</Tag>)}
               </div>
-              <div className="cap" style={{ border: 0, padding: 0 }}>{pat === '(blind)' ? 'telemetrisiz' : pat}</div>
+              <div className="cap n">{pat === '(blind)' ? 'telemetrisiz' : pat}</div>
             </div>
           ))}
         </Panel>
-      </div>
-
-      <div style={{ height: 14 }} />
-      <div className="grid g2">
-        <Panel title="Eşleşen küme — ama dürüst okuma" icon="◈" cls="d4"
-          cap="Skor seviyelerinde {1,2,3,9} güçlü korele (r≤0.91), ama <b>türev alınınca (olay ölçeği) korelasyon ~0'a düşüyor</b>. Yani ortak bir <b>yavaş zarf</b> (çok-haftalık çalışma ritmi) paylaşıyorlar — eşzamanlı arıza yayılımı DEĞİL. Aksini iddia etmek yanlış olurdu.">
-          <div className="ctl">
-            {cluster.map((m) => <Tag key={m} kind="green">{m.replace('Makine', 'M')}</Tag>)}
-            <Tag kind="dim">seviye r≤0.91</Tag><Tag kind="red">türev r≈0 → akut değil</Tag>
+        <Panel title="Dürüst okuma" icon="◈" cls="d3">
+          <div className="rows">
+            <div className="row"><span>Eski yöntemin #1 bulgusu (bağlantı kesintisi)</span><Tag kind="red">geçersiz · veri tekrarı</Tag></div>
+            <div className="row"><span>{`{1,2,3,9}`} kümesi · seviye r≤0.91</span><Tag kind="amber">ortak gün ritmi</Tag></div>
+            <div className="row"><span>günlük dalgalanma çıkarılınca · r≈0</span><Tag kind="dim">anlık bağ yok</Tag></div>
           </div>
-          <div className="note" style={{ marginTop: 12 }}>Plansız duruşların tamamı tek etiket taşıyor
-            (<b>Duruş</b>) → MES verisi 'aynı neden' korelasyonunu doğrulayamaz. Bu bir negatif bulgu,
-            saklamıyoruz.</div>
+          <div className="note mt-s">Tüm plansız duruşlar tek etiket (<b>Duruş</b>) → MES verisi 'aynı neden'
+            korelasyonunu doğrulayamaz. Negatif bulgu, saklamıyoruz.</div>
         </Panel>
+      </div>
+    </>
+  )
+}
 
-        <Panel title="Rejim modelleri — birleştirmek işe yarıyor mu?" icon="▤" cls="d5"
-          cap="Aynı test satırları üzerinde HistGBDT. Birleştirme ham haliyle berabere; asıl kazanç <b>makine-içi z-norm</b>. Pooled 0.76 ROC kısmen taban-oranı şişmesiydi; dürüst makine-içi ROC ≈ 0.72 (Fanuc) / 0.63 (Mitsubishi).">
-          <table className="dt">
-            <thead><tr><th>Test</th><th>Eğitim</th><th>ROC</th><th>Kazanç</th></tr></thead>
-            <tbody>
-              {rm.map((r, i) => (
-                <tr key={i}>
-                  <td>{r.test_set}</td>
-                  <td>{r.train_regime}</td>
-                  <td className={`num ${r.train_regime === 'merged' ? 'win' : ''}`}>{r.ROC_AUC}</td>
-                  <td className="num">{r.lift_PRAUC_over_base}×</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+/* ── 3. FLEET & OEE (context) ── */
+function Overview({ data }) {
+  // only real, active machines: telemetry present AND non-zero downtime, highest OEE first
+  const fleet = data.machines
+    .filter((m) => m.has_telemetry && m.down_h > 0)
+    .sort((a, b) => b.oee - a.oee)
+  const [sel, setSel] = useState(fleet[0]?.name || 'Makine 1')
+  const plantOEE = fleet.reduce((s, m) => s + m.oee, 0) / fleet.length
+  const sc = data.scenarios?.rows || []
+  return (
+    <>
+      <header className="head">
+        <div>
+          <h1>Filo & OEE</h1>
+          <div className="lede">Telemetrisi olan ve duruşu kaydedilen makineler, OEE'ye göre sıralı.
+            Renk = rejim: yeşil Fanuc (tahmin edilebilir) · kehribar Mitsubishi.</div>
+        </div>
+        <Tag kind="green">{fmtPct(plantOEE)} ort. OEE</Tag>
+      </header>
+
+      <Panel title="Makine filosu" icon="▦" cls="d1"
+        cap="OEE = A × P × Q. P üretimsiz günlerde 0; Q hurda kaydı olmadığından 1.">
+        <div className="mgrid">
+          {fleet.map((mc) => {
+            const c = mc.regime.startsWith('Fanuc') ? 'green' : mc.regime.startsWith('Mits') ? 'amber' : 'dim'
+            return (
+              <div key={mc.name} className={`mcard ${sel === mc.name ? 'sel' : ''}`} onClick={() => setSel(mc.name)}>
+                <div className="mn">{mc.name}<Tag kind={c}>{mc.vendor}</Tag></div>
+                <div className="oee" style={{ color: oeeColor(mc.oee) }}>{fmtPct(mc.oee)}</div>
+                <div className="bar"><i style={{ width: `${mc.oee * 100}%` }} /></div>
+                <div className="meta">duruş {mc.down_h} sa</div>
+              </div>
+            )
+          })}
+        </div>
+      </Panel>
+
+      <div className="grid g2 mt">
+        <Panel title="Duruş Pareto — arıza vs bağlantı" icon="▬" cls="d2"
+          cap="<b>Kırmızı</b> = makine arızası · <b>gri</b> = bağlantı kesintisi (IT, OEE'yi geri kazandırmaz).">
+          <ParetoChart rows={data.pareto.slice(0, 10)} />
+        </Panel>
+        <Panel title="What-If senaryoları — ΔOEE & net €" icon="◇" cls="d3"
+          cap="Her senaryo aynı OEE motoruyla yeniden hesaplanır (ΔA/ΔP/ΔOEE). Varsayımlar etiketli.">
+          <div className="rows">
+            {sc.map((s) => (
+              <div className="row sc" key={s.id}>
+                <span>{s.scenario}</span>
+                <span className="num"><b className={s.delta_OEE_pp > 0 ? 'green' : 'dim'}>+{s.delta_OEE_pp} pp</b>
+                  <i className={s.net_eur >= 0 ? 'green' : 'red'}>{fmtEur(s.net_eur)}</i></span>
+              </div>
+            ))}
+          </div>
         </Panel>
       </div>
     </>

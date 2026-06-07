@@ -192,7 +192,7 @@ text(sl, "trexCloud · Kestirimci OEE ve Kök Neden Analizi", ML, 7.05, 8, 0.3, 
 # ═══════════════════════════ 02 veri ═══════════════════════════
 sl = base("Veri", "Önce veriyi dürüstçe envanterledik", 2)
 bullets(sl, [
-    "Tesiste 12 makine var (Fanuc, Mitsubishi, Nukon). Yaklaşık 7,4 milyon telemetri kaydı ve "
+    "Tesiste 12 makine var (Fanuc, Mitsubishi). Yaklaşık 7,4 milyon telemetri kaydı ve "
     "153 bin MES olayı işlendi. Tüm süreler milisaniye cinsindendir.",
     "OEE üç bileşenin çarpımıdır: Kullanılabilirlik (A) çarpı Performans (P) çarpı Kalite (Q).",
     "Veride hurda kaydı sıfırdır, bu yüzden Kalite her zaman 1 çıkar. Üretim sayımı sıfır olan "
@@ -290,13 +290,13 @@ table(sl,
        ["Random Forest", "0,75", "2,00", "Yakın ikinci"],
        ["Lojistik Regresyon", "0,74", "1,98", "Doğrusal taban"],
        ["MLP (sinir ağı, 64-24)", "0,68", "1,72", "Tablo veride en zayıf öğrenen"],
-       ["Denetimsiz AD skoru", "0,51", "1,07", "Tahminci olarak tesadüf seviyesi"],
+       ["Unsupervised AD skoru", "0,51", "1,07", "Tahminci olarak tesadüf seviyesi"],
        ["Her zaman pozitif (taban)", "0,50", "1,00", "Anlamsız referans"]],
       [3.7, 1.2, 1.2, 5.53], 2.95, centers=(1, 2))
 box(sl, ML, 6.05, CW, 0.55, fill=GREEN_SOFT, line=GREEN, lw=1.1)
 text(sl, "Neden HistGBDT: en yüksek PR-AUC ve ROC. Eksik değeri kendisi işler, ölçekleme istemez ve "
-     "doğrusal olmayan eşikleri yakalar. CNN ile transformer yalnızca denetimsiz anomali "
-     "otokodlayıcısında denendi, tahmin için avantaj sağlamadı.",
+     "doğrusal olmayan eşikleri yakalar. CNN ile transformer yalnızca denetimsiz anomali autoencoder "
+     "ile denendi, tahmin için avantaj sağlamadı.",
      ML + 0.22, 6.15, CW - 0.44, 0.4, 10, INK)
 
 # ═══════════════════════════ 08 risk timeline (chart) ═══════════════════════════
@@ -407,9 +407,8 @@ statcards(sl, [("2,38×", "Fanuc duruş tahmini lift"),
 bullets(sl, [
     "Sistem tek bir hatta üç işi birlikte yapar: Fanuc hücresinde duruşu önceden tahmin eder, kök "
     "nedeni alarm zinciriyle açıklar ve düzeltmenin OEE kazanımını sayısallaştırır.",
-    "Her iddia bir null model ile sınanmıştır. Olumsuz bulguları gizlemedik, çünkü güven dürüstlükten "
-    "gelir.",
-    "Canlı arayüz tahminden kök nedene ve What-If analizine uzanan akışı uçtan uca gösterir.",
+    "Her iddia bir null model ile sınanmıştır. Canlı arayüz tahminden kök nedene ve What-If analizine "
+    "uzanan akışı uçtan uca gösterir.",
 ], ML, 4.5, CW, 13.5, gap=10)
 
 prs.save("trexCloud_Final_Sunum.pptx")

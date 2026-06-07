@@ -272,7 +272,7 @@ page()
 base("Veri", "Önce veriyi dürüstçe envanterledik", 2)
 bullets(
     [
-        "Tesiste 12 makine var (Fanuc, Mitsubishi, Nukon). Yaklaşık 7,4 milyon telemetri kaydı ve "
+        "Tesiste 12 makine var (Fanuc, Mitsubishi). Yaklaşık 7,4 milyon telemetri kaydı ve "
         "153 bin MES olayı işlendi. Tüm süreler milisaniye cinsindendir.",
         "OEE üç bileşenin çarpımıdır: Kullanılabilirlik (A) çarpı Performans (P) çarpı Kalite (Q).",
         "Veride hurda kaydı sıfırdır, bu yüzden Kalite her zaman 1 çıkar. Üretim sayımı sıfır olan "
@@ -455,7 +455,12 @@ base("Tahmin", "Hangi algoritmayı neden seçtik", 7)
 para(
     "Aynı held-out gelecekte, aynı öznitelik kümesiyle dört model ailesini ve iki saçma tabanı "
     "yarıştırdık. Karşılaştırma birleşik veride yapıldı (taban oran yüzde 25).",
-    2.25, ML, CW, 13.5, INK, lead=17,
+    2.25,
+    ML,
+    CW,
+    13.5,
+    INK,
+    lead=17,
 )
 mcols = [("Model ailesi", 3.7), ("ROC", 1.2), ("Lift", 1.2), ("Not", 5.53)]
 x = ML
@@ -464,11 +469,23 @@ for label, wd in mcols:
     para(f"<b>{label}</b>", 2.9, x + 0.1, wd - 0.18, 10.5, white, "ARB")
     x += wd
 mrows = [
-    ("HistGBDT (gradyan artırma)", "0,76", "2,09", "Seçilen aile, eksik değeri yerel işler", True),
+    (
+        "HistGBDT (gradyan artırma)",
+        "0,76",
+        "2,09",
+        "Seçilen aile, eksik değeri yerel işler",
+        True,
+    ),
     ("Random Forest", "0,75", "2,00", "Yakın ikinci", False),
     ("Lojistik Regresyon", "0,74", "1,98", "Doğrusal taban", False),
     ("MLP (sinir ağı, 64-24)", "0,68", "1,72", "Tablo veride en zayıf öğrenen", False),
-    ("Denetimsiz AD skoru", "0,51", "1,07", "Tahminci olarak tesadüf seviyesi", False),
+    (
+        "Unsupervised AD skoru",
+        "0,51",
+        "1,07",
+        "Tahminci olarak tesadüf seviyesi",
+        False,
+    ),
     ("Her zaman pozitif (taban)", "0,50", "1,00", "Anlamsız referans", False),
 ]
 for i, (m, roc, lift, note, hi) in enumerate(mrows):
@@ -478,15 +495,28 @@ for i, (m, roc, lift, note, hi) in enumerate(mrows):
     x = ML
     for value, wd, align in vals:
         rect(x, y, wd, 0.44, fill=fill, line=HAIR, lw=0.6)
-        para(value, y + 0.12, x + 0.1, wd - 0.18, 10, GREEN if hi else INK,
-             "ARB" if hi else "AR", align=align)
+        para(
+            value,
+            y + 0.12,
+            x + 0.1,
+            wd - 0.18,
+            10,
+            GREEN if hi else INK,
+            "ARB" if hi else "AR",
+            align=align,
+        )
         x += wd
 rect(ML, 6.0, CW, 0.52, fill=GREEN_SOFT, line=GREEN, lw=1.1)
 para(
     "<b>Neden HistGBDT:</b> en yüksek PR-AUC ve ROC. Eksik değeri kendisi işler, ölçekleme istemez ve "
-    "doğrusal olmayan eşikleri yakalar. CNN ile transformer yalnızca denetimsiz anomali otokodlayıcısında "
+    "doğrusal olmayan eşikleri yakalar. CNN ile transformer yalnızca denetimsiz anomali autoencoder ile "
     "denendi, tahmin için avantaj sağlamadı.",
-    6.13, ML + 0.22, CW - 0.44, 10, INK, lead=12.5,
+    6.13,
+    ML + 0.22,
+    CW - 0.44,
+    10,
+    INK,
+    lead=12.5,
 )
 page()
 
@@ -709,8 +739,7 @@ bullets(
     [
         "Sistem tek bir hatta üç işi birlikte yapar: Fanuc hücresinde duruşu önceden tahmin eder, kök "
         "nedeni alarm zinciriyle açıklar ve düzeltmenin OEE kazanımını sayısallaştırır.",
-        "Her iddia bir null model ile sınanmıştır. Olumsuz bulguları gizlemedik, çünkü güven dürüstlükten "
-        "gelir.",
+        "Her iddia bir null model ile sınanmıştır. "
         "Canlı arayüz tahminden kök nedene ve What-If analizine uzanan akışı uçtan uca gösterir.",
     ],
     4.5,

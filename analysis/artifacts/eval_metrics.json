@@ -1,0 +1,312 @@
+{
+  "ad": {
+    "machines_scored": 7,
+    "score_buckets": 419728,
+    "anomaly_windows": 5026,
+    "lead_time_per_machine": [
+      {
+        "machine": "Makine 1",
+        "n_events": 2652,
+        "median_lead_min": 284.0,
+        "pct_with_warning": 62.7
+      },
+      {
+        "machine": "Makine 2",
+        "n_events": 4977,
+        "median_lead_min": 212.4,
+        "pct_with_warning": 64.3
+      },
+      {
+        "machine": "Makine 3",
+        "n_events": 3304,
+        "median_lead_min": 209.3,
+        "pct_with_warning": 58.3
+      },
+      {
+        "machine": "Makine 5",
+        "n_events": 2167,
+        "median_lead_min": 224.9,
+        "pct_with_warning": 93.3
+      },
+      {
+        "machine": "Makine 7",
+        "n_events": 6765,
+        "median_lead_min": 221.5,
+        "pct_with_warning": 94.4
+      },
+      {
+        "machine": "Makine 8",
+        "n_events": 5640,
+        "median_lead_min": 229.6,
+        "pct_with_warning": 92.6
+      },
+      {
+        "machine": "Makine 9",
+        "n_events": 2163,
+        "median_lead_min": 258.3,
+        "pct_with_warning": 53.8
+      },
+      {
+        "machine": "TurboCut 400",
+        "n_events": 528,
+        "median_lead_min": NaN,
+        "pct_with_warning": 0.0
+      }
+    ],
+    "precision_recall": [
+      {
+        "thresh": 50.0,
+        "precision": 0.538,
+        "recall": 0.891,
+        "flags": 234903
+      },
+      {
+        "thresh": 55.4,
+        "precision": 0.496,
+        "recall": 0.842,
+        "flags": 189956
+      },
+      {
+        "thresh": 60.9,
+        "precision": 0.502,
+        "recall": 0.813,
+        "flags": 169860
+      },
+      {
+        "thresh": 66.3,
+        "precision": 0.52,
+        "recall": 0.781,
+        "flags": 149582
+      },
+      {
+        "thresh": 71.8,
+        "precision": 0.538,
+        "recall": 0.734,
+        "flags": 125807
+      },
+      {
+        "thresh": 77.2,
+        "precision": 0.55,
+        "recall": 0.685,
+        "flags": 101913
+      },
+      {
+        "thresh": 82.7,
+        "precision": 0.548,
+        "recall": 0.631,
+        "flags": 82131
+      },
+      {
+        "thresh": 88.1,
+        "precision": 0.545,
+        "recall": 0.561,
+        "flags": 49204
+      },
+      {
+        "thresh": 93.6,
+        "precision": 0.577,
+        "recall": 0.424,
+        "flags": 22954
+      },
+      {
+        "thresh": 99.0,
+        "precision": 0.657,
+        "recall": 0.175,
+        "flags": 4980
+      }
+    ],
+    "median_lead_min_overall": 224.9,
+    "mean_pct_with_warning": 64.92500000000001
+  },
+  "rca": {
+    "event_stream_rows": 57383,
+    "events_by_source": {
+      "stoppage": 51871,
+      "ad_window": 5026,
+      "offline": 409,
+      "alert": 77
+    },
+    "alarms_total": 77,
+    "alarm_categories": [
+      {
+        "machine": "Makine 2",
+        "category": "EMERGENCY_STOP",
+        "occurrences": 25,
+        "machines_affected": 1
+      },
+      {
+        "machine": "Makine 1",
+        "category": "AXIS_ZERO_RETURN",
+        "occurrences": 15,
+        "machines_affected": 1
+      },
+      {
+        "machine": "Makine 1",
+        "category": "AIR_PRESSURE",
+        "occurrences": 10,
+        "machines_affected": 1
+      },
+      {
+        "machine": "Makine 2",
+        "category": "CHUCK",
+        "occurrences": 9,
+        "machines_affected": 1
+      },
+      {
+        "machine": "Makine 2",
+        "category": "DOOR_INTERLOCK",
+        "occurrences": 4,
+        "machines_affected": 1
+      },
+      {
+        "machine": "Makine 1",
+        "category": "OVERTRAVEL",
+        "occurrences": 3,
+        "machines_affected": 1
+      },
+      {
+        "machine": "Makine 2",
+        "category": "LUBE_OIL",
+        "occurrences": 3,
+        "machines_affected": 1
+      },
+      {
+        "machine": "Makine 2",
+        "category": "OVERTRAVEL",
+        "occurrences": 3,
+        "machines_affected": 1
+      },
+      {
+        "machine": "Makine 2",
+        "category": "PROGRAM_ERROR",
+        "occurrences": 3,
+        "machines_affected": 1
+      },
+      {
+        "machine": "Makine 1",
+        "category": "MOTOR_OVERLOAD",
+        "occurrences": 1,
+        "machines_affected": 1
+      },
+      {
+        "machine": "Makine 2",
+        "category": "AXIS_ZERO_RETURN",
+        "occurrences": 1,
+        "machines_affected": 1
+      }
+    ],
+    "alarm_cascades": 7,
+    "cascade_examples": [
+      {
+        "machine": "Makine 1",
+        "ts": "2026-01-12 04:47:10+00:00",
+        "root": "AIR_PRESSURE",
+        "chain": "AIR PRESSURE FAILED! -> Z AXIS NEED  ZERO RETURN !"
+      },
+      {
+        "machine": "Makine 1",
+        "ts": "2026-01-27 04:43:08+00:00",
+        "root": "AIR_PRESSURE",
+        "chain": "AIR PRESSURE FAILED! -> Z AXIS NEED  ZERO RETURN !"
+      },
+      {
+        "machine": "Makine 1",
+        "ts": "2026-02-19 04:40:12+00:00",
+        "root": "AIR_PRESSURE",
+        "chain": "AIR PRESSURE FAILED! -> Z AXIS NEED  ZERO RETURN !"
+      },
+      {
+        "machine": "Makine 1",
+        "ts": "2026-03-04 04:46:08+00:00",
+        "root": "AIR_PRESSURE",
+        "chain": "AIR PRESSURE FAILED! -> Z AXIS NEED  ZERO RETURN !"
+      },
+      {
+        "machine": "Makine 1",
+        "ts": "2026-03-26 04:40:06+00:00",
+        "root": "AIR_PRESSURE",
+        "chain": "AIR PRESSURE FAILED! -> Z AXIS NEED  ZERO RETURN !"
+      }
+    ],
+    "alarm_to_stop_match_rate": 0.208,
+    "systemic_events": 1473,
+    "top_systemic": [
+      {
+        "bucket_start": "2026-04-12 04:00:00+00:00",
+        "category": "CONNECTIVITY",
+        "facility_root": "FACILITY_NETWORK",
+        "n_machines": 11,
+        "total_hours": 547.1650086111111
+      },
+      {
+        "bucket_start": "2025-11-24 10:00:00+00:00",
+        "category": "CONNECTIVITY",
+        "facility_root": "FACILITY_NETWORK",
+        "n_machines": 11,
+        "total_hours": 430.2005150148333
+      },
+      {
+        "bucket_start": "2026-03-02 15:00:00+00:00",
+        "category": "CONNECTIVITY",
+        "facility_root": "FACILITY_NETWORK",
+        "n_machines": 11,
+        "total_hours": 311.11674666666664
+      },
+      {
+        "bucket_start": "2025-11-11 19:00:00+00:00",
+        "category": "CONNECTIVITY",
+        "facility_root": "FACILITY_NETWORK",
+        "n_machines": 11,
+        "total_hours": 175.72377333333333
+      },
+      {
+        "bucket_start": "2025-12-26 14:00:00+00:00",
+        "category": "UNPLANNED_RUNSTOP",
+        "facility_root": "MULTI_MACHINE",
+        "n_machines": 7,
+        "total_hours": 145.28300277777777
+      }
+    ],
+    "plant_downtime_top": [
+      {
+        "machine": "PLANT",
+        "category": "UNPLANNED_RUNSTOP",
+        "reason": "Duru\u015f",
+        "events": 28118,
+        "hours": 11949.1
+      },
+      {
+        "machine": "PLANT",
+        "category": "WAITING_WORK",
+        "reason": "\u0130\u015f Bekliyor",
+        "events": 19642,
+        "hours": 5819.7
+      },
+      {
+        "machine": "PLANT",
+        "category": "CONNECTIVITY",
+        "reason": "System Offline",
+        "events": 329,
+        "hours": 983.4
+      }
+    ]
+  },
+  "whatif": {
+    "sanity": {
+      "doc_case_A_before": 0.0,
+      "doc_case_A_after_W1_50": 0.5,
+      "decompose_residual": 0.0
+    },
+    "portfolio_W1_30pct": {
+      "machine_days": 1588,
+      "total_recovered_hours": 3062.5,
+      "total_extra_pieces": 26835.0,
+      "mean_dOEE_pp": 6.35,
+      "gross_benefit_margin_basis": 322021.0,
+      "assumptions": {
+        "margin_per_piece": 12.0,
+        "currency": "TRY"
+      }
+    }
+  }
+}

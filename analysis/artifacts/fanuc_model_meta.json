@@ -1,0 +1,31 @@
+{
+  "ROC_AUC": 0.7311,
+  "PR_AUC": 0.4263,
+  "base_rate": 0.1789,
+  "threshold": 0.1778,
+  "n_train": 186066,
+  "n_test": 124047,
+  "n_features": 41,
+  "test_start": "2026-01-29 12:10:00+00:00",
+  "test_end": "2026-05-22 13:28:00+00:00",
+  "lift": 2.38,
+  "machines": [
+    "Makine 1",
+    "Makine 2",
+    "Makine 3",
+    "Makine 5",
+    "Makine 9"
+  ],
+  "params": {
+    "learning_rate": 0.02,
+    "max_iter": 300,
+    "max_leaf_nodes": 15,
+    "min_samples_leaf": 200,
+    "l2_regularization": 1.0,
+    "max_features": 0.9,
+    "class_weight": null
+  },
+  "n_episodes": 722,
+  "episode_precision": 0.44,
+  "feature_count": 41
+}

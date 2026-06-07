@@ -1,0 +1,264 @@
+{
+  "task": {
+    "target": ">= 15min unplanned stop within 60min",
+    "horizon_min": 60,
+    "min_stop_min": 15,
+    "split": "chronological per machine, train_frac=0.6",
+    "leakage_safe": true,
+    "n_train": 234365,
+    "n_test": 156248,
+    "train_end": "2026-03-11 05:02:00+00:00",
+    "test_start": "2026-01-29 12:10:00+00:00",
+    "features": [
+      "production_count_delta",
+      "production_count_delta__roll_mean",
+      "production_count_delta__roll_std",
+      "production_count_delta__slope",
+      "production_count_delta__long_mean",
+      "cycle_time_mean",
+      "cycle_time_mean__roll_mean",
+      "cycle_time_mean__roll_std",
+      "cycle_time_mean__slope",
+      "cycle_time_mean__long_mean",
+      "cycle_time_std",
+      "cycle_time_std__roll_mean",
+      "cycle_time_std__roll_std",
+      "cycle_time_std__slope",
+      "cycle_time_std__long_mean",
+      "run_state_duty",
+      "run_state_duty__roll_mean",
+      "run_state_duty__roll_std",
+      "run_state_duty__slope",
+      "run_state_duty__long_mean",
+      "run_time_delta",
+      "run_time_delta__roll_mean",
+      "run_time_delta__roll_std",
+      "run_time_delta__slope",
+      "run_time_delta__long_mean",
+      "axis_move_total",
+      "axis_move_total__roll_mean",
+      "axis_move_total__roll_std",
+      "axis_move_total__slope",
+      "axis_move_total__long_mean",
+      "axis_move_max",
+      "axis_move_max__roll_mean",
+      "axis_move_max__roll_std",
+      "axis_move_max__slope",
+      "axis_move_max__long_mean",
+      "machine_mode_last",
+      "machine_mode_last__roll_mean",
+      "machine_mode_last__roll_std",
+      "machine_mode_last__slope",
+      "machine_mode_last__long_mean",
+      "machine_mode_changes",
+      "machine_mode_changes__roll_mean",
+      "machine_mode_changes__roll_std",
+      "machine_mode_changes__slope",
+      "machine_mode_changes__long_mean",
+      "n_samples",
+      "is_idle_now",
+      "anystop_min_since",
+      "anystop_cnt_1h",
+      "anystop_cnt_4h",
+      "sigstop_min_since",
+      "sigstop_cnt_1h",
+      "sigstop_cnt_4h",
+      "micro_min_since",
+      "micro_cnt_1h",
+      "micro_cnt_4h",
+      "downtime_min_4h",
+      "hour"
+    ],
+    "n_features": 58
+  },
+  "results": [
+    {
+      "model": "hist_gbdt",
+      "base_rate": 0.2515,
+      "PR_AUC": 0.5255,
+      "ROC_AUC": 0.7598,
+      "lift_PRAUC_over_base": 2.09,
+      "F1": 0.5483,
+      "precision": 0.4923,
+      "recall": 0.6187,
+      "threshold": 0.2783,
+      "confusion_tn_fp_fn_tp": [
+        [
+          91879,
+          25072
+        ],
+        [
+          14985,
+          24312
+        ]
+      ]
+    },
+    {
+      "model": "random_forest",
+      "base_rate": 0.2515,
+      "PR_AUC": 0.5027,
+      "ROC_AUC": 0.7456,
+      "lift_PRAUC_over_base": 2.0,
+      "F1": 0.5254,
+      "precision": 0.4599,
+      "recall": 0.6125,
+      "threshold": 0.2917,
+      "confusion_tn_fp_fn_tp": [
+        [
+          88687,
+          28264
+        ],
+        [
+          15227,
+          24070
+        ]
+      ]
+    },
+    {
+      "model": "logreg",
+      "base_rate": 0.2515,
+      "PR_AUC": 0.4987,
+      "ROC_AUC": 0.7384,
+      "lift_PRAUC_over_base": 1.98,
+      "F1": 0.5309,
+      "precision": 0.4387,
+      "recall": 0.6722,
+      "threshold": 0.4284,
+      "confusion_tn_fp_fn_tp": [
+        [
+          83159,
+          33792
+        ],
+        [
+          12882,
+          26415
+        ]
+      ]
+    },
+    {
+      "model": "mlp",
+      "base_rate": 0.2515,
+      "PR_AUC": 0.4322,
+      "ROC_AUC": 0.6808,
+      "lift_PRAUC_over_base": 1.72,
+      "F1": 0.473,
+      "precision": 0.3972,
+      "recall": 0.5846,
+      "threshold": 0.1876,
+      "confusion_tn_fp_fn_tp": [
+        [
+          82087,
+          34864
+        ],
+        [
+          16323,
+          22974
+        ]
+      ]
+    },
+    {
+      "model": "ad_score_unsupervised*",
+      "base_rate": 0.2515,
+      "PR_AUC": 0.2698,
+      "ROC_AUC": 0.5078,
+      "lift_PRAUC_over_base": 1.07,
+      "F1": 0.4023,
+      "precision": 0.2519,
+      "recall": 0.9983,
+      "threshold": 0.0057,
+      "confusion_tn_fp_fn_tp": [
+        [
+          437,
+          116514
+        ],
+        [
+          65,
+          39232
+        ]
+      ]
+    },
+    {
+      "model": "baseline_always_positive",
+      "base_rate": 0.2515,
+      "PR_AUC": 0.2515,
+      "ROC_AUC": 0.5,
+      "lift_PRAUC_over_base": 1.0,
+      "F1": 0.4019,
+      "precision": 0.2515,
+      "recall": 1.0,
+      "threshold": 0.5,
+      "confusion_tn_fp_fn_tp": [
+        [
+          0,
+          116951
+        ],
+        [
+          0,
+          39297
+        ]
+      ]
+    }
+  ],
+  "feature_importance": [
+    {
+      "feature": "hour",
+      "importance": 0.08692780433645758
+    },
+    {
+      "feature": "downtime_min_4h",
+      "importance": 0.06918678883179002
+    },
+    {
+      "feature": "sigstop_min_since",
+      "importance": 0.06759983653790631
+    },
+    {
+      "feature": "micro_min_since",
+      "importance": 0.04456318092317977
+    },
+    {
+      "feature": "cycle_time_mean__long_mean",
+      "importance": 0.04136952102703657
+    },
+    {
+      "feature": "anystop_cnt_4h",
+      "importance": 0.038588334280473126
+    },
+    {
+      "feature": "run_time_delta__long_mean",
+      "importance": 0.03833533102364068
+    },
+    {
+      "feature": "run_state_duty__long_mean",
+      "importance": 0.036967096149261476
+    },
+    {
+      "feature": "micro_cnt_4h",
+      "importance": 0.035030421860523346
+    },
+    {
+      "feature": "anystop_min_since",
+      "importance": 0.034618933734290785
+    },
+    {
+      "feature": "cycle_time_mean__roll_mean",
+      "importance": 0.0307592229912799
+    },
+    {
+      "feature": "cycle_time_mean",
+      "importance": 0.027849920192016875
+    },
+    {
+      "feature": "n_samples",
+      "importance": 0.027459399284897653
+    },
+    {
+      "feature": "cycle_time_mean__roll_std",
+      "importance": 0.025811668061199652
+    },
+    {
+      "feature": "machine_mode_changes__long_mean",
+      "importance": 0.02364944600848253
+    }
+  ]
+}

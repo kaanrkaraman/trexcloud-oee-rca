@@ -1,0 +1,217 @@
+readingdef_uid,machine,vendor,readingdef_name,canonical_role,is_evidence_signal,external_signal_type,external_signal_category,si_unit,mes_signal_type,mes_signal_category,mes_exclude_from_oee,matched_mes,unit_uid,unit_id
+00000000-0000-0000-0000-000000000001,Makine 7,Mitsubishi,Undefined Stoppage,stop_event,False,STOP,UNPLANNED,,STOP,UNPLANNED,False,True,3a1d144a-0d22-ba9f-884c-18b40551ebd0,6
+3a1d144a-0eed-94d3-e888-d25517a54509,Makine 8,Mitsubishi,RUN_STATUS_START__GetRunStartStatus,run_state,False,STOP,UNPLANNED,,STOP,UNPLANNED,False,True,3a1d144a-0eb8-8b07-8466-41f170d828de,7
+00000000-0000-0000-0000-000000000001,Makine 2,Fanuc,Undefined Stoppage,stop_event,False,STOP,UNPLANNED,,STOP,UNPLANNED,False,True,3a1d1435-0afb-41a7-2d12-5eb77c185258,5
+3a1d8054-94e6-ee1e-44bd-933434a4c154,Makine 3,Fanuc,EXECUTION,machine_mode,False,,,,,,False,True,3a1d8054-94bd-747d-0e30-05d4ca302199,8
+3a1d8054-9598-80de-3bdb-741cea7d1769,Makine 3,Fanuc,RUNNING_PROGRAM_NO,program,False,,,,,,False,True,3a1d8054-94bd-747d-0e30-05d4ca302199,8
+3a1d8054-95af-63f0-3ce6-e004f73149d1,Makine 3,Fanuc,STATINFO_RUN,run_state,False,,,,,,False,True,3a1d8054-94bd-747d-0e30-05d4ca302199,8
+3a1d8054-95d8-b23b-24c5-3ded6be4a429,Makine 3,Fanuc,M30 Duruş,stop_event,False,STOP,PLANNED,,STOP,PLANNED,False,True,3a1d8054-94bd-747d-0e30-05d4ca302199,8
+3a1d8054-957d-5a78-932b-7753353c6676,Makine 3,Fanuc,IsNotRunning,run_state,False,STOP,UNPLANNED,,STOP,UNPLANNED,False,True,3a1d8054-94bd-747d-0e30-05d4ca302199,8
+3a1d8054-95c3-2f52-a588-4083047a504a,Makine 3,Fanuc,PIECES_PRODUCED_TOTAL,production_count,False,COUNT,,Ad,COUNT,,False,True,3a1d8054-94bd-747d-0e30-05d4ca302199,8
+3a1eb3d6-389a-452d-ebd6-514f8cd81c3d,Makine 3,Fanuc,ALM_ARR_MSG,alarm,False,ALERT_ARRAY,,,ALERT_ARRAY,,False,True,3a1d8054-94bd-747d-0e30-05d4ca302199,8
+00000000-0000-0000-0000-000000000002,Makine 3,Fanuc,Test Production,test_prod,False,TEST_PROD,,,TEST_PROD,,False,True,3a1d8054-94bd-747d-0e30-05d4ca302199,8
+3a1debd9-4289-1371-1dfa-8efac8ec6f46,Makine 5,Fanuc,M30 Duruş,stop_event,False,STOP,PLANNED,,STOP,PLANNED,False,True,3a1debd9-412d-74b3-b3f9-832a50f89a94,9
+3a1debd9-4159-40eb-a9ec-2e0720146076,Makine 5,Fanuc,MagazineToolChange,stop_event,False,STOP,PLANNED,,STOP,PLANNED,False,True,3a1debd9-412d-74b3-b3f9-832a50f89a94,9
+3a1debd9-420d-f7df-2c0e-f557fd299155,Makine 5,Fanuc,CYCLE_TIME_MS,cycle_time,True,STOCK_CYCLE,,,STOCK_CYCLE,,False,True,3a1debd9-412d-74b3-b3f9-832a50f89a94,9
+3a1debd9-4240-bd63-3752-96d8bac8723d,Makine 5,Fanuc,PIECES_PRODUCED,production_count,False,,,,,,False,True,3a1debd9-412d-74b3-b3f9-832a50f89a94,9
+3a1debd9-4258-010b-bab2-512881597532,Makine 5,Fanuc,RUNNING_PROGRAM_NO,program,False,,,,,,False,True,3a1debd9-412d-74b3-b3f9-832a50f89a94,9
+3a1debd9-4271-9514-f490-a69298a697a4,Makine 5,Fanuc,EXECUTION,machine_mode,False,,,,,,False,True,3a1debd9-412d-74b3-b3f9-832a50f89a94,9
+3a1eb3d6-38b3-6e2e-d209-db19a327b6a5,Makine 5,Fanuc,ALM_ARR_MSG,alarm,False,ALERT_ARRAY,,,ALERT_ARRAY,,False,True,3a1debd9-412d-74b3-b3f9-832a50f89a94,9
+00000000-0000-0000-0000-000000000002,Makine 5,Fanuc,Test Production,test_prod,False,TEST_PROD,,,TEST_PROD,,False,True,3a1debd9-412d-74b3-b3f9-832a50f89a94,9
+00000000-0000-0000-0000-000000000003,Makine 5,Fanuc,Manual Scrap,scrap,False,PROD_ERROR,,,PROD_ERROR,,False,True,3a1debd9-412d-74b3-b3f9-832a50f89a94,9
+00000000-0000-0000-0000-000000000004,Makine 5,Fanuc,Manual Workorder,workorder,False,WORK_ORDER_NO,,,WORK_ORDER_NO,,False,True,3a1debd9-412d-74b3-b3f9-832a50f89a94,9
+3a1d144a-0efd-4185-99cb-c2a3bc5480f5,Makine 8,Mitsubishi,RUN_STATUS_RESET__GetRunResetStatus,machine_mode,False,,,,,,False,True,3a1d144a-0eb8-8b07-8466-41f170d828de,7
+3a1d144a-1007-0a96-e4b0-b8ea18694983,Makine 8,Mitsubishi,RUN_TIME__GetRunTime,run_time,False,,,,,,False,True,3a1d144a-0eb8-8b07-8466-41f170d828de,7
+3a1debd9-c2cc-e993-ed3c-d0d6e9db69e0,Makine 4,Mitsubishi,PROGRAM_POSITION_3__GetProgramPosition3(2),axis_position,False,,,,,,False,True,3a1debd9-c20c-53ca-b094-d32a1e422887,10
+3a1debd9-c2e1-8117-138a-5b5cecfb3bb9,Makine 4,Mitsubishi,PROGRAM_POSITION_3__GetProgramPosition3(1),axis_position,False,,,,,,False,True,3a1debd9-c20c-53ca-b094-d32a1e422887,10
+3a1debd9-c3bc-0325-7fb5-b3f7fed4dd56,Makine 4,Mitsubishi,SERVO_MOTOR_TEMPERATURE_M800__GetServoMotorTemperatureM800(1),servo_temp,True,,,,,,True,True,3a1debd9-c20c-53ca-b094-d32a1e422887,10
+3a1debd9-c3d2-3fc6-76d5-19c031e983b4,Makine 4,Mitsubishi,RUN_TIME__GetRunTime,run_time,False,,,,,,False,True,3a1debd9-c20c-53ca-b094-d32a1e422887,10
+3a1debd9-c3ea-24c9-2abe-a9cda7eb5888,Makine 4,Mitsubishi,RUN_STATUS_RESET__GetRunResetStatus,machine_mode,False,,,,,,False,True,3a1debd9-c20c-53ca-b094-d32a1e422887,10
+00000000-0000-0000-0000-000000000005,Makine 4,Mitsubishi,Manual Stock,stock,False,STOCK_NO,,,STOCK_NO,,False,True,3a1debd9-c20c-53ca-b094-d32a1e422887,10
+3a1debed-c8d4-15fd-639a-085d33abc145,Makine 6,Mitsubishi,NEXT_DISTANCE_GetNextDistance(1),axis_position,False,,,,,,False,True,3a1debed-c5e4-2f15-1576-2551d5f4bcbf,11
+3a1debed-c633-1fce-fcf0-233fdb71c42c,Makine 6,Mitsubishi,TCP_MACHINE_POSITION__GetTCPMachinePosition(1),axis_position,False,,,,,,False,True,3a1debed-c5e4-2f15-1576-2551d5f4bcbf,11
+3a1debed-c6be-879c-3c83-32668e02d5b2,Makine 6,Mitsubishi,RUN_STATUS_START__GetRunStartStatus,run_state,False,STOP,UNPLANNED,,STOP,UNPLANNED,False,True,3a1debed-c5e4-2f15-1576-2551d5f4bcbf,11
+3a1debed-c6da-e50f-3482-c0fc7ac6437b,Makine 6,Mitsubishi,RUN_STATUS_RESET__GetRunResetStatus,machine_mode,False,,,,,,False,True,3a1debed-c5e4-2f15-1576-2551d5f4bcbf,11
+3a1debed-c6f3-3448-a36e-19f047a9b987,Makine 6,Mitsubishi,RUN_TIME__GetRunTime,run_time,False,,,,,,False,True,3a1debed-c5e4-2f15-1576-2551d5f4bcbf,11
+00000000-0000-0000-0000-000000000005,Makine 5,Fanuc,Manual Stock,stock,False,STOCK_NO,,,STOCK_NO,,False,True,3a1debd9-412d-74b3-b3f9-832a50f89a94,9
+00000000-0000-0000-0000-000000000001,Makine 5,Fanuc,Undefined Stoppage,stop_event,False,STOP,UNPLANNED,,STOP,UNPLANNED,False,True,3a1debd9-412d-74b3-b3f9-832a50f89a94,9
+3a1debf8-859d-476c-7520-44c557d483c8,Makine 10,Fanuc,CYCLE_TIME_MS,cycle_time,True,STOCK_CYCLE,,,STOCK_CYCLE,,False,True,3a1debf8-841b-af4f-b67c-4aab557e9668,12
+3a1debf8-857d-f588-6c81-f755a21125f6,Makine 10,Fanuc,ProgramNo,program,False,STOCK_NO,,,STOCK_NO,,False,True,3a1debf8-841b-af4f-b67c-4aab557e9668,12
+3a1debf8-8559-3e0b-5e88-bde3ea567284,Makine 10,Fanuc,PIECES_PRODUCED,production_count,False,,,,,,False,True,3a1debf8-841b-af4f-b67c-4aab557e9668,12
+3a1d1435-0b95-b980-4d82-e746705342b4,Makine 2,Fanuc,EXECUTION,machine_mode,False,,,,,,False,True,3a1d1435-0afb-41a7-2d12-5eb77c185258,5
+3a1d1435-0b60-6ed5-5e78-3d30ca918e93,Makine 2,Fanuc,STATINFO_RUN,run_state,False,,,,,,False,True,3a1d1435-0afb-41a7-2d12-5eb77c185258,5
+3a1d1435-0ba5-435b-e27a-36a55a9a8692,Makine 2,Fanuc,CYCLE_TIME_MS,cycle_time,True,STOCK_CYCLE,,,STOCK_CYCLE,,False,True,3a1d1435-0afb-41a7-2d12-5eb77c185258,5
+3a1d1435-0b83-0244-a7ab-bb6c3abfe817,Makine 2,Fanuc,IsNotRunning,run_state,False,STOP,UNPLANNED,,STOP,UNPLANNED,False,True,3a1d1435-0afb-41a7-2d12-5eb77c185258,5
+3a1eb3d6-3880-d3e2-9558-cc8a156cda52,Makine 2,Fanuc,ALM_ARR_MSG,alarm,False,ALERT_ARRAY,,,ALERT_ARRAY,,False,True,3a1d1435-0afb-41a7-2d12-5eb77c185258,5
+00000000-0000-0000-0000-000000000002,Makine 2,Fanuc,Test Production,test_prod,False,TEST_PROD,,,TEST_PROD,,False,True,3a1d1435-0afb-41a7-2d12-5eb77c185258,5
+00000000-0000-0000-0000-000000000006,Makine 2,Fanuc,System Offline,stop_event,False,STOP,UNPLANNED,,STOP,UNPLANNED,False,True,3a1d1435-0afb-41a7-2d12-5eb77c185258,5
+00000000-0000-0000-0000-000000000003,Makine 2,Fanuc,Manual Scrap,scrap,False,PROD_ERROR,,,PROD_ERROR,,False,True,3a1d1435-0afb-41a7-2d12-5eb77c185258,5
+00000000-0000-0000-0000-000000000004,Makine 2,Fanuc,Manual Workorder,workorder,False,WORK_ORDER_NO,,,WORK_ORDER_NO,,False,True,3a1d1435-0afb-41a7-2d12-5eb77c185258,5
+3a1debed-c70e-523a-18fc-5bc303f2f8af,Makine 6,Mitsubishi,SERVO_MOTOR_TEMPERATURE_M800__GetServoMotorTemperatureM800(1),servo_temp,True,,,,,,True,True,3a1debed-c5e4-2f15-1576-2551d5f4bcbf,11
+3a1debed-c729-79f4-b94b-7b6bf2ebccb9,Makine 6,Mitsubishi,Counter,counter,False,PULSE_COUNT,,,PULSE_COUNT,,False,True,3a1debed-c5e4-2f15-1576-2551d5f4bcbf,11
+3a1debed-c742-da1d-efce-3d2be00467bf,Makine 6,Mitsubishi,ProgramNo,program,False,STOCK_NO,,,STOCK_NO,,False,True,3a1debed-c5e4-2f15-1576-2551d5f4bcbf,11
+3a1debed-c75d-d6df-b7ca-cd6d8a8ceba5,Makine 6,Mitsubishi,RUN_STATUS_STOP__GetRunStopStatus,machine_mode,False,,,,,,False,True,3a1debed-c5e4-2f15-1576-2551d5f4bcbf,11
+3a1debed-c778-2008-8254-1bd2f8fd5fd6,Makine 6,Mitsubishi,MagazineToolChange,stop_event,False,STOP,PLANNED,,STOP,PLANNED,False,True,3a1debed-c5e4-2f15-1576-2551d5f4bcbf,11
+3a1debed-c793-2a4d-86d5-79dcecc7d28e,Makine 6,Mitsubishi,RUN_STATUS_PAUSE__GetRunPauseStatus,machine_mode,False,,,,,,False,True,3a1debed-c5e4-2f15-1576-2551d5f4bcbf,11
+00000000-0000-0000-0000-000000000003,Makine 6,Mitsubishi,Manual Scrap,scrap,False,PROD_ERROR,,,PROD_ERROR,,False,True,3a1debed-c5e4-2f15-1576-2551d5f4bcbf,11
+00000000-0000-0000-0000-000000000004,Makine 6,Mitsubishi,Manual Workorder,workorder,False,WORK_ORDER_NO,,,WORK_ORDER_NO,,False,True,3a1debed-c5e4-2f15-1576-2551d5f4bcbf,11
+00000000-0000-0000-0000-000000000005,Makine 6,Mitsubishi,Manual Stock,stock,False,STOCK_NO,,,STOCK_NO,,False,True,3a1debed-c5e4-2f15-1576-2551d5f4bcbf,11
+00000000-0000-0000-0000-000000000001,Makine 6,Mitsubishi,Undefined Stoppage,stop_event,False,STOP,UNPLANNED,,STOP,UNPLANNED,False,True,3a1debed-c5e4-2f15-1576-2551d5f4bcbf,11
+3a1d144a-0e2a-ddda-485e-1e93f1f75d51,Makine 7,Mitsubishi,POWER_CONSUMPTION_M800A_SERVO_AXIS_IN_DRIVE_SYSTEM__GetPowerConsumptionM800(1),servo_power,True,PULSE_COUNT,,,PULSE_COUNT,,True,True,3a1d144a-0d22-ba9f-884c-18b40551ebd0,6
+3a1d144a-0e38-9893-c409-6323bd12a23e,Makine 7,Mitsubishi,POWER_CONSUMPTION_M800A_ENTIRE_DRIVE_SYSTEM__GetPowerConsumptionM800(1),servo_power,True,PULSE_COUNT,,,PULSE_COUNT,,True,True,3a1d144a-0d22-ba9f-884c-18b40551ebd0,6
+3a1d144a-0f5f-74c1-f20b-c67d1c5df062,Makine 8,Mitsubishi,POWER_CONSUMPTION_M800A_SERVO_AXIS_IN_DRIVE_SYSTEM__GetPowerConsumptionM800(1),servo_power,True,PULSE_COUNT,,,PULSE_COUNT,,True,True,3a1d144a-0eb8-8b07-8466-41f170d828de,7
+3a1d144a-0f71-3624-9253-a3fc89c91cbf,Makine 8,Mitsubishi,POWER_CONSUMPTION_M800A_ENTIRE_DRIVE_SYSTEM__GetPowerConsumptionM800(1),servo_power,True,PULSE_COUNT,,,PULSE_COUNT,,True,True,3a1d144a-0eb8-8b07-8466-41f170d828de,7
+3a1d144a-0d96-7ea4-bf1a-ee0c4e6f64d8,Makine 7,Mitsubishi,NEXT_DISTANCE_GetNextDistance(1),axis_position,False,,,,,,False,True,3a1d144a-0d22-ba9f-884c-18b40551ebd0,6
+3a1d144a-0db5-bc04-ed6d-12915fa5e6e2,Makine 7,Mitsubishi,TCP_MACHINE_POSITION__GetTCPMachinePosition(1),axis_position,False,,,,,,False,True,3a1d144a-0d22-ba9f-884c-18b40551ebd0,6
+3a1d144a-0dc5-a8cf-8d58-9af3eaa0a75c,Makine 7,Mitsubishi,TCP_WORK_POSITION__GetTCPWorkPosition(2),axis_position,False,,,,,,False,True,3a1d144a-0d22-ba9f-884c-18b40551ebd0,6
+3a1d144a-0df0-5c3b-4b6a-6ed94e60a055,Makine 7,Mitsubishi,"COMMAND_2__GetCommand2(EZNC_M, 1)",axis_position,False,,,,,,False,True,3a1d144a-0d22-ba9f-884c-18b40551ebd0,6
+3a1d144a-0d23-9b8f-f5cb-0f0c74c25b7d,Makine 7,Mitsubishi,RUN_STATUS_START__GetRunStartStatus,run_state,False,STOP,UNPLANNED,,STOP,UNPLANNED,False,True,3a1d144a-0d22-ba9f-884c-18b40551ebd0,6
+3a1d144a-0dff-b1be-1af3-359e4d896f27,Makine 7,Mitsubishi,Counter,counter,False,PULSE_COUNT,,,PULSE_COUNT,,False,True,3a1d144a-0d22-ba9f-884c-18b40551ebd0,6
+3a1d144a-0d5d-4604-ae18-97b82e16414a,Makine 7,Mitsubishi,RUN_STATUS_RESET__GetRunResetStatus,machine_mode,False,,,,,,False,True,3a1d144a-0d22-ba9f-884c-18b40551ebd0,6
+3a1d144a-0d6c-29b1-6119-698555d94bb4,Makine 7,Mitsubishi,RUN_STATUS_PAUSE__GetRunPauseStatus,machine_mode,False,,,,,,False,True,3a1d144a-0d22-ba9f-884c-18b40551ebd0,6
+3a1d144a-0d7a-7414-918d-308b81c1003f,Makine 7,Mitsubishi,SERVO_MOTOR_TEMPERATURE_M800__GetServoMotorTemperatureM800(1),servo_temp,True,,,,,,True,True,3a1d144a-0d22-ba9f-884c-18b40551ebd0,6
+3a1d144a-0d89-0f61-5a83-510da9c69966,Makine 7,Mitsubishi,HEAD__GetHead,machine_mode,False,,,,,,False,True,3a1d144a-0d22-ba9f-884c-18b40551ebd0,6
+3a1d144a-0da4-f67e-8d72-b7694ede5551,Makine 7,Mitsubishi,POWER_CONSUMPTION_M800A_SPINDLE_IN_DRIVE_SYSTEM__GetPowerConsumptionM800(1),spindle_power,True,PULSE_COUNT,,,PULSE_COUNT,,True,True,3a1d144a-0d22-ba9f-884c-18b40551ebd0,6
+3a1d144a-0e6c-ab3f-62e8-77ea7ca1f7f6,Makine 7,Mitsubishi,PATH_LOAD_MODULE__GetPathLoadModule,path_load,True,,,,,,False,True,3a1d144a-0d22-ba9f-884c-18b40551ebd0,6
+3a1d144a-0e7b-9f4e-0bf2-f5393d7894d3,Makine 7,Mitsubishi,NC_MODE__GetNcMode,machine_mode,False,,,,,,False,True,3a1d144a-0d22-ba9f-884c-18b40551ebd0,6
+3a1d144a-0e8a-b05a-31fa-39d9bf8a8934,Makine 7,Mitsubishi,MagazineToolChange,stop_event,False,STOP,PLANNED,,STOP,PLANNED,False,True,3a1d144a-0d22-ba9f-884c-18b40551ebd0,6
+00000000-0000-0000-0000-000000000005,Makine 2,Fanuc,Manual Stock,stock,False,STOCK_NO,,,STOCK_NO,,False,True,3a1d1435-0afb-41a7-2d12-5eb77c185258,5
+3a1debd9-c30a-da9c-5c81-99da7780b2a4,Makine 4,Mitsubishi,HEAD__GetHead,machine_mode,False,,,,,,False,True,3a1debd9-c20c-53ca-b094-d32a1e422887,10
+3a1debd9-c321-90d7-a3db-2bb7e6962474,Makine 4,Mitsubishi,NC_MODE__GetNcMode,machine_mode,False,,,,,,False,True,3a1debd9-c20c-53ca-b094-d32a1e422887,10
+3a1debd9-c336-a5ad-1d83-eb9017d5540d,Makine 4,Mitsubishi,PATH_LOAD_MODULE__GetPathLoadModule,path_load,True,,,,,,False,True,3a1debd9-c20c-53ca-b094-d32a1e422887,10
+3a1debd9-c34b-ea27-2f17-0bc32c9529ca,Makine 4,Mitsubishi,RUN_STATUS_PAUSE__GetRunPauseStatus,machine_mode,False,,,,,,False,True,3a1debd9-c20c-53ca-b094-d32a1e422887,10
+3a1debd9-c360-1652-2e56-38ce7abd9976,Makine 4,Mitsubishi,MagazineToolChange,stop_event,False,STOP,PLANNED,,STOP,PLANNED,False,True,3a1debd9-c20c-53ca-b094-d32a1e422887,10
+00000000-0000-0000-0000-000000000006,Makine 3,Fanuc,System Offline,stop_event,False,STOP,UNPLANNED,,STOP,UNPLANNED,False,True,3a1d8054-94bd-747d-0e30-05d4ca302199,8
+3a1debd9-c376-826f-e87b-7947a490f0ef,Makine 4,Mitsubishi,RUN_STATUS_STOP__GetRunStopStatus,machine_mode,False,,,,,,False,True,3a1debd9-c20c-53ca-b094-d32a1e422887,10
+00000000-0000-0000-0000-000000000003,Makine 3,Fanuc,Manual Scrap,scrap,False,PROD_ERROR,,,PROD_ERROR,,False,True,3a1d8054-94bd-747d-0e30-05d4ca302199,8
+3a1debd9-c38e-ee9b-8104-f2873d87f140,Makine 4,Mitsubishi,ProgramNo,program,False,STOCK_NO,,,STOCK_NO,,False,True,3a1debd9-c20c-53ca-b094-d32a1e422887,10
+00000000-0000-0000-0000-000000000004,Makine 3,Fanuc,Manual Workorder,workorder,False,WORK_ORDER_NO,,,WORK_ORDER_NO,,False,True,3a1d8054-94bd-747d-0e30-05d4ca302199,8
+3a1debd9-c3a4-8811-efe2-abb8c34e04e8,Makine 4,Mitsubishi,Counter,counter,False,PULSE_COUNT,,,PULSE_COUNT,,False,True,3a1debd9-c20c-53ca-b094-d32a1e422887,10
+00000000-0000-0000-0000-000000000005,Makine 3,Fanuc,Manual Stock,stock,False,STOCK_NO,,,STOCK_NO,,False,True,3a1d8054-94bd-747d-0e30-05d4ca302199,8
+00000000-0000-0000-0000-000000000001,Makine 3,Fanuc,Undefined Stoppage,stop_event,False,STOP,UNPLANNED,,STOP,UNPLANNED,False,True,3a1d8054-94bd-747d-0e30-05d4ca302199,8
+3a1debd9-42a2-196d-44c5-72f27c7109c8,Makine 5,Fanuc,PIECES_PRODUCED_TOTAL,production_count,False,COUNT,,Ad,COUNT,,False,True,3a1debd9-412d-74b3-b3f9-832a50f89a94,9
+3a1debd9-4229-54df-491d-5fec368971cb,Makine 5,Fanuc,ProgramNo,program,False,STOCK_NO,,,STOCK_NO,,False,True,3a1debd9-412d-74b3-b3f9-832a50f89a94,9
+3a1debd9-42bf-2104-31b4-487b36df6757,Makine 5,Fanuc,STATINFO_RUN,run_state,False,,,,,,False,True,3a1debd9-412d-74b3-b3f9-832a50f89a94,9
+3a1debd9-42e5-3773-e8d7-e66c14e5f032,Makine 5,Fanuc,IsNotRunning,run_state,False,STOP,UNPLANNED,,STOP,UNPLANNED,False,True,3a1debd9-412d-74b3-b3f9-832a50f89a94,9
+3a1d144a-0e5d-9645-3e8d-300f898940b0,Makine 7,Mitsubishi,RUN_STATUS_STOP__GetRunStopStatus,machine_mode,False,,,,,,False,True,3a1d144a-0d22-ba9f-884c-18b40551ebd0,6
+3a1d144a-0de2-9b82-e34f-09716a87ee40,Makine 7,Mitsubishi,RUN_TIME__GetRunTime,run_time,False,,,,,,False,True,3a1d144a-0d22-ba9f-884c-18b40551ebd0,6
+3a1d144a-0e0c-1517-134e-94580044b98d,Makine 7,Mitsubishi,PROGRAM_POSITION_3__GetProgramPosition3(2),axis_position,False,,,,,,False,True,3a1d144a-0d22-ba9f-884c-18b40551ebd0,6
+3a1d144a-0e1c-173e-940f-c33bf36e5749,Makine 7,Mitsubishi,CYCLE_TIME_M800__GetCycleTimeM800,cycle_time,True,STOCK_CYCLE,,,STOCK_CYCLE,,False,True,3a1d144a-0d22-ba9f-884c-18b40551ebd0,6
+3a1d144a-0e4d-92cf-fc7d-fe18c4edb7d3,Makine 7,Mitsubishi,PROGRAM_NUMBER_2__GetProgramNumber2(EZNC_MAINPRG),program,False,STOCK_NO,,,STOCK_NO,,False,True,3a1d144a-0d22-ba9f-884c-18b40551ebd0,6
+3a1d8054-95eb-2cd3-e5e4-0494d8ab6d83,Makine 3,Fanuc,PIECES_PRODUCED,production_count,False,,,,,,False,True,3a1d8054-94bd-747d-0e30-05d4ca302199,8
+3a1debd9-c400-3534-e396-307cf1f66870,Makine 4,Mitsubishi,RUN_STATUS_START__GetRunStartStatus,run_state,False,STOP,UNPLANNED,,STOP,UNPLANNED,False,True,3a1debd9-c20c-53ca-b094-d32a1e422887,10
+00000000-0000-0000-0000-000000000002,Makine 4,Mitsubishi,Test Production,test_prod,False,TEST_PROD,,,TEST_PROD,,False,True,3a1debd9-c20c-53ca-b094-d32a1e422887,10
+00000000-0000-0000-0000-000000000006,Makine 4,Mitsubishi,System Offline,stop_event,False,STOP,UNPLANNED,,STOP,UNPLANNED,False,True,3a1debd9-c20c-53ca-b094-d32a1e422887,10
+00000000-0000-0000-0000-000000000003,Makine 4,Mitsubishi,Manual Scrap,scrap,False,PROD_ERROR,,,PROD_ERROR,,False,True,3a1debd9-c20c-53ca-b094-d32a1e422887,10
+00000000-0000-0000-0000-000000000004,Makine 4,Mitsubishi,Manual Workorder,workorder,False,WORK_ORDER_NO,,,WORK_ORDER_NO,,False,True,3a1debd9-c20c-53ca-b094-d32a1e422887,10
+00000000-0000-0000-0000-000000000001,Makine 4,Mitsubishi,Undefined Stoppage,stop_event,False,STOP,UNPLANNED,,STOP,UNPLANNED,False,True,3a1debd9-c20c-53ca-b094-d32a1e422887,10
+00000000-0000-0000-0000-000000000006,Makine 5,Fanuc,System Offline,stop_event,False,STOP,UNPLANNED,,STOP,UNPLANNED,False,True,3a1debd9-412d-74b3-b3f9-832a50f89a94,9
+3a1d144a-0d4a-5f9d-852f-9f9ed0078021,Makine 7,Mitsubishi,START_TIME__GetStartTime,run_time,False,,,,,,False,True,3a1d144a-0d22-ba9f-884c-18b40551ebd0,6
+3a1d144a-0e99-691b-1906-da5e5ce30e21,Makine 7,Mitsubishi,PROGRAM_POSITION_3__GetProgramPosition3(1),axis_position,False,,,,,,False,True,3a1d144a-0d22-ba9f-884c-18b40551ebd0,6
+3a1d144a-0ea8-c1ac-502e-8aed5a787fa8,Makine 7,Mitsubishi,ProgramNo,program,False,STOCK_NO,,,STOCK_NO,,False,True,3a1d144a-0d22-ba9f-884c-18b40551ebd0,6
+00000000-0000-0000-0000-000000000002,Makine 7,Mitsubishi,Test Production,test_prod,False,TEST_PROD,,,TEST_PROD,,False,True,3a1d144a-0d22-ba9f-884c-18b40551ebd0,6
+00000000-0000-0000-0000-000000000006,Makine 7,Mitsubishi,System Offline,stop_event,False,STOP,UNPLANNED,,STOP,UNPLANNED,False,True,3a1d144a-0d22-ba9f-884c-18b40551ebd0,6
+00000000-0000-0000-0000-000000000003,Makine 7,Mitsubishi,Manual Scrap,scrap,False,PROD_ERROR,,,PROD_ERROR,,False,True,3a1d144a-0d22-ba9f-884c-18b40551ebd0,6
+00000000-0000-0000-0000-000000000004,Makine 7,Mitsubishi,Manual Workorder,workorder,False,WORK_ORDER_NO,,,WORK_ORDER_NO,,False,True,3a1d144a-0d22-ba9f-884c-18b40551ebd0,6
+00000000-0000-0000-0000-000000000005,Makine 7,Mitsubishi,Manual Stock,stock,False,STOCK_NO,,,STOCK_NO,,False,True,3a1d144a-0d22-ba9f-884c-18b40551ebd0,6
+3a1debf8-8533-9bb0-8c4e-7d79f361ae82,Makine 10,Fanuc,RUNNING_PROGRAM_NO,program,False,,,,,,False,True,3a1debf8-841b-af4f-b67c-4aab557e9668,12
+3a1debf8-8516-92b6-5cb1-7570ba134b0a,Makine 10,Fanuc,EXECUTION,machine_mode,False,,,,,,False,True,3a1debf8-841b-af4f-b67c-4aab557e9668,12
+3a1debf8-84f4-7b25-72ae-9f2e4f882c90,Makine 10,Fanuc,M30 Duruş,stop_event,False,STOP,PLANNED,,STOP,PLANNED,False,True,3a1debf8-841b-af4f-b67c-4aab557e9668,12
+3a1debf8-84d6-69aa-c0ff-d994d62fba90,Makine 10,Fanuc,PIECES_PRODUCED_TOTAL,production_count,False,COUNT,,Ad,COUNT,,False,True,3a1debf8-841b-af4f-b67c-4aab557e9668,12
+3a1debf8-84b3-4e5e-3ed8-c71981ad8ee3,Makine 10,Fanuc,STATINFO_RUN,run_state,False,,,,,,False,True,3a1debf8-841b-af4f-b67c-4aab557e9668,12
+3a1debf8-8449-3cdc-4249-3c12f18ce1f4,Makine 10,Fanuc,IsNotRunning,run_state,False,STOP,UNPLANNED,,STOP,UNPLANNED,False,True,3a1debf8-841b-af4f-b67c-4aab557e9668,12
+3a1debf8-85bb-0830-c46a-4606f1a15ba3,Makine 10,Fanuc,MagazineToolChange,stop_event,False,STOP,PLANNED,,STOP,PLANNED,False,True,3a1debf8-841b-af4f-b67c-4aab557e9668,12
+3a1eb3d6-38cc-79cb-d4f0-7ee63c3559d9,Makine 10,Fanuc,ALM_ARR_MSG,alarm,False,ALERT_ARRAY,,,ALERT_ARRAY,,False,True,3a1debf8-841b-af4f-b67c-4aab557e9668,12
+3a1d144a-1056-37c9-c5b8-79ebd8a6a671,Makine 8,Mitsubishi,POWER_CONSUMPTION_M800A_SPINDLE_IN_DRIVE_SYSTEM__GetPowerConsumptionM800(1),spindle_power,True,PULSE_COUNT,,,PULSE_COUNT,,True,True,3a1d144a-0eb8-8b07-8466-41f170d828de,7
+3a1d144a-0f1c-ca1e-b157-96685d032273,Makine 8,Mitsubishi,SERVO_MOTOR_TEMPERATURE_M800__GetServoMotorTemperatureM800(1),servo_temp,True,,,,,,True,True,3a1d144a-0eb8-8b07-8466-41f170d828de,7
+3a1d144a-0eb8-6e2f-361f-a96f08a17059,Makine 8,Mitsubishi,RUN_STATUS_STOP__GetRunStopStatus,machine_mode,False,,,,,,False,True,3a1d144a-0eb8-8b07-8466-41f170d828de,7
+3a1d144a-0ecc-9c49-2942-8aeb9d55ae34,Makine 8,Mitsubishi,MagazineToolChange,stop_event,False,STOP,PLANNED,,STOP,PLANNED,False,True,3a1d144a-0eb8-8b07-8466-41f170d828de,7
+3a1d144a-0edd-79dc-7853-df1d0036fece,Makine 8,Mitsubishi,TCP_MACHINE_POSITION__GetTCPMachinePosition(1),axis_position,False,,,,,,False,True,3a1d144a-0eb8-8b07-8466-41f170d828de,7
+3a1d144a-0f0b-69eb-f079-e7270419f9f1,Makine 8,Mitsubishi,RUN_STATUS_PAUSE__GetRunPauseStatus,machine_mode,False,,,,,,False,True,3a1d144a-0eb8-8b07-8466-41f170d828de,7
+3a1d144a-0f2d-801e-613d-2e7300ce0eb8,Makine 8,Mitsubishi,PATH_LOAD_MODULE__GetPathLoadModule,path_load,True,,,,,,False,True,3a1d144a-0eb8-8b07-8466-41f170d828de,7
+3a1d144a-0f3c-df7f-1ed0-64158221a5f4,Makine 8,Mitsubishi,NC_MODE__GetNcMode,machine_mode,False,,,,,,False,True,3a1d144a-0eb8-8b07-8466-41f170d828de,7
+3a1d144a-0f4d-c133-2ac4-2dc7d884f53b,Makine 8,Mitsubishi,HEAD__GetHead,machine_mode,False,,,,,,False,True,3a1d144a-0eb8-8b07-8466-41f170d828de,7
+3a1d144a-0f85-3fa6-dc9c-b0dd0f909c27,Makine 8,Mitsubishi,TCP_WORK_POSITION__GetTCPWorkPosition(2),axis_position,False,,,,,,False,True,3a1d144a-0eb8-8b07-8466-41f170d828de,7
+3a1d144a-0f98-73a9-05e6-5ba241191220,Makine 8,Mitsubishi,PROGRAM_POSITION_3__GetProgramPosition3(1),axis_position,False,,,,,,False,True,3a1d144a-0eb8-8b07-8466-41f170d828de,7
+3a1d144a-0faa-4160-dd45-6f9714c1e30b,Makine 8,Mitsubishi,PROGRAM_POSITION_3__GetProgramPosition3(2),axis_position,False,,,,,,False,True,3a1d144a-0eb8-8b07-8466-41f170d828de,7
+3a1d144a-0fbc-ea41-fad6-cd0275481a2b,Makine 8,Mitsubishi,PROGRAM_NUMBER_2__GetProgramNumber2(EZNC_MAINPRG),program,False,STOCK_NO,,,STOCK_NO,,False,True,3a1d144a-0eb8-8b07-8466-41f170d828de,7
+3a1d144a-0fce-169b-6196-3b80c7bc8aa2,Makine 8,Mitsubishi,START_TIME__GetStartTime,run_time,False,,,,,,False,True,3a1d144a-0eb8-8b07-8466-41f170d828de,7
+3a1d144a-0fdf-c2b4-b20b-89a1995f2c7a,Makine 8,Mitsubishi,"COMMAND_2__GetCommand2(EZNC_M, 1)",axis_position,False,,,,,,False,True,3a1d144a-0eb8-8b07-8466-41f170d828de,7
+3a1d144a-101a-85cc-e146-33dbca01eff4,Makine 8,Mitsubishi,CYCLE_TIME_M800__GetCycleTimeM800,cycle_time,True,STOCK_CYCLE,,,STOCK_CYCLE,,False,True,3a1d144a-0eb8-8b07-8466-41f170d828de,7
+3a1debd9-c418-a63b-2e1f-54378680e0b0,Makine 4,Mitsubishi,TCP_MACHINE_POSITION__GetTCPMachinePosition(1),axis_position,False,,,,,,False,True,3a1debd9-c20c-53ca-b094-d32a1e422887,10
+3a1d144a-0ff2-63ca-15e2-b690b77bb8ba,Makine 8,Mitsubishi,Counter,counter,False,PULSE_COUNT,,,PULSE_COUNT,,False,True,3a1d144a-0eb8-8b07-8466-41f170d828de,7
+3a1d144a-102e-06f6-9538-8d4baf08eb04,Makine 8,Mitsubishi,ProgramNo,program,False,STOCK_NO,,,STOCK_NO,,False,True,3a1d144a-0eb8-8b07-8466-41f170d828de,7
+3a1d144a-1042-e88a-2638-55f9bb49d01f,Makine 8,Mitsubishi,NEXT_DISTANCE_GetNextDistance(1),axis_position,False,,,,,,False,True,3a1d144a-0eb8-8b07-8466-41f170d828de,7
+00000000-0000-0000-0000-000000000002,Makine 8,Mitsubishi,Test Production,test_prod,False,TEST_PROD,,,TEST_PROD,,False,True,3a1d144a-0eb8-8b07-8466-41f170d828de,7
+00000000-0000-0000-0000-000000000006,Makine 8,Mitsubishi,System Offline,stop_event,False,STOP,UNPLANNED,,STOP,UNPLANNED,False,True,3a1d144a-0eb8-8b07-8466-41f170d828de,7
+00000000-0000-0000-0000-000000000003,Makine 8,Mitsubishi,Manual Scrap,scrap,False,PROD_ERROR,,,PROD_ERROR,,False,True,3a1d144a-0eb8-8b07-8466-41f170d828de,7
+00000000-0000-0000-0000-000000000004,Makine 8,Mitsubishi,Manual Workorder,workorder,False,WORK_ORDER_NO,,,WORK_ORDER_NO,,False,True,3a1d144a-0eb8-8b07-8466-41f170d828de,7
+00000000-0000-0000-0000-000000000005,Makine 8,Mitsubishi,Manual Stock,stock,False,STOCK_NO,,,STOCK_NO,,False,True,3a1d144a-0eb8-8b07-8466-41f170d828de,7
+00000000-0000-0000-0000-000000000001,Makine 8,Mitsubishi,Undefined Stoppage,stop_event,False,STOP,UNPLANNED,,STOP,UNPLANNED,False,True,3a1d144a-0eb8-8b07-8466-41f170d828de,7
+3a1debd9-c22f-7ab5-353f-d76a751a2f86,Makine 4,Mitsubishi,NEXT_DISTANCE_GetNextDistance(1),axis_position,False,,,,,,False,True,3a1debd9-c20c-53ca-b094-d32a1e422887,10
+3a1debd9-c278-65be-2e2e-9af724644fb2,Makine 4,Mitsubishi,CYCLE_TIME_M800__GetCycleTimeM800,cycle_time,True,STOCK_CYCLE,,,STOCK_CYCLE,,False,True,3a1debd9-c20c-53ca-b094-d32a1e422887,10
+3a1d1435-0aaa-7214-5127-dc161eb09477,Makine 9,Fanuc,PIECES_PRODUCED_TOTAL,production_count,False,COUNT,,Ad,COUNT,,False,True,3a1d1435-0a17-9903-5c19-3d0f521b78ee,3
+3a1d1435-0a54-9f6f-bd5e-dc7da2ba157f,Makine 9,Fanuc,STATINFO_RUN,run_state,False,,,,,,False,True,3a1d1435-0a17-9903-5c19-3d0f521b78ee,3
+3a1d1435-0ae6-113d-008e-76945eb9cdc2,Makine 9,Fanuc,IsNotRunning,run_state,False,STOP,UNPLANNED,,STOP,UNPLANNED,False,True,3a1d1435-0a17-9903-5c19-3d0f521b78ee,3
+3a1d1435-0a64-a258-0206-0e93d7412cb1,Makine 9,Fanuc,RUNNING_PROGRAM_NO,program,False,,,,,,False,True,3a1d1435-0a17-9903-5c19-3d0f521b78ee,3
+3a1d1435-0a18-f387-0407-539b7cf53d67,Makine 9,Fanuc,CYCLE_TIME_MS,cycle_time,True,STOCK_CYCLE,,,STOCK_CYCLE,,False,True,3a1d1435-0a17-9903-5c19-3d0f521b78ee,3
+3a1d1435-0a2c-f822-964b-1e9d64dd0d51,Makine 9,Fanuc,PIECES_PRODUCED,production_count,False,,,,,,False,True,3a1d1435-0a17-9903-5c19-3d0f521b78ee,3
+3a1d1435-0a40-727a-69f5-bdcccf7a1e5b,Makine 9,Fanuc,M30 Duruş,stop_event,False,STOP,PLANNED,,STOP,PLANNED,False,True,3a1d1435-0a17-9903-5c19-3d0f521b78ee,3
+3a1d1435-0a75-7386-0b0c-67e73762f89d,Makine 9,Fanuc,MagazineToolChange,stop_event,False,STOP,PLANNED,,STOP,PLANNED,False,True,3a1d1435-0a17-9903-5c19-3d0f521b78ee,3
+3a1debd9-c28e-5df8-06cf-9538e4be8e1b,Makine 4,Mitsubishi,"COMMAND_2__GetCommand2(EZNC_M, 1)",axis_position,False,,,,,,False,True,3a1debd9-c20c-53ca-b094-d32a1e422887,10
+3a1debd9-c2a4-6d76-daff-2313d1624d9a,Makine 4,Mitsubishi,START_TIME__GetStartTime,run_time,False,,,,,,False,True,3a1debd9-c20c-53ca-b094-d32a1e422887,10
+3a1debd9-c2b8-df9d-93bd-3e2df61b2292,Makine 4,Mitsubishi,PROGRAM_NUMBER_2__GetProgramNumber2(EZNC_MAINPRG),program,False,STOCK_NO,,,STOCK_NO,,False,True,3a1debd9-c20c-53ca-b094-d32a1e422887,10
+3a1debd9-c2f5-3719-ede0-352fcb4f61e2,Makine 4,Mitsubishi,TCP_WORK_POSITION__GetTCPWorkPosition(2),axis_position,False,,,,,,False,True,3a1debd9-c20c-53ca-b094-d32a1e422887,10
+3a1d1435-0a87-a71d-0cda-85e686833f1c,Makine 9,Fanuc,ProgramNo,program,False,STOCK_NO,,,STOCK_NO,,False,True,3a1d1435-0a17-9903-5c19-3d0f521b78ee,3
+3a1d1435-0a99-4e77-1d6c-a3cdb0678227,Makine 9,Fanuc,EXECUTION,machine_mode,False,,,,,,False,True,3a1d1435-0a17-9903-5c19-3d0f521b78ee,3
+3a1eb3d6-37b2-d7ed-be5f-bae90f8b3ef2,Makine 9,Fanuc,ALM_ARR_MSG,alarm,False,ALERT_ARRAY,,,ALERT_ARRAY,,False,True,3a1d1435-0a17-9903-5c19-3d0f521b78ee,3
+00000000-0000-0000-0000-000000000002,Makine 9,Fanuc,Test Production,test_prod,False,TEST_PROD,,,TEST_PROD,,False,True,3a1d1435-0a17-9903-5c19-3d0f521b78ee,3
+00000000-0000-0000-0000-000000000006,Makine 9,Fanuc,System Offline,stop_event,False,STOP,UNPLANNED,,STOP,UNPLANNED,False,True,3a1d1435-0a17-9903-5c19-3d0f521b78ee,3
+00000000-0000-0000-0000-000000000003,Makine 9,Fanuc,Manual Scrap,scrap,False,PROD_ERROR,,,PROD_ERROR,,False,True,3a1d1435-0a17-9903-5c19-3d0f521b78ee,3
+00000000-0000-0000-0000-000000000004,Makine 9,Fanuc,Manual Workorder,workorder,False,WORK_ORDER_NO,,,WORK_ORDER_NO,,False,True,3a1d1435-0a17-9903-5c19-3d0f521b78ee,3
+00000000-0000-0000-0000-000000000005,Makine 9,Fanuc,Manual Stock,stock,False,STOCK_NO,,,STOCK_NO,,False,True,3a1d1435-0a17-9903-5c19-3d0f521b78ee,3
+00000000-0000-0000-0000-000000000001,Makine 9,Fanuc,Undefined Stoppage,stop_event,False,STOP,UNPLANNED,,STOP,UNPLANNED,False,True,3a1d1435-0a17-9903-5c19-3d0f521b78ee,3
+3a1d1435-0c08-4aee-4375-dd331c56e7e9,Makine 1,Fanuc,STATINFO_RUN,run_state,False,,,,,,False,True,3a1d1435-0bb7-86db-9c63-ca5b1272cbf3,4
+3a1d1435-0c5e-0279-215d-45ffe7205c87,Makine 1,Fanuc,MagazineToolChange,stop_event,False,STOP,PLANNED,,STOP,PLANNED,False,True,3a1d1435-0bb7-86db-9c63-ca5b1272cbf3,4
+3a1d1435-0c4d-ceaf-e7a7-206557992f14,Makine 1,Fanuc,ProgramNo,program,False,STOCK_NO,,,STOCK_NO,,False,True,3a1d1435-0bb7-86db-9c63-ca5b1272cbf3,4
+3a1d1435-0c2b-81d1-6bdc-96f980ca27f0,Makine 1,Fanuc,M30 Duruş,stop_event,False,STOP,PLANNED,,STOP,PLANNED,False,True,3a1d1435-0bb7-86db-9c63-ca5b1272cbf3,4
+3a1d1435-0bd5-aa55-e8a0-1e637db187fa,Makine 1,Fanuc,EXECUTION,machine_mode,False,,,,,,False,True,3a1d1435-0bb7-86db-9c63-ca5b1272cbf3,4
+3a1d1435-0c3c-3a53-b34c-5c0c933210e9,Makine 1,Fanuc,PIECES_PRODUCED,production_count,False,,,,,,False,True,3a1d1435-0bb7-86db-9c63-ca5b1272cbf3,4
+3a1d1435-0bf7-291b-8baa-74658610c6ef,Makine 1,Fanuc,RUNNING_PROGRAM_NO,program,False,,,,,,False,True,3a1d1435-0bb7-86db-9c63-ca5b1272cbf3,4
+3a1d1435-0bb7-3baf-8108-6370b43b2d35,Makine 1,Fanuc,CYCLE_TIME_MS,cycle_time,True,STOCK_CYCLE,,,STOCK_CYCLE,,False,True,3a1d1435-0bb7-86db-9c63-ca5b1272cbf3,4
+3a1d1435-0c1a-8ed1-d779-2434945409d3,Makine 1,Fanuc,PIECES_PRODUCED_TOTAL,production_count,False,COUNT,,Ad,COUNT,,False,True,3a1d1435-0bb7-86db-9c63-ca5b1272cbf3,4
+3a1d1435-0be7-9d85-956b-1d4859553afa,Makine 1,Fanuc,IsNotRunning,run_state,False,STOP,UNPLANNED,,STOP,UNPLANNED,False,True,3a1d1435-0bb7-86db-9c63-ca5b1272cbf3,4
+3a1eb3d6-3861-8614-2781-23ce6a1bffce,Makine 1,Fanuc,ALM_ARR_MSG,alarm,False,ALERT_ARRAY,,,ALERT_ARRAY,,False,True,3a1d1435-0bb7-86db-9c63-ca5b1272cbf3,4
+00000000-0000-0000-0000-000000000002,Makine 1,Fanuc,Test Production,test_prod,False,TEST_PROD,,,TEST_PROD,,False,True,3a1d1435-0bb7-86db-9c63-ca5b1272cbf3,4
+3a1debed-c893-2f4c-a687-32e8654d8864,Makine 6,Mitsubishi,"COMMAND_2__GetCommand2(EZNC_M, 1)",axis_position,False,,,,,,False,True,3a1debed-c5e4-2f15-1576-2551d5f4bcbf,11
+3a1debed-c8b1-0bc5-eee3-d95d344ac39c,Makine 6,Mitsubishi,CYCLE_TIME_M800__GetCycleTimeM800,cycle_time,True,STOCK_CYCLE,,,STOCK_CYCLE,,False,True,3a1debed-c5e4-2f15-1576-2551d5f4bcbf,11
+3a1debed-c7b1-7da2-d2db-4fb24ccd995f,Makine 6,Mitsubishi,PATH_LOAD_MODULE__GetPathLoadModule,path_load,True,,,,,,False,True,3a1debed-c5e4-2f15-1576-2551d5f4bcbf,11
+3a1debed-c7cb-d872-fe79-f303b073046d,Makine 6,Mitsubishi,NC_MODE__GetNcMode,machine_mode,False,,,,,,False,True,3a1debed-c5e4-2f15-1576-2551d5f4bcbf,11
+3a1debed-c7e6-29c1-532c-f136e2e33555,Makine 6,Mitsubishi,HEAD__GetHead,machine_mode,False,,,,,,False,True,3a1debed-c5e4-2f15-1576-2551d5f4bcbf,11
+3a1debed-c801-4f2a-16f3-22cbf70499ea,Makine 6,Mitsubishi,TCP_WORK_POSITION__GetTCPWorkPosition(2),axis_position,False,,,,,,False,True,3a1debed-c5e4-2f15-1576-2551d5f4bcbf,11
+3a1debed-c81d-a3f5-7cb7-0b824d897f35,Makine 6,Mitsubishi,PROGRAM_POSITION_3__GetProgramPosition3(1),axis_position,False,,,,,,False,True,3a1debed-c5e4-2f15-1576-2551d5f4bcbf,11
+3a1debed-c839-c9d6-7f83-53943f9e8147,Makine 6,Mitsubishi,PROGRAM_POSITION_3__GetProgramPosition3(2),axis_position,False,,,,,,False,True,3a1debed-c5e4-2f15-1576-2551d5f4bcbf,11
+3a1debed-c855-bbc9-db3d-9f86bc2c8acb,Makine 6,Mitsubishi,PROGRAM_NUMBER_2__GetProgramNumber2(EZNC_MAINPRG),program,False,STOCK_NO,,,STOCK_NO,,False,True,3a1debed-c5e4-2f15-1576-2551d5f4bcbf,11
+3a1debed-c872-5415-11a3-8590e62ca066,Makine 6,Mitsubishi,START_TIME__GetStartTime,run_time,False,,,,,,False,True,3a1debed-c5e4-2f15-1576-2551d5f4bcbf,11
+00000000-0000-0000-0000-000000000002,Makine 6,Mitsubishi,Test Production,test_prod,False,TEST_PROD,,,TEST_PROD,,False,True,3a1debed-c5e4-2f15-1576-2551d5f4bcbf,11
+00000000-0000-0000-0000-000000000006,Makine 6,Mitsubishi,System Offline,stop_event,False,STOP,UNPLANNED,,STOP,UNPLANNED,False,True,3a1debed-c5e4-2f15-1576-2551d5f4bcbf,11
+00000000-0000-0000-0000-000000000006,Makine 1,Fanuc,System Offline,stop_event,False,STOP,UNPLANNED,,STOP,UNPLANNED,False,True,3a1d1435-0bb7-86db-9c63-ca5b1272cbf3,4
+00000000-0000-0000-0000-000000000003,Makine 1,Fanuc,Manual Scrap,scrap,False,PROD_ERROR,,,PROD_ERROR,,False,True,3a1d1435-0bb7-86db-9c63-ca5b1272cbf3,4
+00000000-0000-0000-0000-000000000004,Makine 1,Fanuc,Manual Workorder,workorder,False,WORK_ORDER_NO,,,WORK_ORDER_NO,,False,True,3a1d1435-0bb7-86db-9c63-ca5b1272cbf3,4
+00000000-0000-0000-0000-000000000005,Makine 1,Fanuc,Manual Stock,stock,False,STOCK_NO,,,STOCK_NO,,False,True,3a1d1435-0bb7-86db-9c63-ca5b1272cbf3,4
+00000000-0000-0000-0000-000000000001,Makine 1,Fanuc,Undefined Stoppage,stop_event,False,STOP,UNPLANNED,,STOP,UNPLANNED,False,True,3a1d1435-0bb7-86db-9c63-ca5b1272cbf3,4
+3a1d1435-0afb-6139-3b0c-e51a87e8ba74,Makine 2,Fanuc,MagazineToolChange,stop_event,False,STOP,PLANNED,,STOP,PLANNED,False,True,3a1d1435-0afb-41a7-2d12-5eb77c185258,5
+3a1d1435-0b13-3494-ee4c-6864a92cfbf3,Makine 2,Fanuc,ProgramNo,program,False,STOCK_NO,,,STOCK_NO,,False,True,3a1d1435-0afb-41a7-2d12-5eb77c185258,5
+3a1d1435-0b26-5aa3-ca40-5c430f8fcc84,Makine 2,Fanuc,PIECES_PRODUCED,production_count,False,,,,,,False,True,3a1d1435-0afb-41a7-2d12-5eb77c185258,5
+3a1d1435-0b4c-2872-6dcb-c08f106577a5,Makine 2,Fanuc,PIECES_PRODUCED_TOTAL,production_count,False,COUNT,,Ad,COUNT,,False,True,3a1d1435-0afb-41a7-2d12-5eb77c185258,5
+3a1d1435-0b71-0194-598a-2963fece696b,Makine 2,Fanuc,RUNNING_PROGRAM_NO,program,False,,,,,,False,True,3a1d1435-0afb-41a7-2d12-5eb77c185258,5
+3a1d1435-0b38-ba78-67df-f4983c48689e,Makine 2,Fanuc,M30 Duruş,stop_event,False,STOP,PLANNED,,STOP,PLANNED,False,True,3a1d1435-0afb-41a7-2d12-5eb77c185258,5
+3a1d8054-95ff-7a99-0407-18fadd5c51d3,Makine 3,Fanuc,ProgramNo,program,False,STOCK_NO,,,STOCK_NO,,False,True,3a1d8054-94bd-747d-0e30-05d4ca302199,8
+3a1d8054-9615-02dc-476a-9c4eb5ceb810,Makine 3,Fanuc,MagazineToolChange,stop_event,False,STOP,PLANNED,,STOP,PLANNED,False,True,3a1d8054-94bd-747d-0e30-05d4ca302199,8
+3a1d8054-962b-15f4-8ddb-67949fae10ae,Makine 3,Fanuc,CYCLE_TIME_MS,cycle_time,True,STOCK_CYCLE,,,STOCK_CYCLE,,False,True,3a1d8054-94bd-747d-0e30-05d4ca302199,8
+00000000-0000-0000-0000-000000000002,Makine 10,Fanuc,Test Production,test_prod,False,TEST_PROD,,,TEST_PROD,,False,True,3a1debf8-841b-af4f-b67c-4aab557e9668,12
+00000000-0000-0000-0000-000000000006,Makine 10,Fanuc,System Offline,stop_event,False,STOP,UNPLANNED,,STOP,UNPLANNED,False,True,3a1debf8-841b-af4f-b67c-4aab557e9668,12
+00000000-0000-0000-0000-000000000003,Makine 10,Fanuc,Manual Scrap,scrap,False,PROD_ERROR,,,PROD_ERROR,,False,True,3a1debf8-841b-af4f-b67c-4aab557e9668,12
+00000000-0000-0000-0000-000000000004,Makine 10,Fanuc,Manual Workorder,workorder,False,WORK_ORDER_NO,,,WORK_ORDER_NO,,False,True,3a1debf8-841b-af4f-b67c-4aab557e9668,12
+00000000-0000-0000-0000-000000000005,Makine 10,Fanuc,Manual Stock,stock,False,STOCK_NO,,,STOCK_NO,,False,True,3a1debf8-841b-af4f-b67c-4aab557e9668,12
+00000000-0000-0000-0000-000000000001,Makine 10,Fanuc,Undefined Stoppage,stop_event,False,STOP,UNPLANNED,,STOP,UNPLANNED,False,True,3a1debf8-841b-af4f-b67c-4aab557e9668,12

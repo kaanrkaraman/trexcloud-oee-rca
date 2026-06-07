@@ -1,0 +1,253 @@
+{
+  "old_recurrence_top": [
+    {
+      "category": "CONNECTIVITY",
+      "n_machines": 11,
+      "total_hours": 547.1650086111111,
+      "systemic_score": 6018.82
+    },
+    {
+      "category": "CONNECTIVITY",
+      "n_machines": 11,
+      "total_hours": 430.2005150148333,
+      "systemic_score": 4732.21
+    },
+    {
+      "category": "CONNECTIVITY",
+      "n_machines": 11,
+      "total_hours": 311.11674666666664,
+      "systemic_score": 3422.28
+    },
+    {
+      "category": "CONNECTIVITY",
+      "n_machines": 11,
+      "total_hours": 175.72377333333333,
+      "systemic_score": 1932.96
+    },
+    {
+      "category": "UNPLANNED_RUNSTOP",
+      "n_machines": 7,
+      "total_hours": 145.28300277777777,
+      "systemic_score": 1016.98
+    },
+    {
+      "category": "CONNECTIVITY",
+      "n_machines": 11,
+      "total_hours": 73.12903055555556,
+      "systemic_score": 804.42
+    }
+  ],
+  "old_connectivity_rank": 0,
+  "synchronization": {
+    "n_machines": 8,
+    "buckets": 6603,
+    "observed_co_stop_hours": 708,
+    "free": {
+      "null": "free_shift",
+      "exp": 332.7,
+      "sd": 46.6,
+      "z": 8.05,
+      "p": 0.0
+    },
+    "daily": {
+      "null": "daily_preserving",
+      "exp": 563.9,
+      "sd": 27.9,
+      "z": 5.16,
+      "p": 0.0
+    },
+    "top3_hour_share": 0.428,
+    "busiest_hours": [
+      14,
+      9,
+      12
+    ],
+    "n_distinct_reasons": 1,
+    "reason_note": "VACUOUS \u2014 single generic label, no reason granularity",
+    "n_co_stop_buckets": 708
+  },
+  "coupling": {
+    "all": {
+      "median_off": -0.08,
+      "max_off": 0.851,
+      "clusters": [
+        [
+          "Makine 1",
+          "Makine 2",
+          "Makine 3",
+          "Makine 9"
+        ]
+      ],
+      "top_pairs": [
+        [
+          "Makine 1",
+          "Makine 9",
+          0.851
+        ],
+        [
+          "Makine 3",
+          "Makine 9",
+          0.845
+        ]
+      ]
+    },
+    "live": {
+      "median_off": -0.078,
+      "max_off": 0.851,
+      "clusters": [
+        [
+          "Makine 1",
+          "Makine 2",
+          "Makine 3",
+          "Makine 9"
+        ]
+      ],
+      "top_pairs": [
+        [
+          "Makine 1",
+          "Makine 9",
+          0.851
+        ],
+        [
+          "Makine 3",
+          "Makine 9",
+          0.845
+        ]
+      ]
+    },
+    "running": {
+      "median_off": -0.029,
+      "max_off": 0.907,
+      "clusters": [
+        [
+          "Makine 1",
+          "Makine 2",
+          "Makine 3",
+          "Makine 9"
+        ]
+      ],
+      "top_pairs": [
+        [
+          "Makine 1",
+          "Makine 9",
+          0.907
+        ],
+        [
+          "Makine 3",
+          "Makine 9",
+          0.905
+        ]
+      ]
+    }
+  },
+  "regimes": {
+    "cycle_time_mean, run_state_duty, production_count_delta": [
+      "Makine 1",
+      "Makine 2",
+      "Makine 3",
+      "Makine 5",
+      "Makine 9"
+    ],
+    "cycle_time_mean, run_state_duty, run_time_delta, axis_move_total": [
+      "Makine 7"
+    ],
+    "run_state_duty, run_time_delta, axis_move_total": [
+      "Makine 8"
+    ],
+    "(blind)": [
+      "ARES SEIKI  (Fanuc)",
+      "Makine 10",
+      "Makine 4",
+      "Makine 6",
+      "TurboCut 400"
+    ]
+  },
+  "comparability": [
+    {
+      "role": "cycle_time_mean",
+      "machines": 6,
+      "median_min": 123113.33333333334,
+      "median_max": 1003918.3673469388,
+      "spread_x": 8.2
+    },
+    {
+      "role": "run_state_duty",
+      "machines": 7,
+      "median_min": 0.5,
+      "median_max": 1.0,
+      "spread_x": 2.0
+    },
+    {
+      "role": "run_time_delta",
+      "machines": 2,
+      "median_min": 120000.0,
+      "median_max": 120000.0,
+      "spread_x": 1.0
+    }
+  ],
+  "availability": [
+    {
+      "machine": "Makine 1",
+      "live_buckets": 73118,
+      "cycle_time_mean": 72832,
+      "run_state_duty": 72838,
+      "run_time_delta": 0,
+      "axis_move_total": 0,
+      "production_count_delta": 73086
+    },
+    {
+      "machine": "Makine 2",
+      "live_buckets": 75299,
+      "cycle_time_mean": 74958,
+      "run_state_duty": 74976,
+      "run_time_delta": 0,
+      "axis_move_total": 0,
+      "production_count_delta": 75157
+    },
+    {
+      "machine": "Makine 3",
+      "live_buckets": 68733,
+      "cycle_time_mean": 68419,
+      "run_state_duty": 68410,
+      "run_time_delta": 0,
+      "axis_move_total": 0,
+      "production_count_delta": 68703
+    },
+    {
+      "machine": "Makine 5",
+      "live_buckets": 64209,
+      "cycle_time_mean": 63865,
+      "run_state_duty": 63857,
+      "run_time_delta": 0,
+      "axis_move_total": 0,
+      "production_count_delta": 64166
+    },
+    {
+      "machine": "Makine 7",
+      "live_buckets": 42208,
+      "cycle_time_mean": 7429,
+      "run_state_duty": 7438,
+      "run_time_delta": 42213,
+      "axis_move_total": 42218,
+      "production_count_delta": 0
+    },
+    {
+      "machine": "Makine 8",
+      "live_buckets": 43398,
+      "cycle_time_mean": 0,
+      "run_state_duty": 6921,
+      "run_time_delta": 43401,
+      "axis_move_total": 43407,
+      "production_count_delta": 0
+    },
+    {
+      "machine": "Makine 9",
+      "live_buckets": 52686,
+      "cycle_time_mean": 52510,
+      "run_state_duty": 52496,
+      "run_time_delta": 0,
+      "axis_move_total": 0,
+      "production_count_delta": 52675
+    }
+  ]
+}

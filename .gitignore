@@ -1,0 +1,21 @@
+# competition-provided data (large, not ours to publish)
+dataset/
+
+# python
+.venv/
+__pycache__/
+*.pyc
+*.egg-info/
+.pytest_cache/
+
+# node / web build
+web/node_modules/
+web/dist/
+
+# large regenerable binaries (CSV/JSON artifacts are kept)
+analysis/artifacts/*.parquet
+analysis/artifacts/*.pt
+
+# os / tooling
+.DS_Store
+*.log

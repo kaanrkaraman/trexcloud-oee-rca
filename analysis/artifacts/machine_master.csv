@@ -1,0 +1,13 @@
+unit_uid,name,vendor,collector_type_name,is_enabled,nw_unit_id,has_telemetry
+3a1bd958-3763-b086-5e4a-1a4d1755b0e9,TurboCut 400,Nukon,LibPlc,False,,False
+3a1d144a-0d22-ba9f-884c-18b40551ebd0,Makine 7,Mitsubishi,MitsubishiCnc,True,6.0,True
+3a1d144a-0eb8-8b07-8466-41f170d828de,Makine 8,Mitsubishi,MitsubishiCnc,True,7.0,True
+3a1debd9-c20c-53ca-b094-d32a1e422887,Makine 4,Mitsubishi,MitsubishiCnc,True,10.0,True
+3a1d1435-0857-d341-c573-17f864248e16,ARES SEIKI  (Fanuc),Fanuc,FanucFocas,False,,False
+3a1debed-c5e4-2f15-1576-2551d5f4bcbf,Makine 6,Mitsubishi,MitsubishiCnc,True,11.0,True
+3a1d1435-0a17-9903-5c19-3d0f521b78ee,Makine 9,Fanuc,FanucFocas,True,3.0,True
+3a1d1435-0bb7-86db-9c63-ca5b1272cbf3,Makine 1,Fanuc,FanucFocas,True,4.0,True
+3a1d1435-0afb-41a7-2d12-5eb77c185258,Makine 2,Fanuc,FanucFocas,True,5.0,True
+3a1d8054-94bd-747d-0e30-05d4ca302199,Makine 3,Fanuc,FanucFocas,True,8.0,True
+3a1debd9-412d-74b3-b3f9-832a50f89a94,Makine 5,Fanuc,FanucFocas,True,9.0,True
+3a1debf8-841b-af4f-b67c-4aab557e9668,Makine 10,Fanuc,FanucFocas,True,12.0,True

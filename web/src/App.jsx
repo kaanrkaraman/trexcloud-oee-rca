@@ -1,6 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { Panel, Stat, Tag, RiskChart, ParetoChart, OeeBars, TelemetrySpark, SyncBars, DeviationBars } from './components.jsx'
-import { recompute, whatIfW1, financials, fmtPct, fmtInt, fmtH, oeeColor } from './lib.js'
+import {
+  recompute, whatIfW1, financials, pmFinancials,
+  fmtPct, fmtInt, fmtH, fmtEur, oeeColor,
+} from './lib.js'
 
 const FANUC = ['Makine 1', 'Makine 2', 'Makine 3', 'Makine 5', 'Makine 9']
 const NAV = [
@@ -188,8 +191,17 @@ function Predict({ data }) {
 
       <div style={{ height: 14 }} />
 
-      {/* 3 — WHAT-IF */}
+      {/* 3 — PREDICTIVE-MAINTENANCE VALUE */}
+      <PmValue pm={data.pm_value} />
+
+      <div style={{ height: 14 }} />
+
+      {/* 4 — WHAT-IF */}
       <WhatIf machine={mc} assumptions={data.whatif_assumptions} />
+
+      <div style={{ height: 14 }} />
+
+      <ScenarioCatalog catalog={data.scenarios} />
     </>
   )
 }
@@ -280,7 +292,7 @@ function WhatIf({ machine, assumptions }) {
   const set = (k) => (e) => setA({ ...a, [k]: parseFloat(e.target.value) || 0 })
 
   return (
-    <Panel title="3 · What-If — düzeltmenin OEE / € etkisi" icon="◇" cls="d4">
+    <Panel title="4 · What-If — düzeltmenin OEE / € etkisi" icon="◇" cls="d4">
       <div className="ctl" style={{ marginBottom: 12 }}>
         <label className="fld" style={{ flex: 1, minWidth: 240 }}>
           {machine.name} plansız duruşunu %{pct} azalt
@@ -315,6 +327,143 @@ function WhatIf({ machine, assumptions }) {
             <Stat label="Geri ödeme (gün)" value={fin.payback ? fin.payback.toFixed(1) : '—'} plain />
           </div>
         </div>
+      </div>
+    </Panel>
+  )
+}
+
+function PmValue({ pm }) {
+  const defaults = pm.assumptions
+  const [effectiveness, setEffectiveness] = useState(
+    Math.round(defaults.pm.intervention_effectiveness * 100))
+  const [downtimeCost, setDowntimeCost] = useState(
+    defaults.financial.downtime_cost_per_hour)
+  const [interventionCost, setInterventionCost] = useState(
+    defaults.financial.intervention_cost)
+  const result = useMemo(() => pmFinancials(
+    pm, effectiveness / 100, downtimeCost, interventionCost,
+  ), [pm, effectiveness, downtimeCost, interventionCost])
+  const d = pm.deployed
+
+  return (
+    <Panel title="3 · Kestirimci Bakım Getirisi — ROC/lift → OEE/€" icon="◆" cls="d4"
+      cap={`Tutulmamış gelecekte <b>${d.caught_stops}/${d.significant_stops}</b> anlamlı duruş
+        yakalandı (recall <b>${(d.recall * 100).toFixed(1)}%</b>). Değer yalnız yakalanan
+        duruşların varsayılan etkililik payından gelir; kaçırılan duruşlara değer yazılmaz.
+        Eşik <b>${d.threshold}</b> olarak sabittir.`}>
+      <div className="scope" style={{ marginBottom: 14 }}>
+        <b>Fanuc {`{1,2,3,5,9}`} / denetimli tahmin:</b> {d.episodes} alarm dönemi ·
+        dönem isabeti {(d.episode_precision * 100).toFixed(1)}% ·
+        yanlış alarm {d.false_alarm_episodes}. Her alarm dönemi, gerçek veya yanlış,
+        bir kontrol maliyeti doğurur.
+      </div>
+      <div className="ctl" style={{ marginBottom: 14 }}>
+        <label className="fld" style={{ minWidth: 250 }}>
+          Müdahale etkililiği %{effectiveness}
+          <input type="range" min="0" max="100" value={effectiveness}
+            onChange={(e) => setEffectiveness(+e.target.value)} />
+        </label>
+        <label className="fld">Duruş maliyeti / saat (€)
+          <input type="number" value={downtimeCost}
+            onChange={(e) => setDowntimeCost(parseFloat(e.target.value) || 0)} /></label>
+        <label className="fld">Alarm başı kontrol maliyeti (€)
+          <input type="number" value={interventionCost}
+            onChange={(e) => setInterventionCost(parseFloat(e.target.value) || 0)} /></label>
+      </div>
+      <div className="grid g3">
+        <div>
+          <div className="ptitle" style={{ fontSize: 11 }}>Tutulmamış test dönemi</div>
+          <div className="grid" style={{ gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+            <Stat label="Geri kazanılan saat" value={fmtH(result.preventedH)} />
+            <Stat label="ΔOEE" value={`+${(result.deltaOEE * 100).toFixed(2)} puan`} />
+            <Stat label="Net değer" value={fmtEur(result.observed.net)}
+              plain={result.observed.net < 0} />
+            <Stat label="ROI" value={result.observed.roi == null
+              ? '—' : `${(result.observed.roi * 100).toFixed(0)}%`}
+              plain={result.observed.roi < 0} />
+          </div>
+        </div>
+        <div>
+          <div className="ptitle" style={{ fontSize: 11 }}>365 gün projeksiyonu</div>
+          <div className="grid" style={{ gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+            <Stat label="Geri kazanılan saat / yıl"
+              value={fmtH(result.annualized.preventedH)} />
+            <Stat label="Brüt değer / yıl" value={fmtEur(result.annualized.gross)} plain />
+            <Stat label="Kontrol maliyeti / yıl"
+              value={fmtEur(result.annualized.intervention)} plain />
+            <Stat label="Net / yıl" value={fmtEur(result.annualized.net)}
+              plain={result.annualized.net < 0} />
+          </div>
+        </div>
+        <div>
+          <div className="ptitle" style={{ fontSize: 11 }}>
+            Ekonomik duyarlılık <Tag kind="amber">RETROSPEKTİF</Tag></div>
+          <div className="cap" style={{ border: 0, padding: 0 }}>
+            Denetim penceresinde net €'yu en yüksek yapan eşik
+            <b> {pm.sensitivity.economic_optimum.threshold.toFixed(2)}</b>.
+            Bu seçim recall'ı %{(pm.sensitivity.economic_optimum.recall * 100).toFixed(1)}
+            seviyesine indirip alarm sayısını {pm.sensitivity.economic_optimum.episodes}'e
+            düşürüyor. Canlı model eşiğinin yerine geçmez.
+          </div>
+          <div className="note">
+            <Tag kind="amber">VARSAYIM</Tag> Veri setinde maliyet veya müdahale etkililiği yoktur.
+            € sonuçları hipotezdir; recall ve alarm isabeti gerçek held-out ölçümlerdir.
+          </div>
+        </div>
+      </div>
+    </Panel>
+  )
+}
+
+function ScenarioCatalog({ catalog }) {
+  const [sort, setSort] = useState({ key: 'delta_OEE_pp', dir: -1 })
+  const rows = useMemo(() => [...(catalog.rows || [])].sort((a, b) => {
+    const av = a[sort.key], bv = b[sort.key]
+    if (typeof av === 'number' && typeof bv === 'number') return (av - bv) * sort.dir
+    return String(av ?? '').localeCompare(String(bv ?? '')) * sort.dir
+  }), [catalog, sort])
+  const order = (key) => setSort((s) => ({
+    key, dir: s.key === key ? -s.dir : -1,
+  }))
+  const head = (label, key) => (
+    <th className="sortable" onClick={() => order(key)}>
+      {label}{sort.key === key ? (sort.dir > 0 ? ' ▲' : ' ▼') : ''}
+    </th>
+  )
+
+  return (
+    <Panel title="5 · Senaryo Kataloğu — incelenebilir A/P/Q/OEE/€" icon="▤" cls="d5">
+      <div className="tablewrap">
+        <table className="dt">
+          <thead><tr>
+            {head('Senaryo', 'id')}{head('Makine / sahip', 'machine')}
+            {head('ΔA pp', 'delta_A_pp')}{head('ΔP pp', 'delta_P_pp')}
+            {head('ΔQ pp', 'delta_Q_pp')}{head('ΔOEE pp', 'delta_OEE_pp')}
+            {head('Runtime h', 'recovered_runtime_h')}
+            {head('Schedule h', 'recovered_schedule_h')}
+            {head('Net €', 'net_eur')}{head('Geri ödeme', 'payback_days')}
+          </tr></thead>
+          <tbody>{rows.map((r) => (
+            <tr key={r.id}>
+              <td><b>{r.id}</b> · {r.scenario}<div className="cellnote">{r.note}</div></td>
+              <td>{r.machine}<div className="cellnote">{r.owner}</div></td>
+              <td className="num">{r.delta_A_pp.toFixed(2)}</td>
+              <td className="num">{r.delta_P_pp.toFixed(2)}</td>
+              <td className="num">{r.delta_Q_pp.toFixed(2)}</td>
+              <td className={`num ${r.delta_OEE_pp > 0 ? 'win' : ''}`}>
+                {r.delta_OEE_pp.toFixed(2)}</td>
+              <td className="num">{r.recovered_runtime_h.toFixed(1)}</td>
+              <td className="num">{r.recovered_schedule_h.toFixed(1)}</td>
+              <td className={`num ${r.net_eur > 0 ? 'win' : r.net_eur < 0 ? 'lose' : ''}`}>
+                {fmtEur(r.net_eur)}</td>
+              <td className="num">{r.payback_days == null ? '—' : `${r.payback_days.toFixed(1)} g`}</td>
+            </tr>
+          ))}</tbody>
+        </table>
+      </div>
+      <div className="note">
+        <Tag kind="amber">VARSAYIM</Tag> Finansal oranlar kullanıcı varsayımıdır.
+        S4, bağlantı/IT aksiyonudur: schedule görünürlüğünü geri getirir fakat makine OEE'sine yazılmaz.
       </div>
     </Panel>
   )

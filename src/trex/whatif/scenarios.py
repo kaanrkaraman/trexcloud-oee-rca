@@ -61,15 +61,24 @@ def run_scenario(baseline_row, spec: ScenarioSpec, *, category_ms: float | None 
     note = ""
 
     if spec.kind in ("W1", "W3"):
+        available = min(
+            c0["UnPlannedStop"],
+            max(0.0, category_ms) if category_ms is not None else c0["UnPlannedStop"],
+        )
         target = spec.abs_ms if spec.abs_ms is not None else \
-            spec.pct * (category_ms if category_ms is not None else c0["UnPlannedStop"])
-        reduce_by = min(target, c0["UnPlannedStop"])
+            spec.pct * available
+        reduce_by = min(max(0.0, target), available)
         c["UnPlannedStop"] = max(0.0, c0["UnPlannedStop"] - reduce_by)
         note = ("Eliminate" if spec.kind == "W1" else "Shorten") + \
             f" {spec.category or 'top unplanned'} by {spec.pct*100:.0f}% "
     elif spec.kind == "W2":
-        move = spec.pct * (category_ms if category_ms is not None else c0["UnPlannedStop"])
-        move = min(move, c0["UnPlannedStop"])
+        available = min(
+            c0["UnPlannedStop"],
+            max(0.0, category_ms) if category_ms is not None else c0["UnPlannedStop"],
+        )
+        move = spec.abs_ms if spec.abs_ms is not None else \
+            spec.pct * available
+        move = min(max(0.0, move), available)
         c["UnPlannedStop"] = c0["UnPlannedStop"] - move
         c["PlannedStop"] = c0["PlannedStop"] + move
         note = f"Reclassify {move/3.6e6:.1f}h of {spec.category or 'unplanned'} -> planned"

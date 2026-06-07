@@ -1,0 +1,1111 @@
+{
+  "scope": {
+    "machines": [
+      "Makine 1",
+      "Makine 2",
+      "Makine 3",
+      "Makine 5",
+      "Makine 9"
+    ],
+    "prediction": "supervised Fanuc predictor only",
+    "exclusions": "Mitsubishi and telemetry-blind machines remain in RCA/OEE What-If only"
+  },
+  "model": {
+    "ROC_AUC": 0.7311,
+    "PR_AUC": 0.4263,
+    "base_rate": 0.1789,
+    "lift": 2.38,
+    "threshold": 0.1778,
+    "test_start": "2026-01-29 12:10:00+00:00",
+    "test_end": "2026-05-22 13:28:00+00:00",
+    "n_episodes": 722,
+    "episode_precision": 0.44
+  },
+  "audit_note": "Deployed episode count/precision come from the committed held-out episode artifact; strict stop catches are recomputed from fanuc_risk.parquet.",
+  "assumptions": {
+    "label": "USER-PROVIDED ASSUMPTIONS — the dataset contains NO cost/price data; treat all currency figures as hypotheses, not facts.",
+    "pm": {
+      "intervention_effectiveness": 0.35,
+      "horizon_min": 60,
+      "annual_days": 365
+    },
+    "financial": {
+      "contribution_margin_per_piece": 12.0,
+      "machine_hour_cost": 45.0,
+      "downtime_cost_per_hour": 80.0,
+      "scrap_cost_per_piece": 18.0,
+      "intervention_cost": 300.0,
+      "horizon_days": 30,
+      "currency": "EUR",
+      "value_recovered_time_as": "downtime_cost"
+    }
+  },
+  "deployed": {
+    "threshold": 0.1778,
+    "test_start": "2026-01-29 12:10:00+00:00",
+    "test_end": "2026-05-22 14:28:00+00:00",
+    "observed_days": 113.0958,
+    "significant_stops": 527,
+    "caught_stops": 364,
+    "recall": 0.6907,
+    "caught_downtime_h": 2062.489,
+    "prevented_h": 721.871,
+    "episodes": 722,
+    "episode_hits": 318,
+    "false_alarm_episodes": 404,
+    "episode_precision": 0.4404,
+    "oee": {
+      "applied_prevented_h": 721.871,
+      "before": {
+        "OEE": 0.6017467485668759,
+        "A": 0.6017467485668759,
+        "P": 1.0,
+        "Q": 1.0
+      },
+      "after": {
+        "OEE": 0.7061479726249398,
+        "A": 0.7061479726249398,
+        "P": 1.0,
+        "Q": 1.0
+      },
+      "delta": {
+        "dOEE": 0.1044,
+        "dA": 0.1044,
+        "dP": 0.0,
+        "dQ": 0.0
+      },
+      "components_before": {
+        "WorkTotal": 35818685427.083336,
+        "PlannedStop": 10926873827.684029,
+        "UnPlannedStop": 9913244903.521526,
+        "WorkingTime": 43704485193.62292,
+        "PlannedTime": 352420990.2540817,
+        "ProductSum": 6059.117361111112,
+        "ScrapeSum": 0.0
+      }
+    },
+    "financial": {
+      "observed": {
+        "gross_eur": 57749.68,
+        "intervention_eur": 216600.0,
+        "net_eur": -158850.32,
+        "roi": -0.7334
+      },
+      "annualized": {
+        "factor": 3.227351,
+        "prevented_h": 2329.731,
+        "gross_eur": 186378.51,
+        "intervention_eur": 699044.32,
+        "net_eur": -512665.81,
+        "roi": -0.7334
+      }
+    },
+    "per_machine": [
+      {
+        "machine": "Makine 1",
+        "test_start": "2026-03-03 13:08:00+00:00",
+        "test_end": "2026-05-22 14:28:00+00:00",
+        "observed_days": 80.0556,
+        "significant_stops": 90,
+        "caught_stops": 65,
+        "recall": 0.7222,
+        "total_downtime_h": 746.955,
+        "caught_downtime_h": 735.315,
+        "prevented_h": 257.36,
+        "episodes": 131,
+        "episode_hits": 62,
+        "false_alarm_episodes": 69,
+        "episode_precision": 0.4733,
+        "oee": {
+          "applied_prevented_h": 257.36026176388884,
+          "before": {
+            "OEE": 0.46286696702351443,
+            "A": 0.46286696702351443,
+            "P": 1.0,
+            "Q": 1.0
+          },
+          "after": {
+            "OEE": 0.6217335301891853,
+            "A": 0.6217335301891853,
+            "P": 1.0,
+            "Q": 1.0
+          },
+          "delta": {
+            "dOEE": 0.1589,
+            "dA": 0.1589,
+            "dP": 0.0,
+            "dQ": 0.0
+          },
+          "components_before": {
+            "WorkTotal": 6916719944.444445,
+            "PlannedStop": 1084800855.3166666,
+            "UnPlannedStop": 3132516388.4166665,
+            "WorkingTime": 8849821148.522223,
+            "PlannedTime": 139230731.07797223,
+            "ProductSum": 943.6777777777778,
+            "ScrapeSum": 0.0
+          }
+        },
+        "financial": {
+          "observed": {
+            "gross_eur": 20588.82,
+            "intervention_eur": 39300.0,
+            "net_eur": -18711.18,
+            "roi": -0.4761
+          },
+          "annualized": {
+            "factor": 4.559334,
+            "prevented_h": 1173.391,
+            "gross_eur": 93871.31,
+            "intervention_eur": 179181.82,
+            "net_eur": -85310.51,
+            "roi": -0.4761
+          }
+        }
+      },
+      {
+        "machine": "Makine 2",
+        "test_start": "2026-02-25 11:50:00+00:00",
+        "test_end": "2026-05-22 14:27:00+00:00",
+        "observed_days": 86.109,
+        "significant_stops": 68,
+        "caught_stops": 24,
+        "recall": 0.3529,
+        "total_downtime_h": 148.972,
+        "caught_downtime_h": 106.763,
+        "prevented_h": 37.367,
+        "episodes": 125,
+        "episode_hits": 21,
+        "false_alarm_episodes": 104,
+        "episode_precision": 0.168,
+        "oee": {
+          "applied_prevented_h": 37.36704329166666,
+          "before": {
+            "OEE": 0.7786431179269119,
+            "A": 0.7786431179269119,
+            "P": 1.0,
+            "Q": 1.0
+          },
+          "after": {
+            "OEE": 0.8196160109976517,
+            "A": 0.8196160109976517,
+            "P": 1.0,
+            "Q": 1.0
+          },
+          "delta": {
+            "dOEE": 0.041,
+            "dA": 0.041,
+            "dP": 0.0,
+            "dQ": 0.0
+          },
+          "components_before": {
+            "WorkTotal": 7439733890.972222,
+            "PlannedStop": 4156554555.3625,
+            "UnPlannedStop": 726754341.0173612,
+            "WorkingTime": 9716334195.430555,
+            "PlannedTime": 10039126.61948343,
+            "ProductSum": 2336.523611111111,
+            "ScrapeSum": 0.0
+          }
+        },
+        "financial": {
+          "observed": {
+            "gross_eur": 2989.36,
+            "intervention_eur": 37500.0,
+            "net_eur": -34510.64,
+            "roi": -0.9203
+          },
+          "annualized": {
+            "factor": 4.238812,
+            "prevented_h": 158.392,
+            "gross_eur": 12671.35,
+            "intervention_eur": 158955.46,
+            "net_eur": -146284.11,
+            "roi": -0.9203
+          }
+        }
+      },
+      {
+        "machine": "Makine 3",
+        "test_start": "2026-03-05 11:00:00+00:00",
+        "test_end": "2026-05-22 14:27:00+00:00",
+        "observed_days": 78.1437,
+        "significant_stops": 101,
+        "caught_stops": 70,
+        "recall": 0.6931,
+        "total_downtime_h": 355.934,
+        "caught_downtime_h": 327.714,
+        "prevented_h": 114.7,
+        "episodes": 166,
+        "episode_hits": 65,
+        "false_alarm_episodes": 101,
+        "episode_precision": 0.3916,
+        "oee": {
+          "applied_prevented_h": 114.69981940277776,
+          "before": {
+            "OEE": 0.6642092477467859,
+            "A": 0.6642092477467859,
+            "P": 1.0,
+            "Q": 1.0
+          },
+          "after": {
+            "OEE": 0.7529433866295928,
+            "A": 0.7529433866295928,
+            "P": 1.0,
+            "Q": 1.0
+          },
+          "delta": {
+            "dOEE": 0.0887,
+            "dA": 0.0887,
+            "dP": 0.0,
+            "dQ": 0.0
+          },
+          "components_before": {
+            "WorkTotal": 6751541856.250001,
+            "PlannedStop": 2098097814.8833334,
+            "UnPlannedStop": 1562583475.21875,
+            "WorkingTime": 6867124918.514584,
+            "PlannedTime": 76629234.64072275,
+            "ProductSum": 976.5354166666667,
+            "ScrapeSum": 0.0
+          }
+        },
+        "financial": {
+          "observed": {
+            "gross_eur": 9175.99,
+            "intervention_eur": 49800.0,
+            "net_eur": -40624.01,
+            "roi": -0.8157
+          },
+          "annualized": {
+            "factor": 4.670879,
+            "prevented_h": 535.749,
+            "gross_eur": 42859.92,
+            "intervention_eur": 232609.77,
+            "net_eur": -189749.86,
+            "roi": -0.8157
+          }
+        }
+      },
+      {
+        "machine": "Makine 5",
+        "test_start": "2026-03-11 05:03:00+00:00",
+        "test_end": "2026-05-22 14:25:00+00:00",
+        "observed_days": 72.3903,
+        "significant_stops": 140,
+        "caught_stops": 109,
+        "recall": 0.7786,
+        "total_downtime_h": 540.814,
+        "caught_downtime_h": 500.019,
+        "prevented_h": 175.007,
+        "episodes": 168,
+        "episode_hits": 94,
+        "false_alarm_episodes": 74,
+        "episode_precision": 0.5595,
+        "oee": {
+          "applied_prevented_h": 175.0065419861111,
+          "before": {
+            "OEE": 0.5167261355545874,
+            "A": 0.5167261355545874,
+            "P": 1.0,
+            "Q": 1.0
+          },
+          "after": {
+            "OEE": 0.6448772258608829,
+            "A": 0.6448772258608829,
+            "P": 1.0,
+            "Q": 1.0
+          },
+          "delta": {
+            "dOEE": 0.1282,
+            "dA": 0.1282,
+            "dP": 0.0,
+            "dQ": 0.0
+          },
+          "components_before": {
+            "WorkTotal": 6254447609.722221,
+            "PlannedStop": 1338191730.4770834,
+            "UnPlannedStop": 2375897977.365278,
+            "WorkingTime": 6256733721.454166,
+            "PlannedTime": 102982047.3295619,
+            "ProductSum": 798.2333333333332,
+            "ScrapeSum": 0.0
+          }
+        },
+        "financial": {
+          "observed": {
+            "gross_eur": 14000.52,
+            "intervention_eur": 50400.0,
+            "net_eur": -36399.48,
+            "roi": -0.7222
+          },
+          "annualized": {
+            "factor": 5.042114,
+            "prevented_h": 882.403,
+            "gross_eur": 70592.23,
+            "intervention_eur": 254122.52,
+            "net_eur": -183530.29,
+            "roi": -0.7222
+          }
+        }
+      },
+      {
+        "machine": "Makine 9",
+        "test_start": "2026-01-29 12:10:00+00:00",
+        "test_end": "2026-05-07 09:09:00+00:00",
+        "observed_days": 97.8743,
+        "significant_stops": 128,
+        "caught_stops": 96,
+        "recall": 0.75,
+        "total_downtime_h": 504.55,
+        "caught_downtime_h": 392.678,
+        "prevented_h": 137.437,
+        "episodes": 132,
+        "episode_hits": 76,
+        "false_alarm_episodes": 56,
+        "episode_precision": 0.5758,
+        "oee": {
+          "applied_prevented_h": 137.4373179861111,
+          "before": {
+            "OEE": 0.6591770252587846,
+            "A": 0.6591770252587846,
+            "P": 1.0,
+            "Q": 1.0
+          },
+          "after": {
+            "OEE": 0.7388891709396668,
+            "A": 0.7388891709396668,
+            "P": 1.0,
+            "Q": 1.0
+          },
+          "delta": {
+            "dOEE": 0.0797,
+            "dA": 0.0797,
+            "dP": 0.0,
+            "dQ": 0.0
+          },
+          "components_before": {
+            "WorkTotal": 8456242125.694445,
+            "PlannedStop": 2249228871.6444445,
+            "UnPlannedStop": 2115492721.5034723,
+            "WorkingTime": 12014471209.70139,
+            "PlannedTime": 23539850.586341366,
+            "ProductSum": 1004.1472222222221,
+            "ScrapeSum": 0.0
+          }
+        },
+        "financial": {
+          "observed": {
+            "gross_eur": 10994.99,
+            "intervention_eur": 39600.0,
+            "net_eur": -28605.01,
+            "roi": -0.7223
+          },
+          "annualized": {
+            "factor": 3.729273,
+            "prevented_h": 512.541,
+            "gross_eur": 41003.3,
+            "intervention_eur": 147679.21,
+            "net_eur": -106675.91,
+            "roi": -0.7223
+          }
+        }
+      }
+    ]
+  },
+  "sensitivity": {
+    "selection_note": "Retrospective held-out sensitivity only; the deployed headline remains threshold=0.1778.",
+    "economic_optimum": {
+      "threshold": 0.78,
+      "recall": 0.0569,
+      "caught_stops": 30,
+      "caught_downtime_h": 475.445,
+      "prevented_h": 166.406,
+      "episodes": 33,
+      "episode_precision": 0.7576,
+      "delta_oee": 0.0241,
+      "annualized_net_eur": 11013.27,
+      "annualized_gross_eur": 42964.05,
+      "annualized_intervention_eur": 31950.78
+    },
+    "rows": [
+      {
+        "threshold": 0.0,
+        "recall": 0.9772,
+        "caught_stops": 515,
+        "caught_downtime_h": 2251.076,
+        "prevented_h": 787.877,
+        "episodes": 469,
+        "episode_precision": 0.7846,
+        "delta_oee": 0.1139,
+        "annualized_net_eur": -250667.87,
+        "annualized_gross_eur": 203420.48,
+        "annualized_intervention_eur": 454088.35
+      },
+      {
+        "threshold": 0.02,
+        "recall": 0.9772,
+        "caught_stops": 515,
+        "caught_downtime_h": 2251.076,
+        "prevented_h": 787.877,
+        "episodes": 469,
+        "episode_precision": 0.7846,
+        "delta_oee": 0.1139,
+        "annualized_net_eur": -250667.87,
+        "annualized_gross_eur": 203420.48,
+        "annualized_intervention_eur": 454088.35
+      },
+      {
+        "threshold": 0.04,
+        "recall": 0.9772,
+        "caught_stops": 515,
+        "caught_downtime_h": 2251.076,
+        "prevented_h": 787.877,
+        "episodes": 469,
+        "episode_precision": 0.7846,
+        "delta_oee": 0.1139,
+        "annualized_net_eur": -250667.87,
+        "annualized_gross_eur": 203420.48,
+        "annualized_intervention_eur": 454088.35
+      },
+      {
+        "threshold": 0.06,
+        "recall": 0.9753,
+        "caught_stops": 514,
+        "caught_downtime_h": 2250.254,
+        "prevented_h": 787.589,
+        "episodes": 542,
+        "episode_precision": 0.6919,
+        "delta_oee": 0.1139,
+        "annualized_net_eur": -321421.22,
+        "annualized_gross_eur": 203346.12,
+        "annualized_intervention_eur": 524767.34
+      },
+      {
+        "threshold": 0.08,
+        "recall": 0.9488,
+        "caught_stops": 500,
+        "caught_downtime_h": 2243.951,
+        "prevented_h": 785.383,
+        "episodes": 754,
+        "episode_precision": 0.5027,
+        "delta_oee": 0.1136,
+        "annualized_net_eur": -527250.34,
+        "annualized_gross_eur": 202776.56,
+        "annualized_intervention_eur": 730026.89
+      },
+      {
+        "threshold": 0.1,
+        "recall": 0.888,
+        "caught_stops": 468,
+        "caught_downtime_h": 2228.361,
+        "prevented_h": 779.926,
+        "episodes": 850,
+        "episode_precision": 0.4341,
+        "delta_oee": 0.1128,
+        "annualized_net_eur": -621606.99,
+        "annualized_gross_eur": 201367.62,
+        "annualized_intervention_eur": 822974.62
+      },
+      {
+        "threshold": 0.12,
+        "recall": 0.8292,
+        "caught_stops": 437,
+        "caught_downtime_h": 2212.469,
+        "prevented_h": 774.365,
+        "episodes": 829,
+        "episode_precision": 0.4367,
+        "delta_oee": 0.112,
+        "annualized_net_eur": -602710.46,
+        "annualized_gross_eur": 199931.84,
+        "annualized_intervention_eur": 802642.3
+      },
+      {
+        "threshold": 0.14,
+        "recall": 0.7761,
+        "caught_stops": 409,
+        "caught_downtime_h": 2181.6,
+        "prevented_h": 763.56,
+        "episodes": 798,
+        "episode_precision": 0.4261,
+        "delta_oee": 0.1104,
+        "annualized_net_eur": -575485.82,
+        "annualized_gross_eur": 197142.12,
+        "annualized_intervention_eur": 772627.93
+      },
+      {
+        "threshold": 0.16,
+        "recall": 0.7211,
+        "caught_stops": 380,
+        "caught_downtime_h": 2068.373,
+        "prevented_h": 723.93,
+        "episodes": 763,
+        "episode_precision": 0.4299,
+        "delta_oee": 0.1047,
+        "annualized_net_eur": -551830.62,
+        "annualized_gross_eur": 186910.12,
+        "annualized_intervention_eur": 738740.74
+      },
+      {
+        "threshold": 0.1778,
+        "recall": 0.6907,
+        "caught_stops": 364,
+        "caught_downtime_h": 2062.489,
+        "prevented_h": 721.871,
+        "episodes": 722,
+        "episode_precision": 0.4404,
+        "delta_oee": 0.1044,
+        "annualized_net_eur": -512665.81,
+        "annualized_gross_eur": 186378.51,
+        "annualized_intervention_eur": 699044.32
+      },
+      {
+        "threshold": 0.18,
+        "recall": 0.6888,
+        "caught_stops": 363,
+        "caught_downtime_h": 2046.783,
+        "prevented_h": 716.374,
+        "episodes": 695,
+        "episode_precision": 0.4662,
+        "delta_oee": 0.1036,
+        "annualized_net_eur": -487943.52,
+        "annualized_gross_eur": 184959.25,
+        "annualized_intervention_eur": 672902.77
+      },
+      {
+        "threshold": 0.2,
+        "recall": 0.6243,
+        "caught_stops": 329,
+        "caught_downtime_h": 1911.738,
+        "prevented_h": 669.109,
+        "episodes": 614,
+        "episode_precision": 0.4577,
+        "delta_oee": 0.0968,
+        "annualized_net_eur": -421722.14,
+        "annualized_gross_eur": 172755.99,
+        "annualized_intervention_eur": 594478.13
+      },
+      {
+        "threshold": 0.22,
+        "recall": 0.5636,
+        "caught_stops": 297,
+        "caught_downtime_h": 1849.864,
+        "prevented_h": 647.452,
+        "episodes": 545,
+        "episode_precision": 0.4734,
+        "delta_oee": 0.0936,
+        "annualized_net_eur": -360507.55,
+        "annualized_gross_eur": 167164.41,
+        "annualized_intervention_eur": 527671.96
+      },
+      {
+        "threshold": 0.24,
+        "recall": 0.5218,
+        "caught_stops": 275,
+        "caught_downtime_h": 1760.709,
+        "prevented_h": 616.248,
+        "episodes": 498,
+        "episode_precision": 0.496,
+        "delta_oee": 0.0891,
+        "annualized_net_eur": -323058.4,
+        "annualized_gross_eur": 159107.91,
+        "annualized_intervention_eur": 482166.3
+      },
+      {
+        "threshold": 0.26,
+        "recall": 0.4991,
+        "caught_stops": 263,
+        "caught_downtime_h": 1684.039,
+        "prevented_h": 589.413,
+        "episodes": 469,
+        "episode_precision": 0.5011,
+        "delta_oee": 0.0852,
+        "annualized_net_eur": -301908.92,
+        "annualized_gross_eur": 152179.43,
+        "annualized_intervention_eur": 454088.35
+      },
+      {
+        "threshold": 0.28,
+        "recall": 0.4592,
+        "caught_stops": 242,
+        "caught_downtime_h": 1607.93,
+        "prevented_h": 562.776,
+        "episodes": 431,
+        "episode_precision": 0.5035,
+        "delta_oee": 0.0814,
+        "annualized_net_eur": -271994.47,
+        "annualized_gross_eur": 145302.07,
+        "annualized_intervention_eur": 417296.54
+      },
+      {
+        "threshold": 0.3,
+        "recall": 0.4288,
+        "caught_stops": 226,
+        "caught_downtime_h": 1583.75,
+        "prevented_h": 554.312,
+        "episodes": 388,
+        "episode_precision": 0.5232,
+        "delta_oee": 0.0802,
+        "annualized_net_eur": -232546.94,
+        "annualized_gross_eur": 143116.77,
+        "annualized_intervention_eur": 375663.71
+      },
+      {
+        "threshold": 0.32,
+        "recall": 0.408,
+        "caught_stops": 215,
+        "caught_downtime_h": 1561.199,
+        "prevented_h": 546.419,
+        "episodes": 339,
+        "episode_precision": 0.5516,
+        "delta_oee": 0.079,
+        "annualized_net_eur": -187142.75,
+        "annualized_gross_eur": 141078.89,
+        "annualized_intervention_eur": 328221.64
+      },
+      {
+        "threshold": 0.34,
+        "recall": 0.3833,
+        "caught_stops": 202,
+        "caught_downtime_h": 1526.737,
+        "prevented_h": 534.357,
+        "episodes": 314,
+        "episode_precision": 0.5541,
+        "delta_oee": 0.0773,
+        "annualized_net_eur": -166051.88,
+        "annualized_gross_eur": 137964.63,
+        "annualized_intervention_eur": 304016.51
+      },
+      {
+        "threshold": 0.36,
+        "recall": 0.3435,
+        "caught_stops": 181,
+        "caught_downtime_h": 1447.864,
+        "prevented_h": 506.753,
+        "episodes": 282,
+        "episode_precision": 0.5496,
+        "delta_oee": 0.0733,
+        "annualized_net_eur": -142196.33,
+        "annualized_gross_eur": 130837.6,
+        "annualized_intervention_eur": 273033.93
+      },
+      {
+        "threshold": 0.38,
+        "recall": 0.3055,
+        "caught_stops": 161,
+        "caught_downtime_h": 1409.106,
+        "prevented_h": 493.187,
+        "episodes": 252,
+        "episode_precision": 0.5675,
+        "delta_oee": 0.0713,
+        "annualized_net_eur": -116652.75,
+        "annualized_gross_eur": 127335.02,
+        "annualized_intervention_eur": 243987.77
+      },
+      {
+        "threshold": 0.4,
+        "recall": 0.2922,
+        "caught_stops": 154,
+        "caught_downtime_h": 1405.183,
+        "prevented_h": 491.814,
+        "episodes": 225,
+        "episode_precision": 0.5956,
+        "delta_oee": 0.0711,
+        "annualized_net_eur": -90865.69,
+        "annualized_gross_eur": 126980.53,
+        "annualized_intervention_eur": 217846.22
+      },
+      {
+        "threshold": 0.42,
+        "recall": 0.2638,
+        "caught_stops": 139,
+        "caught_downtime_h": 1397.875,
+        "prevented_h": 489.257,
+        "episodes": 203,
+        "episode_precision": 0.601,
+        "delta_oee": 0.0708,
+        "annualized_net_eur": -70225.36,
+        "annualized_gross_eur": 126320.34,
+        "annualized_intervention_eur": 196545.7
+      },
+      {
+        "threshold": 0.44,
+        "recall": 0.2486,
+        "caught_stops": 131,
+        "caught_downtime_h": 1394.003,
+        "prevented_h": 487.901,
+        "episodes": 184,
+        "episode_precision": 0.6141,
+        "delta_oee": 0.0706,
+        "annualized_net_eur": -52179.56,
+        "annualized_gross_eur": 125970.24,
+        "annualized_intervention_eur": 178149.8
+      },
+      {
+        "threshold": 0.46,
+        "recall": 0.2429,
+        "caught_stops": 128,
+        "caught_downtime_h": 1378.698,
+        "prevented_h": 482.545,
+        "episodes": 168,
+        "episode_precision": 0.6429,
+        "delta_oee": 0.0698,
+        "annualized_net_eur": -38071.13,
+        "annualized_gross_eur": 124587.38,
+        "annualized_intervention_eur": 162658.51
+      },
+      {
+        "threshold": 0.48,
+        "recall": 0.2334,
+        "caught_stops": 123,
+        "caught_downtime_h": 1375.983,
+        "prevented_h": 481.594,
+        "episodes": 159,
+        "episode_precision": 0.6415,
+        "delta_oee": 0.0697,
+        "annualized_net_eur": -29602.82,
+        "annualized_gross_eur": 124341.85,
+        "annualized_intervention_eur": 153944.66
+      },
+      {
+        "threshold": 0.5,
+        "recall": 0.2144,
+        "caught_stops": 113,
+        "caught_downtime_h": 1356.838,
+        "prevented_h": 474.893,
+        "episodes": 150,
+        "episode_precision": 0.64,
+        "delta_oee": 0.0687,
+        "annualized_net_eur": -22619.09,
+        "annualized_gross_eur": 122611.73,
+        "annualized_intervention_eur": 145230.81
+      },
+      {
+        "threshold": 0.52,
+        "recall": 0.2011,
+        "caught_stops": 106,
+        "caught_downtime_h": 1298.669,
+        "prevented_h": 454.533,
+        "episodes": 143,
+        "episode_precision": 0.6503,
+        "delta_oee": 0.0657,
+        "annualized_net_eur": -21098.36,
+        "annualized_gross_eur": 117355.02,
+        "annualized_intervention_eur": 138453.38
+      },
+      {
+        "threshold": 0.54,
+        "recall": 0.1954,
+        "caught_stops": 103,
+        "caught_downtime_h": 1256.387,
+        "prevented_h": 439.734,
+        "episodes": 138,
+        "episode_precision": 0.6522,
+        "delta_oee": 0.0636,
+        "annualized_net_eur": -20078.26,
+        "annualized_gross_eur": 113534.09,
+        "annualized_intervention_eur": 133612.35
+      },
+      {
+        "threshold": 0.56,
+        "recall": 0.1822,
+        "caught_stops": 96,
+        "caught_downtime_h": 1199.142,
+        "prevented_h": 419.699,
+        "episodes": 130,
+        "episode_precision": 0.6769,
+        "delta_oee": 0.0607,
+        "annualized_net_eur": -17505.41,
+        "annualized_gross_eur": 108361.29,
+        "annualized_intervention_eur": 125866.71
+      },
+      {
+        "threshold": 0.58,
+        "recall": 0.1727,
+        "caught_stops": 91,
+        "caught_downtime_h": 1197.062,
+        "prevented_h": 418.971,
+        "episodes": 127,
+        "episode_precision": 0.6772,
+        "delta_oee": 0.0606,
+        "annualized_net_eur": -14788.76,
+        "annualized_gross_eur": 108173.33,
+        "annualized_intervention_eur": 122962.09
+      },
+      {
+        "threshold": 0.6,
+        "recall": 0.1689,
+        "caught_stops": 89,
+        "caught_downtime_h": 1195.687,
+        "prevented_h": 418.49,
+        "episodes": 120,
+        "episode_precision": 0.7,
+        "delta_oee": 0.0605,
+        "annualized_net_eur": -8135.51,
+        "annualized_gross_eur": 108049.14,
+        "annualized_intervention_eur": 116184.65
+      },
+      {
+        "threshold": 0.62,
+        "recall": 0.1575,
+        "caught_stops": 83,
+        "caught_downtime_h": 1139.096,
+        "prevented_h": 398.683,
+        "episodes": 107,
+        "episode_precision": 0.7383,
+        "delta_oee": 0.0577,
+        "annualized_net_eur": -662.77,
+        "annualized_gross_eur": 102935.21,
+        "annualized_intervention_eur": 103597.98
+      },
+      {
+        "threshold": 0.64,
+        "recall": 0.1461,
+        "caught_stops": 77,
+        "caught_downtime_h": 1082.32,
+        "prevented_h": 378.811,
+        "episodes": 94,
+        "episode_precision": 0.7234,
+        "delta_oee": 0.0548,
+        "annualized_net_eur": 6793.19,
+        "annualized_gross_eur": 97804.5,
+        "annualized_intervention_eur": 91011.31
+      },
+      {
+        "threshold": 0.66,
+        "recall": 0.1195,
+        "caught_stops": 63,
+        "caught_downtime_h": 942.21,
+        "prevented_h": 329.774,
+        "episodes": 85,
+        "episode_precision": 0.7176,
+        "delta_oee": 0.0477,
+        "annualized_net_eur": 2846.27,
+        "annualized_gross_eur": 85143.73,
+        "annualized_intervention_eur": 82297.46
+      },
+      {
+        "threshold": 0.68,
+        "recall": 0.1139,
+        "caught_stops": 60,
+        "caught_downtime_h": 889.937,
+        "prevented_h": 311.478,
+        "episodes": 81,
+        "episode_precision": 0.716,
+        "delta_oee": 0.045,
+        "annualized_net_eur": 1995.28,
+        "annualized_gross_eur": 80419.92,
+        "annualized_intervention_eur": 78424.64
+      },
+      {
+        "threshold": 0.7,
+        "recall": 0.1006,
+        "caught_stops": 53,
+        "caught_downtime_h": 788.636,
+        "prevented_h": 276.022,
+        "episodes": 73,
+        "episode_precision": 0.7397,
+        "delta_oee": 0.0399,
+        "annualized_net_eur": 586.6,
+        "annualized_gross_eur": 71265.6,
+        "annualized_intervention_eur": 70679.0
+      },
+      {
+        "threshold": 0.72,
+        "recall": 0.0892,
+        "caught_stops": 47,
+        "caught_downtime_h": 693.807,
+        "prevented_h": 242.832,
+        "episodes": 64,
+        "episode_precision": 0.7344,
+        "delta_oee": 0.0351,
+        "annualized_net_eur": 731.19,
+        "annualized_gross_eur": 62696.34,
+        "annualized_intervention_eur": 61965.15
+      },
+      {
+        "threshold": 0.74,
+        "recall": 0.0759,
+        "caught_stops": 40,
+        "caught_downtime_h": 608.67,
+        "prevented_h": 213.035,
+        "episodes": 57,
+        "episode_precision": 0.7018,
+        "delta_oee": 0.0308,
+        "annualized_net_eur": -184.6,
+        "annualized_gross_eur": 55003.11,
+        "annualized_intervention_eur": 55187.71
+      },
+      {
+        "threshold": 0.76,
+        "recall": 0.0645,
+        "caught_stops": 34,
+        "caught_downtime_h": 527.852,
+        "prevented_h": 184.748,
+        "episodes": 42,
+        "episode_precision": 0.7381,
+        "delta_oee": 0.0267,
+        "annualized_net_eur": 7035.11,
+        "annualized_gross_eur": 47699.74,
+        "annualized_intervention_eur": 40664.63
+      },
+      {
+        "threshold": 0.78,
+        "recall": 0.0569,
+        "caught_stops": 30,
+        "caught_downtime_h": 475.445,
+        "prevented_h": 166.406,
+        "episodes": 33,
+        "episode_precision": 0.7576,
+        "delta_oee": 0.0241,
+        "annualized_net_eur": 11013.27,
+        "annualized_gross_eur": 42964.05,
+        "annualized_intervention_eur": 31950.78
+      },
+      {
+        "threshold": 0.8,
+        "recall": 0.0304,
+        "caught_stops": 16,
+        "caught_downtime_h": 243.041,
+        "prevented_h": 85.065,
+        "episodes": 19,
+        "episode_precision": 0.7895,
+        "delta_oee": 0.0123,
+        "annualized_net_eur": 3566.87,
+        "annualized_gross_eur": 21962.77,
+        "annualized_intervention_eur": 18395.9
+      },
+      {
+        "threshold": 0.82,
+        "recall": 0.0209,
+        "caught_stops": 11,
+        "caught_downtime_h": 175.262,
+        "prevented_h": 61.342,
+        "episodes": 10,
+        "episode_precision": 0.8,
+        "delta_oee": 0.0089,
+        "annualized_net_eur": 6155.72,
+        "annualized_gross_eur": 15837.78,
+        "annualized_intervention_eur": 9682.05
+      },
+      {
+        "threshold": 0.84,
+        "recall": 0.0076,
+        "caught_stops": 4,
+        "caught_downtime_h": 76.572,
+        "prevented_h": 26.8,
+        "episodes": 6,
+        "episode_precision": 0.6667,
+        "delta_oee": 0.0039,
+        "annualized_net_eur": 1110.21,
+        "annualized_gross_eur": 6919.44,
+        "annualized_intervention_eur": 5809.23
+      },
+      {
+        "threshold": 0.86,
+        "recall": 0.0038,
+        "caught_stops": 2,
+        "caught_downtime_h": 28.572,
+        "prevented_h": 10.0,
+        "episodes": 2,
+        "episode_precision": 1.0,
+        "delta_oee": 0.0014,
+        "annualized_net_eur": 645.47,
+        "annualized_gross_eur": 2581.88,
+        "annualized_intervention_eur": 1936.41
+      },
+      {
+        "threshold": 0.88,
+        "recall": 0.0019,
+        "caught_stops": 1,
+        "caught_downtime_h": 14.229,
+        "prevented_h": 4.98,
+        "episodes": 0,
+        "episode_precision": null,
+        "delta_oee": 0.0007,
+        "annualized_net_eur": 1285.78,
+        "annualized_gross_eur": 1285.78,
+        "annualized_intervention_eur": 0.0
+      },
+      {
+        "threshold": 0.9,
+        "recall": 0.0,
+        "caught_stops": 0,
+        "caught_downtime_h": 0.0,
+        "prevented_h": 0.0,
+        "episodes": 0,
+        "episode_precision": null,
+        "delta_oee": 0.0,
+        "annualized_net_eur": 0.0,
+        "annualized_gross_eur": 0.0,
+        "annualized_intervention_eur": 0.0
+      },
+      {
+        "threshold": 0.92,
+        "recall": 0.0,
+        "caught_stops": 0,
+        "caught_downtime_h": 0.0,
+        "prevented_h": 0.0,
+        "episodes": 0,
+        "episode_precision": null,
+        "delta_oee": 0.0,
+        "annualized_net_eur": 0.0,
+        "annualized_gross_eur": 0.0,
+        "annualized_intervention_eur": 0.0
+      },
+      {
+        "threshold": 0.94,
+        "recall": 0.0,
+        "caught_stops": 0,
+        "caught_downtime_h": 0.0,
+        "prevented_h": 0.0,
+        "episodes": 0,
+        "episode_precision": null,
+        "delta_oee": 0.0,
+        "annualized_net_eur": 0.0,
+        "annualized_gross_eur": 0.0,
+        "annualized_intervention_eur": 0.0
+      },
+      {
+        "threshold": 0.96,
+        "recall": 0.0,
+        "caught_stops": 0,
+        "caught_downtime_h": 0.0,
+        "prevented_h": 0.0,
+        "episodes": 0,
+        "episode_precision": null,
+        "delta_oee": 0.0,
+        "annualized_net_eur": 0.0,
+        "annualized_gross_eur": 0.0,
+        "annualized_intervention_eur": 0.0
+      },
+      {
+        "threshold": 0.98,
+        "recall": 0.0,
+        "caught_stops": 0,
+        "caught_downtime_h": 0.0,
+        "prevented_h": 0.0,
+        "episodes": 0,
+        "episode_precision": null,
+        "delta_oee": 0.0,
+        "annualized_net_eur": 0.0,
+        "annualized_gross_eur": 0.0,
+        "annualized_intervention_eur": 0.0
+      },
+      {
+        "threshold": 1.0,
+        "recall": 0.0,
+        "caught_stops": 0,
+        "caught_downtime_h": 0.0,
+        "prevented_h": 0.0,
+        "episodes": 0,
+        "episode_precision": null,
+        "delta_oee": 0.0,
+        "annualized_net_eur": 0.0,
+        "annualized_gross_eur": 0.0,
+        "annualized_intervention_eur": 0.0
+      }
+    ]
+  },
+  "headline": "AI kestirimci bakım (Fanuc, yıllık projeksiyon) -> ~2330 saat geri kazanım, +10.44 puan OEE, ~EUR -512,666 net (varsayımlar etiketli)."
+}

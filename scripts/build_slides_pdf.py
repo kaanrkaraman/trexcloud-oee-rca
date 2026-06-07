@@ -2,6 +2,9 @@
 """Landscape 16:9 PDF render of the deck (viewable everywhere, identical design to the .pptx).
 Same fixed master furniture on every slide. Run: uv run python scripts/build_slides_pdf.py
 """
+import json
+from pathlib import Path
+
 from reportlab.pdfgen import canvas
 from reportlab.lib.colors import HexColor, white
 from reportlab.lib.styles import ParagraphStyle
@@ -9,8 +12,22 @@ from reportlab.platypus import Paragraph
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 
-pdfmetrics.registerFont(TTFont("AR", "/System/Library/Fonts/Supplemental/Arial.ttf"))
-pdfmetrics.registerFont(TTFont("ARB", "/System/Library/Fonts/Supplemental/Arial Bold.ttf"))
+PM = json.loads(Path("analysis/artifacts/pm_value.json").read_text(encoding="utf-8"))
+SCENARIOS = json.loads(Path("analysis/artifacts/scenarios.json").read_text(encoding="utf-8"))["rows"]
+DEPLOYED = PM["deployed"]
+ECON = PM["sensitivity"]["economic_optimum"]
+
+
+def first_font(*paths):
+    return next(str(p) for p in map(Path, paths) if p.exists())
+
+
+pdfmetrics.registerFont(TTFont("AR", first_font(
+    "/System/Library/Fonts/Supplemental/Arial.ttf",
+    "C:/Windows/Fonts/arial.ttf")))
+pdfmetrics.registerFont(TTFont("ARB", first_font(
+    "/System/Library/Fonts/Supplemental/Arial Bold.ttf",
+    "C:/Windows/Fonts/arialbd.ttf")))
 
 OUT = "trexCloud_Sunum.pdf"
 INK = HexColor("#1A1F1D"); GREEN = HexColor("#127145"); GREEN_SOFT = HexColor("#ECF4EF")
@@ -160,20 +177,30 @@ bullets([
 para("Dürüst not: bu olayda sapma eşzamanlı kanıttır, öngörücü bir öncül değildir.", 5.85, ML, CW, 12.5, MUTED)
 page()
 
-# 07 tahmin
-base("Tahmin · Bonus", "Duruşu önceden tahmin", 7)
-stats = [("0,73", "ROC-AUC"), ("2,38×", "taban-üstü kazanç"), ("%44", "dönem isabeti · taban %18")]
-swd = (CW - 2 * 0.4) / 3
+# 07 tahmin -> değer
+base("Tahmin · Değer", "ROC / lift katmanından OEE ve €'ya", 7)
+stats = [
+    ("0,73", "ROC-AUC"),
+    ("2,38×", "taban-üstü kazanç"),
+    (f"%{DEPLOYED['recall'] * 100:.0f}", "duruş yakalama · held-out"),
+    (f"+{DEPLOYED['oee']['delta']['dOEE'] * 100:.2f}".replace(".", ","), "puan OEE · e=%35"),
+]
+swd = (CW - 3 * 0.25) / 4
 for i, (v, l) in enumerate(stats):
-    x = ML + i * (swd + 0.4)
-    rect(x, 2.95, swd, 1.5, fill=white, line=HAIR, lw=1.0)
-    para(f'<b>{v}</b>', 3.25, x, swd, 36, GREEN, "ARB", align=1)
-    para(l, 4.05, x, swd, 12.5, MUTED, align=1)
+    x = ML + i * (swd + 0.25)
+    rect(x, 2.55, swd, 1.35, fill=white, line=HAIR, lw=1.0)
+    para(f'<b>{v}</b>', 2.8, x, swd, 29, GREEN, "ARB", align=1)
+    para(l, 3.48, x + 0.08, swd - 0.16, 10.5, MUTED, align=1)
 bullets([
-    "Sızıntısız kurulum: makine-içi kronolojik ayrım, geçmiş-yalnız öznitelik, makine-içi normalizasyon.",
-    "Kapsam Fanuc üretim hücresi — duruş öncesi sinyali (cycle-time, run-state) yalnız orada akıyor.",
-], 5.0)
-para("Abartmıyoruz: bu kullanışlı bir risk sıralayıcı; makine-içi ROC ≈ 0,72, kâhin değil.", 6.3, ML, CW, 12.5, MUTED)
+    f"Gerçek held-out ölçüm: <b>{DEPLOYED['caught_stops']}/{DEPLOYED['significant_stops']}</b> duruş "
+    f"yakalandı; <b>{DEPLOYED['episodes']}</b> alarm döneminin isabeti %{DEPLOYED['episode_precision']*100:.0f}.",
+    f"e=%35 varsayımıyla yıllık projeksiyon: <b>{DEPLOYED['financial']['annualized']['prevented_h']:.0f} saat</b>; "
+    f"fakat 300 €/kontrol varsayımında net <b>{DEPLOYED['financial']['annualized']['net_eur']:,.0f} €</b>.",
+], 4.25, gap=0.1)
+rect(ML, 5.65, CW, 0.72, fill=GREEN_SOFT, line=GREEN, lw=1.2)
+para(f"Ekonomik duyarlılık (retrospektif): eşik <b>{ECON['threshold']:.2f}</b> → "
+     f"{ECON['episodes']} kontrol → <b>{ECON['annualized_net_eur']:,.0f} €/yıl net</b>. "
+     "Canlı eşiğin yerine geçmez.", 5.84, ML + 0.22, CW - 0.44, 12.5, INK)
 page()
 
 # 08 PLATİN cross
@@ -193,16 +220,36 @@ bullets([
 ], 5.65, gap=0.1)
 page()
 
-# 09 PLATİN whatif
-base("Platin", "ΔOEE ve finansal etki", 9)
-bullets([
-    "W1 senaryosu: bir makinenin plansız duruşunu azalt → kullanılabilirlik yükselir.",
-    "Etki, OEE bileşenlerine ayrıştırılır (<b>A / P / Q</b>); geri kazanılan saat ve ek parça hesaplanır.",
-    "Net fayda ve geri ödeme süresi çıkarılır; kaydırıcı ile canlı güncellenir.",
-], 2.35)
-rect(ML, 5.3, CW, 1.0, fill=GREEN_SOFT, line=GREEN, lw=1.2)
-para("Veri setinde maliyet/fiyat yok. Tüm parasal değerler açıkça VARSAYIM olarak etiketlidir — "
-     "gerçek değil, hipotez.", 5.55, ML + 0.25, CW - 0.5, 14, INK, lead=18)
+# 09 PLATİN scenario catalog
+base("Platin", "İncelenebilir senaryo kataloğu", 9)
+cols = [("Senaryo / kapsam", 4.15), ("ΔA", 1.05), ("ΔP", 1.05),
+        ("ΔOEE", 1.15), ("Saat", 1.2), ("Net €", 1.55)]
+x = ML
+for label, width in cols:
+    rect(x, 2.35, width, 0.45, fill=INK)
+    para(f"<b>{label}</b>", 2.48, x + 0.1, width - 0.2, 10, white, "ARB")
+    x += width
+for i, row in enumerate(SCENARIOS):
+    y = 2.85 + i * 0.68
+    fill = GREEN_SOFT if i == 0 else white
+    values = [
+        (f"{row['id']} · {row['machine']} · {row['scenario']}", 4.15, 0),
+        (f"{row['delta_A_pp']:.2f}".replace(".", ","), 1.05, 2),
+        (f"{row['delta_P_pp']:.2f}".replace(".", ","), 1.05, 2),
+        (f"{row['delta_OEE_pp']:.2f}".replace(".", ","), 1.15, 2),
+        (f"{max(row['recovered_runtime_h'], row['recovered_schedule_h']):.0f}", 1.2, 2),
+        (f"{row['net_eur']:,.0f}", 1.55, 2),
+    ]
+    x = ML
+    for value, width, align in values:
+        rect(x, y, width, 0.6, fill=fill, line=HAIR, lw=0.7)
+        para(value, y + 0.16, x + 0.1, width - 0.2, 10.5,
+             GREEN if i == 0 else INK, "ARB" if i == 0 else "AR", align=align)
+        x += width
+rect(ML, 5.78, CW, 0.62, fill=GREEN_SOFT, line=GREEN, lw=1.2)
+para("S2 yalnız sınıflandırmayı değiştirir; S3 üretim sayımı olmadığı için inerttir; "
+     "S4 IT aksiyonudur ve makine OEE'sine yazılmaz. Tüm € değerleri <b>VARSAYIM</b>.",
+     5.94, ML + 0.22, CW - 0.44, 11.5, INK)
 page()
 
 # 10 sınırlar

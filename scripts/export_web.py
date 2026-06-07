@@ -22,7 +22,7 @@ MITS = ["Makine 7", "Makine 8"]
 
 
 def _j(p):
-    return json.loads((ART / p).read_text()) if (ART / p).exists() else {}
+    return json.loads((ART / p).read_text(encoding="utf-8")) if (ART / p).exists() else {}
 
 
 def regime_of(name):
@@ -169,14 +169,20 @@ def main():
                          "old_connectivity_rank": cm.get("old_connectivity_rank")},
         "regime_models": _j("regime_metrics.json"),
         "rca_demo": rca_demo_block(),
+        "scenarios": _j("scenarios.json"),
+        "pm_value": _j("pm_value.json"),
         "whatif_assumptions": {"margin_per_piece": 12.0, "downtime_cost_per_hour": 80.0,
-                               "intervention_cost": 300.0, "horizon_days": 30, "currency": "TRY"},
+                               "intervention_cost": 300.0, "horizon_days": 30, "currency": "EUR"},
     }
-    (OUT / "bundle.json").write_text(json.dumps(bundle, default=str))
+    (OUT / "bundle.json").write_text(
+        json.dumps(bundle, default=str, ensure_ascii=False),
+        encoding="utf-8",
+    )
     kb = (OUT / "bundle.json").stat().st_size / 1024
     print(f"wrote {OUT/'bundle.json'} ({kb:.0f} KB)")
     print(f"  machines={len(bundle['machines'])}  pareto={len(bundle['pareto'])}  "
           f"fanuc_machines={len(bundle['fanuc']['risk'])}  "
+          f"scenarios={len(bundle['scenarios'].get('rows', []))}  "
           f"rca_events={len(bundle['rca_demo'].get('events', []))}  "
           f"rca_tel_roles={len(bundle['rca_demo'].get('telemetry', []))}")
 

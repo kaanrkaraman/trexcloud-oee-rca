@@ -266,7 +266,7 @@ def main():
           f"{metrics['rca']['systemic_events']} systemic events")
     pf = metrics["whatif"]["portfolio_W1_30pct"]
     print(f"What-If W1 30%: {pf['total_recovered_hours']:,} h recovered, "
-          f"{pf['gross_benefit_margin_basis']:,.0f} TRY gross")
+          f"{pf['gross_benefit_margin_basis']:,.0f} {pf['assumptions']['currency']} gross")
 
 
 if __name__ == "__main__":

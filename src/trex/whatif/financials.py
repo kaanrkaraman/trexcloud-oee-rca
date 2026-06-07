@@ -16,7 +16,7 @@ class FinancialAssumptions:
     scrap_cost_per_piece: float = 18.0
     intervention_cost: float = 300.0
     horizon_days: int = 30
-    currency: str = "TRY"
+    currency: str = "EUR"
     value_recovered_time_as: str = "margin"   # "margin" | "downtime_cost" (avoid double count)
 
 

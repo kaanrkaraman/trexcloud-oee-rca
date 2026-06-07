@@ -97,10 +97,11 @@ def demo_whatif():
     print("  ΔOEE waterfall:")
     for label, val in whatif.waterfall_rows(res.before, res.after):
         print(f"    {label:14s} {val:+.4f}" if label.startswith("Δ") else f"    {label:14s} {val:.4f}")
-    fin = whatif.compute_financials(res, whatif.FinancialAssumptions(), period_days=1)
+    assumptions = whatif.FinancialAssumptions()
+    fin = whatif.compute_financials(res, assumptions, period_days=1)
     print(f"  Financials (ASSUMED): recovered {fin.recovered_hours:.1f}h, "
           f"extra {fin.extra_pieces:.0f} pcs → gross {fin.gross_benefit:,.0f} / "
-          f"net {fin.net_benefit:,.0f} TRY, payback "
+          f"net {fin.net_benefit:,.0f} {assumptions.currency}, payback "
           f"{'—' if fin.payback_days is None else f'{fin.payback_days:.1f}d'}")
 
 

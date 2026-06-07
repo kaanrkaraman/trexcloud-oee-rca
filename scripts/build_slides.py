@@ -7,13 +7,22 @@ grid. Speaker script goes into the notes pane so slides stay clean. Turkish, com
 
 Run: uv run python scripts/build_slides.py
 """
+import json
+import os
+from pathlib import Path
+
 from pptx import Presentation
 from pptx.util import Inches, Pt, Emu
 from pptx.dml.color import RGBColor
 from pptx.enum.text import PP_ALIGN, MSO_ANCHOR
 from pptx.enum.shapes import MSO_SHAPE
 
-OUT = "trexCloud_Sunum.pptx"
+PM = json.loads(Path("analysis/artifacts/pm_value.json").read_text(encoding="utf-8"))
+SCENARIOS = json.loads(Path("analysis/artifacts/scenarios.json").read_text(encoding="utf-8"))["rows"]
+DEPLOYED = PM["deployed"]
+ECON = PM["sensitivity"]["economic_optimum"]
+
+OUT = os.environ.get("TREX_SLIDES_OUT", "trexCloud_Sunum.pptx")
 FONT = "Helvetica Neue"
 
 INK = RGBColor(0x1A, 0x1F, 0x1D)
@@ -227,24 +236,36 @@ notes(s, "Altın'ın kalbi: birden çok sinyalin baseline'dan saptığını sapt
          "kök neden hava basıncı. Dürüstlük: sapmanın bu olayda eşzamanlı olduğunu açıkça söyle. "
          "Canlı demo: Tahmin → Aksiyon panosu, bölüm 2.")
 
-# ───────────────────────── 07 · tahmin ─────────────────────────
-s = new("Tahmin · Bonus", "Duruşu önceden tahmin", 7)
-stats = [("0,73", "ROC-AUC"), ("2,38×", "taban-üstü kazanç"), ("%44", "dönem isabeti · taban %18")]
-sw = (CW - 2 * 0.4) / 3
+# ───────────────────────── 07 · tahmin -> değer ─────────────────────────
+s = new("Tahmin · Değer", "ROC / lift katmanından OEE ve €'ya", 7)
+stats = [
+    ("0,73", "ROC-AUC"),
+    ("2,38×", "taban-üstü kazanç"),
+    (f"%{DEPLOYED['recall'] * 100:.0f}", "duruş yakalama · held-out"),
+    (f"+{DEPLOYED['oee']['delta']['dOEE'] * 100:.2f}".replace(".", ","),
+     "puan OEE · e=%35"),
+]
+sw = (CW - 3 * 0.25) / 4
 for i, (v, l) in enumerate(stats):
-    x = ML + i * (sw + 0.4)
-    box(s, x, 2.95, sw, 1.5, fill=WHITE, line=HAIR, lw=1.0)
-    text(s, x, 3.15, sw, 0.8, v, 38, GREEN, True, align=PP_ALIGN.CENTER)
-    text(s, x, 4.0, sw, 0.4, l, 12.5, MUTED, align=PP_ALIGN.CENTER)
+    x = ML + i * (sw + 0.25)
+    box(s, x, 2.55, sw, 1.35, fill=WHITE, line=HAIR, lw=1.0)
+    text(s, x, 2.76, sw, 0.55, v, 30, GREEN, True, align=PP_ALIGN.CENTER)
+    text(s, x + 0.08, 3.42, sw - 0.16, 0.34, l, 10.5, MUTED, align=PP_ALIGN.CENTER)
 bullets(s, [
-    "Sızıntısız kurulum: makine-içi kronolojik ayrım, geçmiş-yalnız öznitelik, makine-içi normalizasyon.",
-    "Kapsam Fanuc üretim hücresi — duruş öncesi sinyali (cycle-time, run-state) yalnız orada akıyor.",
-], y=5.0)
-text(s, ML, 6.25, CW, 0.4,
-     "Abartmıyoruz: bu kullanışlı bir risk sıralayıcı; makine-içi ROC ≈ 0,72, kâhin değil.", 12.5, MUTED)
-notes(s, "Madalya tahmin istemiyordu ama biz duruşu 60 dakika önceden tahmin ediyoruz. Dürüst "
-         "çerçeve: iyi bir risk sıralayıcı, kâhin değil; ve neden yalnız Fanuc'a sınırlı olduğunu "
-         "biliyoruz. Canlı demo: risk zaman çizgisi.")
+    f"Gerçek held-out ölçüm: *{DEPLOYED['caught_stops']}/{DEPLOYED['significant_stops']}* duruş "
+    f"yakalandı; *{DEPLOYED['episodes']}* alarm döneminin isabeti %{DEPLOYED['episode_precision']*100:.0f}.",
+    f"e=%35 varsayımıyla yıllık projeksiyon: *{DEPLOYED['financial']['annualized']['prevented_h']:.0f} saat*; "
+    f"fakat 300 €/kontrol varsayımında net *{DEPLOYED['financial']['annualized']['net_eur']:,.0f} €*.",
+], y=4.25, gap=8)
+box(s, ML, 5.65, CW, 0.72, fill=GREEN_SOFT, line=GREEN, lw=1.2)
+text(s, ML + 0.22, 5.83, CW - 0.44, 0.36,
+     f"Ekonomik duyarlılık (retrospektif): eşik {ECON['threshold']:.2f} → "
+     f"{ECON['episodes']} kontrol → {ECON['annualized_net_eur']:,.0f} €/yıl net. "
+     "Canlı eşiğin yerine geçmez.", 12.5, INK, lh=1.1)
+notes(s, "Tahmini ilk kez doğrudan OEE ve euroya bağlıyoruz. Recall yakalanabilecek duruş havuzunu, "
+         "alarm isabeti ve alarm sayısı ise müdahale maliyetini belirliyor. Varsayılan 300 euro kontrol "
+         "maliyetinde dağıtılan eşik ekonomik değil; bunu saklamıyoruz. Retrospektif ekonomik eşik daha "
+         "az alarm ve pozitif net değer üretiyor, ama canlı model seçimi olarak sunulmuyor.")
 
 # ───────────────────────── 08 · PLATİN cross ─────────────────────────
 s = new("Platin", "Çapraz-makine örüntüleri — null-model ile", 8)
@@ -270,19 +291,39 @@ notes(s, "Platin'in en kritik kriteri. Her çapraz-makine iddiamızı bir null-m
          "Eşzamanlı duruşlar gerçek; ama kümeyi abartmadık — ortak bir ritim, eşzamanlı arıza değil. "
          "Canlı demo: Çapraz Makine panosu.")
 
-# ───────────────────────── 09 · PLATİN whatif ─────────────────────────
-s = new("Platin", "ΔOEE ve finansal etki", 9)
-bullets(s, [
-    "W1 senaryosu: bir makinenin plansız duruşunu azalt → kullanılabilirlik yükselir.",
-    "Etki, OEE bileşenlerine ayrıştırılır (*A / P / Q*); geri kazanılan saat ve ek parça hesaplanır.",
-    "Net fayda ve geri ödeme süresi çıkarılır; kaydırıcı ile canlı güncellenir.",
-], y=BODY_Y)
-box(s, ML, 5.3, CW, 1.0, fill=GREEN_SOFT, line=GREEN, lw=1.2)
-text(s, ML + 0.25, 5.52, CW - 0.5, 0.6,
-     "Veri setinde maliyet/fiyat yok. Tüm parasal değerler açıkça VARSAYIM olarak etiketlidir — "
-     "gerçek değil, hipotez.", 14, INK, lh=1.2)
-notes(s, "Çözümün etkisini sayısallaştırıyoruz. Kaydırıcıyı oynatınca OEE ve euro canlı güncelleniyor. "
-         "Maliyet verisi olmadığından varsayımları açıkça etiketliyoruz. Canlı demo: What-If kaydırıcısı.")
+# ───────────────────────── 09 · PLATİN scenario catalog ─────────────────────────
+s = new("Platin", "İncelenebilir senaryo kataloğu", 9)
+cols = [("Senaryo / kapsam", 4.15), ("ΔA", 1.05), ("ΔP", 1.05),
+        ("ΔOEE", 1.15), ("Saat", 1.2), ("Net €", 1.55)]
+x = ML
+for label, width in cols:
+    box(s, x, 2.35, width, 0.45, fill=INK)
+    text(s, x + 0.1, 2.47, width - 0.2, 0.22, label, 10, WHITE, True)
+    x += width
+for i, row in enumerate(SCENARIOS):
+    y = 2.85 + i * 0.68
+    fill = GREEN_SOFT if i == 0 else WHITE
+    x = ML
+    values = [
+        (f"{row['id']} · {row['machine']} · {row['scenario']}", 4.15, PP_ALIGN.LEFT),
+        (f"{row['delta_A_pp']:.2f}".replace(".", ","), 1.05, PP_ALIGN.RIGHT),
+        (f"{row['delta_P_pp']:.2f}".replace(".", ","), 1.05, PP_ALIGN.RIGHT),
+        (f"{row['delta_OEE_pp']:.2f}".replace(".", ","), 1.15, PP_ALIGN.RIGHT),
+        (f"{max(row['recovered_runtime_h'], row['recovered_schedule_h']):.0f}", 1.2, PP_ALIGN.RIGHT),
+        (f"{row['net_eur']:,.0f}", 1.55, PP_ALIGN.RIGHT),
+    ]
+    for value, width, align in values:
+        box(s, x, y, width, 0.6, fill=fill, line=HAIR, lw=0.7)
+        text(s, x + 0.1, y + 0.15, width - 0.2, 0.27, value, 10.5,
+             GREEN if i == 0 else INK, i == 0, align=align)
+        x += width
+box(s, ML, 5.78, CW, 0.62, fill=GREEN_SOFT, line=GREEN, lw=1.2)
+text(s, ML + 0.22, 5.93, CW - 0.44, 0.3,
+     "S2 yalnız sınıflandırmayı değiştirir; S3 üretim sayımı olmadığı için inerttir; "
+     "S4 IT aksiyonudur ve makine OEE'sine yazılmaz. Tüm € değerleri VARSAYIM.", 11.5, INK)
+notes(s, "Dört senaryo aynı hesap sözleşmesiyle incelenebilir. S1 gerçek OEE ve zaman kazanımıdır. "
+         "S2 runtime yaratmadan A'yı yükseltir; bu yüzden finansal faydası yoktur. S3 veri yokluğunda "
+         "bilerek inerttir. S4 bağlantı görünürlüğünü geri getirir ama makine OEE'sine yazılmaz.")
 
 # ───────────────────────── 10 · sınırlar ─────────────────────────
 s = new("Sınırlar", "Neyi tahmin edemeyeceğimizi de biliyoruz", 10)

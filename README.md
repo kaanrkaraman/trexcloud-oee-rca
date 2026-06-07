@@ -2,8 +2,8 @@
 
 End-to-end solution for the trexCloud CNC + laser plant dataset:
 **Anomaly Detection → Root Cause Analysis → What-If/OEE → financial impact**, with a
-Streamlit dashboard. Targets the "Platinum" bar: cross-machine pattern detection +
-quantified ΔOEE + financial recommendation.
+React dashboard. Targets the "Platinum" bar: cross-machine pattern detection +
+quantified ΔOEE, predictive-maintenance attribution, and financial recommendation.
 
 ## Setup
 ```bash
@@ -17,6 +17,10 @@ uv run python scripts/build_foundation.py   # machine_master, signal_map, oee_ba
 uv run python scripts/build_ad.py            # anomaly scores + flagged windows (one-time ~few min)
 uv run python scripts/build_ad.py "Makine 1" # single machine (fast dev)
 uv run python scripts/build_predict.py       # supervised stop-prediction benchmark (multi-model)
+uv run python scripts/build_fanuc_risk.py    # deployed Fanuc risk timeline
+uv run python scripts/build_scenarios.py     # four-scenario OEE/financial catalog
+uv run python scripts/build_pm_value.py      # held-out prediction → OEE/EUR attribution
+uv run python scripts/export_web.py          # curated React data bundle
 ```
 
 ## See metrics & demos
@@ -29,14 +33,15 @@ uv run python scripts/demo.py rca    # one demo: rca | conn | recur | whatif | a
 the What-If portfolio impact. `demo.py` prints concrete cases (AIR PRESSURE cascade, connectivity
 case, systemic recurrence, a quantified What-If, an AD leading-indicator window).
 
-## Run the interactive dashboard
+## Run the React dashboard
 ```bash
-uv run streamlit run app/Home.py
+cd web
+npm install
+npm run dev
 ```
-Pages: **Home** (OEE baseline, machine tiering, downtime Pareto) · **RCA Event Explorer**
-(event timeline, telemetry overlay, alarm cascade, root-cause card → Send to What-If) ·
-**What-If** (W1–W5 scenarios, ΔOEE waterfall, financial card) · **Cross-Machine Recurrence**
-(systemic/facility faults).
+Views: **Overview**, **Predict→Action** (held-out model quality, attributable OEE/EUR,
+scenario catalog), and **Cross-Machine**. The legacy Streamlit app remains available with
+`uv run streamlit run app/Home.py`.
 
 ## Library (`src/trex/`)
 | Module | Purpose |
@@ -47,13 +52,13 @@ Pages: **Home** (OEE baseline, machine tiering, downtime Pareto) · **RCA Event 
 | `ad` | unsupervised anomaly detection: feature extraction, robust-z/EWMA baselines, lightweight PyTorch autoencoder, eval, emit (RCA evidence layer) |
 | `predict` | **supervised** stop prediction: leakage-safe dataset + multi-model benchmark (LogReg/RF/HistGBDT/MLP vs baselines) with classical metrics |
 | `rca` | event model, pareto, correlation, ALERT_ARRAY cascade, recurrence, root-cause cards |
-| `whatif` | W1–W5 scenario engine, ΔOEE decomposition, financial impact |
+| `whatif` | W1–W5 scenario engine, ΔOEE decomposition, financial impact, predictive-maintenance valuation |
 
 **AD vs predict — two different jobs (don't conflate):** `ad` is *unsupervised* and answers
 "which signals deviate from normal?" (RCA evidence, scored over the full series). `predict` is
 *supervised* and answers "will a significant stop occur in the next 60 min?" with a chronological
 train/test split and classical metrics. The unsupervised AD score is ≈random as a *forecaster*
-(ROC-AUC ~0.5); use `predict` (HistGBDT, ROC-AUC ~0.70) for prediction.
+(ROC-AUC ~0.5); use the deployed Fanuc `predict` model (held-out ROC-AUC 0.731) for prediction.
 
 ```python
 from trex import loaders, signals, oee, ad, rca, whatif

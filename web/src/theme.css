@@ -214,6 +214,10 @@ table.dt th { text-align: left; font-family: var(--mono); font-size: 10px; lette
 table.dt td { padding: 8px; border-bottom: 1px solid var(--line); }
 table.dt td.num { font-family: var(--mono); text-align: right; }
 table.dt tr:hover td { background: var(--panel-2); }
+.tablewrap { overflow-x: auto; }
+table.dt th.sortable { cursor: pointer; white-space: nowrap; user-select: none; }
+table.dt th.sortable:hover { color: var(--green-bright); }
+.cellnote { margin-top: 3px; color: var(--text-3); font-size: 10.5px; line-height: 1.35; }
 .win { color: var(--green); } .lose { color: var(--red); } .tie { color: var(--text-2); }
 
 @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .35; } }

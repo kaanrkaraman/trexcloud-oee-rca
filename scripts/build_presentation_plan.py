@@ -4,6 +4,7 @@ live-demo action). Targets the Gold + Platinum judging bars. Turkish.
 
 Run: uv run python scripts/build_presentation_plan.py
 """
+import json
 from pathlib import Path
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import mm
@@ -15,13 +16,22 @@ from reportlab.platypus import (SimpleDocTemplate, Paragraph, Spacer, Table, Tab
                                 KeepTogether, HRFlowable)
 
 OUT = Path("trexCloud_Sunum_Plani.pdf")
+PM = json.loads(Path("analysis/artifacts/pm_value.json").read_text(encoding="utf-8"))
+SCENARIOS = json.loads(Path("analysis/artifacts/scenarios.json").read_text(encoding="utf-8"))["rows"]
+DEPLOYED = PM["deployed"]
+ECON = PM["sensitivity"]["economic_optimum"]
 
-# Turkish-capable fonts (macOS)
-pdfmetrics.registerFont(TTFont("AR", "/System/Library/Fonts/Supplemental/Arial.ttf"))
-try:
-    pdfmetrics.registerFont(TTFont("ARB", "/System/Library/Fonts/Supplemental/Arial Bold.ttf"))
-except Exception:
-    pdfmetrics.registerFont(TTFont("ARB", "/System/Library/Fonts/Supplemental/Arial.ttf"))
+
+def first_font(*paths):
+    return next(str(p) for p in map(Path, paths) if p.exists())
+
+
+pdfmetrics.registerFont(TTFont("AR", first_font(
+    "/System/Library/Fonts/Supplemental/Arial.ttf",
+    "C:/Windows/Fonts/arial.ttf")))
+pdfmetrics.registerFont(TTFont("ARB", first_font(
+    "/System/Library/Fonts/Supplemental/Arial Bold.ttf",
+    "C:/Windows/Fonts/arialbd.ttf")))
 
 INK = colors.HexColor("#16201c")
 GREEN = colors.HexColor("#1f9d57")
@@ -132,14 +142,17 @@ SLIDES = [
      "kök neden hava basıncı.” Dürüstlük: sapmanın eşzamanlı olduğunu açıkça söyle.",
      "‘Tahmin → Aksiyon’ panosu, bölüm 2: kaskad + sapma çubukları + hipotezler."),
 
-    (7, "Bonus — Duruş tahmini (madalyanın ötesi)", "BONUS",
-     ["Fanuc HistGBDT: <b>ROC 0.73, 2.38× kazanç, %44 dönem isabeti</b> (taban %18).",
-      "Sızıntısız: makine-içi kronolojik split, geçmiş-yalnız öznitelik, makine-içi z-norm.",
-      "Dürüst: makine-içi ROC ≈0.72 — ‘mükemmel’ değil, kullanışlı bir <b>risk sıralayıcı</b>."],
-     "“Madalya tahmin istemiyordu ama biz bir adım öteye gidip duruşu 60 dk önceden tahmin "
-     "ediyoruz. Abartmıyoruz: bu iyi bir risk sıralayıcı, kâhin değil — ve neden Fanuc’a "
-     "sınırlı olduğunu da biliyoruz (sinyal kullanılabilirliği).”",
-     "‘Tahmin → Aksiyon’: risk zaman çizgisi + gerçek duruş ×’leri + dönem seçimi."),
+    (7, "Tahmin → OEE → Finansal Değer", "BONUS",
+     [f"Fanuc HistGBDT: <b>ROC 0.73, lift 2.38×</b>; held-out duruş recall "
+      f"<b>%{DEPLOYED['recall']*100:.1f}</b> ({DEPLOYED['caught_stops']}/{DEPLOYED['significant_stops']}).",
+      f"e=%35 varsayımıyla <b>+{DEPLOYED['oee']['delta']['dOEE']*100:.2f} puan OEE</b> ve "
+      f"{DEPLOYED['financial']['annualized']['prevented_h']:.0f} saat/yıl projeksiyonu.",
+      f"722 kontrol × 300 € varsayımı neti negatife çeker; retrospektif eşik "
+      f"{ECON['threshold']:.2f} → <b>{ECON['annualized_net_eur']:,.0f} €/yıl</b>."],
+     "“Recall yakalanabilecek duruş havuzunu belirliyor; alarm sayısı ve isabeti ise kontrol "
+     "maliyetini. Böylece ROC/lift katmanını ilk kez doğrudan OEE ve euroya bağlıyoruz. "
+     "Varsayılan maliyetlerde dağıtılan eşiğin ekonomik olmadığını saklamıyoruz.”",
+     "‘Tahmin → Aksiyon’: risk zaman çizgisi → Kestirimci Bakım Getirisi kartı → varsayım kaydırıcıları."),
 
     (8, "PLATİN — Çapraz-makine örüntüleri (null-model’li)", "PLATİN",
      ["Eşzamanlı duruşlar: <b>z=5.16, p&lt;0.001</b> — saat-içi ritmini koruyan null’ın bile ötesinde "
@@ -152,14 +165,17 @@ SLIDES = [
      "bu ortak bir çalışma ritmi, eşzamanlı arıza değil. Doğru olmayanı söylemiyoruz.”",
      "‘Çapraz Makine’ panosu: senkronizasyon çubukları + rejim haritası + dürüst kümeleme."),
 
-    (9, "PLATİN — What-If + Finansal öneri (canlı)", "PLATİN",
-     ["W1 senaryosu: bir makinenin plansız duruşunu %X azalt → A yükselir.",
-      "ΔOEE ayrışımı (A/P/Q ayrı ayrı), geri kazanılan saat + ek parça.",
-      "Finansal: net fayda / geri ödeme — <b>tüm € değerleri açıkça VARSAYIM</b> (veride maliyet yok)."],
-     "“Çözümün etkisini sadece anlatmıyoruz, sayısallaştırıyoruz. Kaydırıcıyı oynatınca OEE ve "
-     "€ canlı güncelleniyor. Maliyet verisi olmadığı için varsayımları açıkça etiketliyoruz — "
-     "bu da dürüstlüğün parçası.”",
-     "‘What-If’ kaydırıcısını canlı oynat: ΔOEE çubukları + € kartı anında değişiyor."),
+    (9, "PLATİN — İncelenebilir Senaryo Kataloğu", "PLATİN",
+     [f"S1 Makine 1 / Duruş −30%: <b>+{SCENARIOS[0]['delta_OEE_pp']:.2f} puan OEE</b>, "
+      f"{SCENARIOS[0]['recovered_runtime_h']:.0f} saat runtime.",
+      "S2: plansız→planlı sınıflandırma A'yı değiştirir ama runtime yaratmaz. "
+      "S3: ProductSum=0 olduğundan performans kolu inerttir.",
+      f"S4: {SCENARIOS[3]['recovered_schedule_h']:.0f} saat bağlantı görünürlüğü; "
+      "<b>IT aksiyonu, makine OEE'si değil</b>. Tüm € değerleri VARSAYIM."],
+     "“Katalog yalnız iyi görünen senaryoları seçmiyor. Runtime yaratmayan sınıflandırmayı, "
+     "veri olmadığı için inert kalan performans kolunu ve OEE'ye yazılmayan bağlantı aksiyonunu "
+     "aynı tabloda gösteriyoruz.”",
+     "‘Senaryo Kataloğu’ tablosunu ΔOEE veya net € sütununa göre sırala."),
 
     (10, "Dürüst Limitler — neden güveniyorsunuz", "—",
      ["Kondisyon sinyalleri (sıcaklık/yük) boş → tavanı veri belirliyor, model değil.",

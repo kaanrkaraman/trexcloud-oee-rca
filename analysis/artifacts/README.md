@@ -13,6 +13,10 @@ All loaders bake in the dataset gotchas (cp1254, `'t'`/`'f'` booleans, ms, recom
 | `ad_scores.parquet` | Per-bucket anomaly score timeline (RCA contract) | `machine, ts, score_baseline, score_ae, score, top_roles, is_idle, is_offline` |
 | `ad_anomaly_windows.parquet` | Flagged anomaly windows | `machine, window_start, window_end, peak_score, detector, top_roles, nearest_label, lead_time_min` |
 | `ad_ae_<machine>.pt` | Trained autoencoder weights per machine | — |
+| `fanuc_risk.parquet` | Held-out deployed Fanuc risk buckets | `machine, ts, y_true, risk` |
+| `fanuc_model_meta.json` | Audited model metrics and deployed operating point | ROC/PR-AUC/lift, threshold, episode precision |
+| `scenarios.json` | Four inspectable OEE/financial scenarios | ΔA/ΔP/ΔQ/ΔOEE, runtime/schedule hours, EUR, owner |
+| `pm_value.json` | Held-out prediction → OEE/EUR attribution | recall, caught/prevented hours, OEE gain, observed/projected value, sensitivity |
 
 ## Quick use
 ```python
@@ -26,6 +30,7 @@ tel  = loaders.read_telemetry(start="2026-01-12 04:32", end="2026-01-12 05:00",
 ```
 
 ## Tiering (drives modeling scope)
-- **Rich (Mitsubishi 4/6/7/8):** servo_temp, path_load, (7/8 also servo/spindle_power) → multivariate baseline-deviation RCA.
-- **Sparse (Fanuc 1/2/3/5/9/10):** run_state + cycle_time; alarms only on Makine 1 & 2.
-- **Blind (TurboCut 400, ARES SEIKI):** no telemetry — MES-only RCA. TurboCut is the top downtime sink.
+- **Predictive Fanuc (1/2/3/5/9):** cycle_time + run_state + production; per-machine normalized supervised model.
+- **Mitsubishi RCA (7/8):** run_time + axis position, with sparse cycle data; retained for RCA/OEE, not the deployed predictor.
+- **Telemetry-blind (4/6/10/TurboCut/ARES):** no streamed model inputs; MES-only RCA and generic What-If.
+- Catalog-only servo temperature/power signals contain no rows; path load has only 28 rows and is not a predictive input.

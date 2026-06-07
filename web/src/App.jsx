@@ -14,7 +14,10 @@ const NAV = [
 
 export default function App() {
   const [data, setData] = useState(null)
-  const [view, setView] = useState('predict')
+  const requestedView = new URLSearchParams(window.location.search).get('view')
+  const [view, setView] = useState(
+    NAV.some((item) => item.id === requestedView) ? requestedView : 'predict',
+  )
   useEffect(() => { fetch('data/bundle.json').then((r) => r.json()).then(setData) }, [])
   if (!data) return <Boot />
 

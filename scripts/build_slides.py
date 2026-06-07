@@ -16,11 +16,13 @@ from pptx.util import Inches, Pt, Emu
 from pptx.dml.color import RGBColor
 from pptx.enum.text import PP_ALIGN, MSO_ANCHOR
 from pptx.enum.shapes import MSO_SHAPE
+from PIL import Image
 
 PM = json.loads(Path("analysis/artifacts/pm_value.json").read_text(encoding="utf-8"))
 SCENARIOS = json.loads(Path("analysis/artifacts/scenarios.json").read_text(encoding="utf-8"))["rows"]
 DEPLOYED = PM["deployed"]
 ECON = PM["sensitivity"]["economic_optimum"]
+DASH = Path("analysis/reports/dashboard")
 
 OUT = os.environ.get("TREX_SLIDES_OUT", "trexCloud_Sunum.pptx")
 FONT = "Helvetica Neue"
@@ -117,6 +119,21 @@ def base(slide, section, title, n):
 
 def notes(slide, t):
     slide.notes_slide.notes_text_frame.text = t
+
+
+def picture_fit(slide, path, x, y, w, h):
+    """Place an image inside a box without stretching it."""
+    path = Path(path)
+    iw, ih = Image.open(path).size
+    scale = min(w / iw, h / ih)
+    pw, ph = iw * scale, ih * scale
+    return slide.shapes.add_picture(
+        str(path),
+        Inches(x + (w - pw) / 2),
+        Inches(y + (h - ph) / 2),
+        width=Inches(pw),
+        height=Inches(ph),
+    )
 
 
 def new(section, title, n):
@@ -349,6 +366,111 @@ text(s, ML + 0.25, 5.35, CW - 0.5, 0.95,
      16, WHITE, True, anchor=MSO_ANCHOR.MIDDLE, lh=1.15)
 notes(s, "Kapanış: dürüst, çalışan, uçtan uca bir sistem kurduk. Tahmin eder, açıklar, "
          "sayısallaştırır; ve her scoping kararının veri temelli bir gerekçesi var.")
+
+# ───────────────────────── 12–18 · dashboard guide appendix ─────────────────────────
+s = new("Canlı Arayüz Rehberi", "Genel Bakış — tesis ve makine resmi", 12)
+picture_fit(s, DASH / "overview_fleet.png", ML, 2.18, 7.95, 4.55)
+box(s, 9.05, 2.18, 3.43, 4.55, fill=GREEN_SOFT, line=GREEN, lw=1.1)
+text(s, 9.3, 2.48, 2.95, 0.35, "NASIL OKUNUR?", 11, GREEN, True)
+bullets(s, [
+    "*Üst KPI'lar:* tesis OEE'si, toplam plansız duruş ve Fanuc tahmin lift'i.",
+    "*Makine kartları:* renk rejimi, yüzde OEE'yi; alt satır duruş saatini gösterir.",
+    "*Sağ panel:* seçilen makinenin A/P/Q ayrışımı ve modelleme rejimi.",
+], x=9.3, y=3.0, w=2.9, size=11.5, gap=8)
+notes(s, "Genel Bakış ekranında önce üç tesis KPI'sını göster. Sonra makine kartlarının rejim "
+         "renklerini açıkla: yeşil Fanuc tahmin hücresi, kehribar Mitsubishi RCA/OEE, gri "
+         "telemetrisiz. Bir karta tıklanınca sağda OEE bileşenleri açılır.")
+
+s = new("Canlı Arayüz Rehberi", "Pareto — arıza ile bağlantıyı ayır", 13)
+picture_fit(s, DASH / "overview_pareto.png", ML, 2.28, 8.25, 3.25)
+box(s, 9.35, 2.28, 3.13, 3.25, fill=GREEN_SOFT, line=GREEN, lw=1.1)
+text(s, 9.6, 2.55, 2.65, 0.35, "KARAR MESAJI", 11, GREEN, True)
+bullets(s, [
+    "*Kırmızı:* giderilebilir makine duruşu.",
+    "*Gri:* System Offline; IT/ağ sahipliğinde.",
+    "TurboCut büyük kayıp kaynağıdır fakat telemetrisi yoktur.",
+], x=9.6, y=3.05, w=2.55, size=11.5, gap=8)
+box(s, ML, 5.78, CW, 0.62, fill=GREEN_SOFT, line=GREEN, lw=1.1)
+text(s, ML + 0.22, 5.94, CW - 0.44, 0.3,
+     "Sunum cümlesi: “Bağlantı kaybını makine arızası sayarsak yanlış ekibe ve yanlış yatırıma gideriz.”",
+     11.5, INK)
+notes(s, "Pareto'da kırmızı ve gri ayrımını vurgula. System Offline makine arızası değildir. "
+         "Bu ekran aksiyon sahibini belirler: bakım mı, IT/ağ mı?")
+
+s = new("Canlı Arayüz Rehberi", "Tahmin — risk zaman çizgisi ve gerçek duruşlar", 14)
+picture_fit(s, DASH / "predict_risk.png", ML, 2.15, 8.25, 4.78)
+box(s, 9.35, 2.15, 3.13, 4.78, fill=GREEN_SOFT, line=GREEN, lw=1.1)
+text(s, 9.6, 2.45, 2.65, 0.35, "NE GÖSTERİYOR?", 11, GREEN, True)
+bullets(s, [
+    "*Yeşil çizgi:* modelin duruş riski.",
+    "*Kırmızı kesik:* denetlenen alarm eşiği 0,1778.",
+    "*Kırmızı çarpılar:* gerçekleşen ≥15 dk plansız duruşlar.",
+    "Alt kutular, yüksek-risk dönemlerini inceleme sırasına koyar.",
+], x=9.6, y=2.95, w=2.55, size=11.3, gap=7)
+notes(s, "Bu ekran modelin tutulmamış gelecekteki riskini gösterir. Yeşil risk çizgisini, sabit "
+         "alarm eşiğini ve gerçek duruş işaretlerini anlat. Alt dönemlerden biri seçilince RCA "
+         "ve What-If akışı aynı sayfada devam eder.")
+
+s = new("Canlı Arayüz Rehberi", "Kök-Neden — alarm kaskadından aksiyona", 15)
+picture_fit(s, DASH / "predict_rca.png", ML, 2.28, 8.25, 3.05)
+box(s, 9.35, 2.28, 3.13, 3.05, fill=GREEN_SOFT, line=GREEN, lw=1.1)
+text(s, 9.6, 2.55, 2.65, 0.35, "ALTIN AKIŞI", 11, GREEN, True)
+bullets(s, [
+    "Kaskad nedensel önceliğe göre sıralanır.",
+    "*AIR PRESSURE* kök neden; Z-axis alarmı sonuçtur.",
+    "Telemetri ve hipotezler önerilen aksiyonu destekler.",
+], x=9.6, y=3.0, w=2.55, size=11.3, gap=7)
+box(s, ML, 5.68, CW, 0.72, fill=GREEN_SOFT, line=GREEN, lw=1.1)
+text(s, ML + 0.22, 5.85, CW - 0.44, 0.38,
+     "Sunum cümlesi: “Model yalnız alarm vermiyor; alarmı kanıt, hipotez ve uygulanabilir aksiyona çeviriyor.”",
+     11.5, INK)
+notes(s, "Makine 1 örneğinde alarm sırası ile neden sırasının aynı şey olmadığını anlat. "
+         "Hava basıncı kök neden, Z ekseni geri dönüş alarmı sonuçtur. Sağdaki hipotezler "
+         "olasılık ve önerilen aksiyonla birlikte gösterilir.")
+
+s = new("Canlı Arayüz Rehberi", "Kestirimci bakım değeri ve What-If", 16)
+picture_fit(s, DASH / "predict_value.png", ML, 2.15, 8.0, 2.18)
+picture_fit(s, DASH / "predict_whatif.png", ML, 4.52, 8.0, 2.25)
+box(s, 9.1, 2.15, 3.38, 4.62, fill=GREEN_SOFT, line=GREEN, lw=1.1)
+text(s, 9.35, 2.45, 2.9, 0.35, "İKİ FARKLI HESAP", 11, GREEN, True)
+bullets(s, [
+    "*Üst panel:* yalnız modelin yakaladığı duruşlara atfedilen OEE/€.",
+    "Etkililik ve maliyetler varsayımdır; recall/precision held-out ölçümdür.",
+    "*Alt panel:* kullanıcı seçtiği duruş azaltımını genel What-If motorunda simüle eder.",
+    "Negatif ROI saklanmaz; alarm maliyeti her gerçek/yanlış alarm için yazılır.",
+], x=9.35, y=2.95, w=2.85, size=11.15, gap=7)
+notes(s, "Üst kart model-atfedilebilir değerdir: kaçırılan duruşlara değer yazılmaz ve her alarm "
+         "kontrol maliyeti doğurur. Alt kart genel What-If'tir; kullanıcı yüzdeyi ve finansal "
+         "varsayımları değiştirerek A/P/Q/OEE etkisini anında görür.")
+
+s = new("Canlı Arayüz Rehberi", "Senaryo kataloğu — sonuçlar denetlenebilir", 17)
+picture_fit(s, DASH / "predict_scenarios.png", ML, 2.25, 8.45, 2.48)
+box(s, 9.45, 2.25, 3.03, 2.48, fill=GREEN_SOFT, line=GREEN, lw=1.1)
+text(s, 9.7, 2.52, 2.55, 0.35, "TABLO NE İŞE YARAR?", 11, GREEN, True)
+bullets(s, [
+    "ΔA / ΔP / ΔQ / ΔOEE birlikte görünür.",
+    "Runtime ve schedule kazanımı ayrıdır.",
+    "Sütun başlığına tıklayarak sıralanır.",
+], x=9.7, y=2.95, w=2.45, size=11.2, gap=7)
+box(s, ML, 5.18, CW, 1.18, fill=GREEN_SOFT, line=GREEN, lw=1.1)
+text(s, ML + 0.22, 5.42, CW - 0.44, 0.72,
+     "S1 gerçek zaman/OEE kazanımıdır. S2 yalnız sınıflandırma etkisini, S3 üretim verisi yokluğundaki "
+     "inert kolu, S4 ise IT sahipliğindeki schedule görünürlüğünü gösterir.", 12, INK, lh=1.16)
+notes(s, "Katalogdaki dört satırı kısa yorumla. Özellikle S2'nin runtime yaratmadığını, S3'ün "
+         "ProductSum sıfır olduğu için inert kaldığını ve S4'ün makine OEE'sine yazılmadığını söyle.")
+
+s = new("Canlı Arayüz Rehberi", "Çapraz Makine — iddiayı null-model ile sınar", 18)
+picture_fit(s, DASH / "cross_machine.png", ML, 2.12, 8.1, 4.82)
+box(s, 9.05, 2.12, 3.43, 4.82, fill=GREEN_SOFT, line=GREEN, lw=1.1)
+text(s, 9.3, 2.42, 2.95, 0.35, "PLATİN EKRANI", 11, GREEN, True)
+bullets(s, [
+    "Eski connectivity sonucu kayıt tekrarı olarak teşhis edilir.",
+    "708 eşzamanlı duruş, vardiya ritmini koruyan null'ın üstündedir.",
+    "Rejim haritası hangi makinelerin birlikte modellenebileceğini gösterir.",
+    "Küme seviyesi güçlü olsa da türev korelasyonu ≈0: akut yayılım iddia edilmez.",
+], x=9.3, y=2.92, w=2.9, size=11.05, gap=7)
+notes(s, "Bu ekranı soru gelirse aç. Eski yöntemin totolojisini, null-model destekli "
+         "senkronizasyonu, veri rejimlerini ve kümenin dürüst yorumunu tek ekranda gösterir.")
 
 prs.save(OUT)
 print(f"kaydedildi: {OUT}  ({len(prs.slides)} slayt)")

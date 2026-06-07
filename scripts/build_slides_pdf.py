@@ -11,11 +11,13 @@ from reportlab.lib.styles import ParagraphStyle
 from reportlab.platypus import Paragraph
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.lib.utils import ImageReader
 
 PM = json.loads(Path("analysis/artifacts/pm_value.json").read_text(encoding="utf-8"))
 SCENARIOS = json.loads(Path("analysis/artifacts/scenarios.json").read_text(encoding="utf-8"))["rows"]
 DEPLOYED = PM["deployed"]
 ECON = PM["sensitivity"]["economic_optimum"]
+DASH = Path("analysis/reports/dashboard")
 
 
 def first_font(*paths):
@@ -87,6 +89,28 @@ def base(section, title, n):
 
 def page():
     c.showPage()
+
+
+def image_fit(path, x, top, w, h):
+    image = ImageReader(str(path))
+    iw, ih = image.getSize()
+    scale = min(X(w) / iw, X(h) / ih)
+    pw, ph = iw * scale, ih * scale
+    c.drawImage(
+        image,
+        X(x) + (X(w) - pw) / 2,
+        Y(top + h) + (X(h) - ph) / 2,
+        width=pw,
+        height=ph,
+        preserveAspectRatio=True,
+        mask="auto",
+    )
+
+
+def guide_panel(top, title, items, h=4.55, x=9.05, w=3.43):
+    rect(x, top, w, h, fill=GREEN_SOFT, line=GREEN, lw=1.1)
+    para(f"<b>{title}</b>", top + 0.34, x + 0.25, w - 0.5, 11, GREEN, "ARB")
+    bullets(items, top + 0.82, x + 0.25, w - 0.55, 11.3, gap=0.1)
 
 
 # 01 cover
@@ -272,6 +296,90 @@ bullets([
 rect(ML, 5.35, CW, 0.95, fill=INK)
 para('<b>Tahmin eder, açıklar, sayısallaştırır — ve filodaki her makine için neden öyle '
      'davrandığımızı biliriz.</b>', 5.66, ML + 0.25, CW - 0.5, 16, white, "ARB", lead=20)
+page()
+
+# 12 dashboard guide: overview
+base("Canlı Arayüz Rehberi", "Genel Bakış — tesis ve makine resmi", 12)
+image_fit(DASH / "overview_fleet.png", ML, 2.18, 7.95, 4.55)
+guide_panel(2.18, "NASIL OKUNUR?", [
+    "<b>Üst KPI'lar:</b> tesis OEE'si, toplam plansız duruş ve Fanuc tahmin lift'i.",
+    "<b>Makine kartları:</b> renk rejimi, yüzde OEE'yi; alt satır duruş saatini gösterir.",
+    "<b>Sağ panel:</b> seçilen makinenin A/P/Q ayrışımı ve modelleme rejimi.",
+])
+page()
+
+# 13 dashboard guide: Pareto
+base("Canlı Arayüz Rehberi", "Pareto — arıza ile bağlantıyı ayır", 13)
+image_fit(DASH / "overview_pareto.png", ML, 2.28, 8.25, 3.25)
+guide_panel(2.28, "KARAR MESAJI", [
+    "<b>Kırmızı:</b> giderilebilir makine duruşu.",
+    "<b>Gri:</b> System Offline; IT/ağ sahipliğinde.",
+    "TurboCut büyük kayıp kaynağıdır fakat telemetrisi yoktur.",
+], h=3.25, x=9.35, w=3.13)
+rect(ML, 5.78, CW, 0.62, fill=GREEN_SOFT, line=GREEN, lw=1.1)
+para("Sunum cümlesi: “Bağlantı kaybını makine arızası sayarsak yanlış ekibe ve yanlış yatırıma gideriz.”",
+     5.98, ML + 0.22, CW - 0.44, 11.5, INK)
+page()
+
+# 14 dashboard guide: prediction
+base("Canlı Arayüz Rehberi", "Tahmin — risk zaman çizgisi ve gerçek duruşlar", 14)
+image_fit(DASH / "predict_risk.png", ML, 2.15, 8.25, 4.78)
+guide_panel(2.15, "NE GÖSTERİYOR?", [
+    "<b>Yeşil çizgi:</b> modelin duruş riski.",
+    "<b>Kırmızı kesik:</b> denetlenen alarm eşiği 0,1778.",
+    "<b>Kırmızı çarpılar:</b> gerçekleşen ≥15 dk plansız duruşlar.",
+    "Alt kutular yüksek-risk dönemlerini inceleme sırasına koyar.",
+], h=4.78, x=9.35, w=3.13)
+page()
+
+# 15 dashboard guide: RCA
+base("Canlı Arayüz Rehberi", "Kök-Neden — alarm kaskadından aksiyona", 15)
+image_fit(DASH / "predict_rca.png", ML, 2.28, 8.25, 3.05)
+guide_panel(2.28, "ALTIN AKIŞI", [
+    "Kaskad nedensel önceliğe göre sıralanır.",
+    "<b>AIR PRESSURE</b> kök neden; Z-axis alarmı sonuçtur.",
+    "Telemetri ve hipotezler önerilen aksiyonu destekler.",
+], h=3.05, x=9.35, w=3.13)
+rect(ML, 5.68, CW, 0.72, fill=GREEN_SOFT, line=GREEN, lw=1.1)
+para("Sunum cümlesi: “Model yalnız alarm vermiyor; alarmı kanıt, hipotez ve uygulanabilir aksiyona çeviriyor.”",
+     5.9, ML + 0.22, CW - 0.44, 11.5, INK)
+page()
+
+# 16 dashboard guide: value + what-if
+base("Canlı Arayüz Rehberi", "Kestirimci bakım değeri ve What-If", 16)
+image_fit(DASH / "predict_value.png", ML, 2.15, 8.0, 2.18)
+image_fit(DASH / "predict_whatif.png", ML, 4.52, 8.0, 2.25)
+guide_panel(2.15, "İKİ FARKLI HESAP", [
+    "<b>Üst panel:</b> yalnız modelin yakaladığı duruşlara atfedilen OEE/€.",
+    "Etkililik ve maliyetler varsayımdır; recall/precision held-out ölçümdür.",
+    "<b>Alt panel:</b> kullanıcının seçtiği duruş azaltımını genel What-If motoru simüle eder.",
+    "Negatif ROI saklanmaz; her gerçek/yanlış alarm maliyet doğurur.",
+], h=4.62, x=9.1, w=3.38)
+page()
+
+# 17 dashboard guide: scenarios
+base("Canlı Arayüz Rehberi", "Senaryo kataloğu — sonuçlar denetlenebilir", 17)
+image_fit(DASH / "predict_scenarios.png", ML, 2.25, 8.45, 2.48)
+guide_panel(2.25, "TABLO NE İŞE YARAR?", [
+    "ΔA / ΔP / ΔQ / ΔOEE birlikte görünür.",
+    "Runtime ve schedule kazanımı ayrıdır.",
+    "Sütun başlığına tıklayarak sıralanır.",
+], h=2.48, x=9.45, w=3.03)
+rect(ML, 5.18, CW, 1.18, fill=GREEN_SOFT, line=GREEN, lw=1.1)
+para("S1 gerçek zaman/OEE kazanımıdır. S2 yalnız sınıflandırma etkisini, S3 üretim verisi "
+     "yokluğundaki inert kolu, S4 ise IT sahipliğindeki schedule görünürlüğünü gösterir.",
+     5.48, ML + 0.22, CW - 0.44, 12, INK, lead=16)
+page()
+
+# 18 dashboard guide: cross-machine
+base("Canlı Arayüz Rehberi", "Çapraz Makine — iddiayı null-model ile sınar", 18)
+image_fit(DASH / "cross_machine.png", ML, 2.12, 8.1, 4.82)
+guide_panel(2.12, "PLATİN EKRANI", [
+    "Eski connectivity sonucu kayıt tekrarı olarak teşhis edilir.",
+    "708 eşzamanlı duruş, vardiya ritmini koruyan null'ın üstündedir.",
+    "Rejim haritası birlikte modellenebilen makineleri gösterir.",
+    "Küme seviyesi güçlü olsa da türev korelasyonu ≈0: akut yayılım iddia edilmez.",
+], h=4.82)
 page()
 
 c.save()

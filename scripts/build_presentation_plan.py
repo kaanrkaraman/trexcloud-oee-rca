@@ -194,12 +194,57 @@ SLIDES = [
      "sayısallaştırır. Ve filodaki her makine için neden öyle davrandığımızı biliyoruz.”",
      "Panoda ‘Genel Bakış’a dön — bütünlüğü göster."),
 
-    (12, "Yedek — Teknik Ek (soru gelirse)", "—",
-     ["Sızıntı kontrolleri: kronolojik split, geçmiş-yalnız öznitelik, iç-CV ile hiperparametre.",
-      "Rejim-model tablosu: birleşik vs Fanuc vs Mitsubishi; z-norm kazancı.",
-      "Metodoloji: robust-z/EWMA zarflar, nedensel-öncelik kaskad, circular-shift null."],
-     "Sadece soru gelirse aç. Metrikleri ve sızıntı önlemlerini burada savun.",
-     "Raporlar: 03–06 (analysis/reports)."),
+    (12, "Canlı Arayüz — Genel Bakış", "—",
+     ["Üst KPI'lar: tesis OEE'si, toplam plansız duruş ve Fanuc tahmin lift'i.",
+      "Makine kartları rejim rengini, OEE'yi ve duruş saatini gösterir.",
+      "Seçilen makinenin A/P/Q ayrışımı sağ panelde açılır."],
+     "Yeşil Fanuc tahmin hücresini, kehribar Mitsubishi RCA/OEE grubunu ve gri telemetrisiz "
+     "makineleri açıkla. Bir makine seçerek KPI ayrışımını göster.",
+     "Genel Bakış ekranı — makine filosu ve KPI ayrışımı."),
+
+    (13, "Canlı Arayüz — Pareto", "GÜMÜŞ",
+     ["Kırmızı = giderilebilir makine duruşu.",
+      "Gri = System Offline; IT/ağ aksiyonu.",
+      "TurboCut büyük kayıp kaynağıdır fakat telemetrisi yoktur."],
+     "Bağlantı kaybını makine arızası saymanın yanlış ekibe ve yanlış yatırıma götüreceğini söyle.",
+     "Genel Bakış ekranı — Duruş Pareto grafiği."),
+
+    (14, "Canlı Arayüz — Tahmin Zaman Çizgisi", "BONUS",
+     ["Yeşil çizgi model riski; kırmızı kesik çizgi dağıtılan eşik 0.1778.",
+      "Kırmızı çarpılar gerçekleşen ≥15 dk plansız duruşlar.",
+      "Alt kutular yüksek-risk dönemlerini inceleme sırasına koyar."],
+     "Modelin bu geleceği eğitimde görmediğini ve işaretlerin gerçek held-out duruşlar olduğunu vurgula.",
+     "Tahmin → Aksiyon, bölüm 1."),
+
+    (15, "Canlı Arayüz — Kök-Neden", "ALTIN",
+     ["Alarm kaskadı nedensel önceliğe göre sıralanır.",
+      "AIR PRESSURE kök neden; Z-axis alarmı sonuçtur.",
+      "Telemetri, hipotez ve önerilen aksiyon aynı paneldedir."],
+     "Modelin yalnız alarm vermediğini; kanıtı, hipotezi ve uygulanabilir aksiyonu bağladığını söyle.",
+     "Tahmin → Aksiyon, bölüm 2."),
+
+    (16, "Canlı Arayüz — Kestirimci Bakım Değeri + What-If", "BONUS",
+     ["Üst kart yalnız yakalanan duruşlara model-atfedilebilir OEE/€ yazar.",
+      "Etkililik ve maliyetler varsayım; recall/precision held-out ölçümdür.",
+      "Alt kart genel What-If motorudur; kullanıcı yüzde ve maliyetleri değiştirir."],
+     "Model-atfedilebilir değer ile genel operasyon senaryosunun iki farklı hesap olduğunu açıkla. "
+     "Negatif ROI'nin saklanmadığını özellikle belirt.",
+     "Tahmin → Aksiyon, bölümler 3 ve 4."),
+
+    (17, "Canlı Arayüz — Senaryo Kataloğu", "PLATİN",
+     ["ΔA / ΔP / ΔQ / ΔOEE aynı tabloda denetlenir.",
+      "Runtime ve schedule kazanımı ayrıdır.",
+      "Tablo herhangi bir sütuna göre sıralanabilir."],
+     "S1-S4 satırlarının neden farklı davrandığını kısaca yorumla; özellikle S4'ün IT sahipliğini söyle.",
+     "Tahmin → Aksiyon, bölüm 5."),
+
+    (18, "Canlı Arayüz — Çapraz Makine", "PLATİN",
+     ["Eski connectivity sonucu kayıt tekrarı olarak teşhis edilir.",
+      "708 eşzamanlı duruş null-model beklentisinin üstündedir.",
+      "Rejim haritası ve türev korelasyonu iddianın sınırlarını gösterir."],
+     "Gerçek senkronizasyonu gösterirken akut arıza yayılımı iddia etmediğimizi söyle. "
+     "Bu ekran projenin dürüst Platin kanıtıdır.",
+     "Çapraz Makine ekranı."),
 ]
 
 DEMO_FLOW = ("<b>Demo akışı (4 dakika):</b> Genel Bakış (Pareto: arıza vs bağlantı) → "

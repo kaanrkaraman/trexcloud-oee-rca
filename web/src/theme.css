@@ -13,7 +13,7 @@
   --green-dim: rgba(15, 122, 82, 0.10);
   --green-glow: rgba(15, 122, 82, 0.18);
   --red: #c43d3d;
-  --amber: #b7791f;
+  --amber: #e0741c;
   --blue: #2f6f9e;
   --text: #16201c;
   --text-2: #4b5953;
@@ -138,7 +138,7 @@ body::before {
   border: 1px solid var(--line-2); color: var(--text-2); letter-spacing: .5px; white-space: nowrap; }
 .tag.green { color: var(--green); border-color: rgba(15,122,82,.3); background: var(--green-dim); }
 .tag.red { color: var(--red); border-color: rgba(196,61,61,.3); background: rgba(196,61,61,.08); }
-.tag.amber { color: var(--amber); border-color: rgba(183,121,31,.3); background: rgba(183,121,31,.08); }
+.tag.amber { color: var(--amber); border-color: rgba(224,116,28,.3); background: rgba(224,116,28,.08); }
 .tag.dim { color: var(--text-3); background: var(--bg-2); }
 
 /* ---------- machine grid ---------- */

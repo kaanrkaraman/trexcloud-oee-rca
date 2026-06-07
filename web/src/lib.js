@@ -78,7 +78,7 @@ export const hhmm = (ms) => {
 }
 
 export const PAL = {
-  green: '#0f7a52', greenB: '#12936a', red: '#c43d3d', amber: '#b7791f',
+  green: '#0f7a52', greenB: '#12936a', red: '#c43d3d', amber: '#e0741c',
   blue: '#2f6f9e', gray: '#9aa8a1', line: '#e3e8e6', text3: '#7d8c85', text: '#16201c',
 }
 export const oeeColor = (v) => (v >= 0.6 ? PAL.green : v >= 0.35 ? PAL.amber : PAL.red)

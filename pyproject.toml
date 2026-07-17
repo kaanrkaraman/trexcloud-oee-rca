@@ -11,7 +11,7 @@ dependencies = [
     "reportlab>=4.5.1",
     "scikit-learn>=1.9.0",
     "streamlit>=1.58.0",
-    "torch>=2.12.0",
+    "torch>=2.13.0",
 ]
 
 [build-system]
